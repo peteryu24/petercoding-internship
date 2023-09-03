@@ -2,8 +2,7 @@
 
 
 ```
-📦 petercoding-java
-└─ Animal_Cafe             
+📦Animal_Cafe             
    │              
    └─ src
       ├─ cafe.animal
