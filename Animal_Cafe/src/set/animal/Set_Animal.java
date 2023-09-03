@@ -12,7 +12,7 @@ public class Set_Animal {
         this.age = age;
     }
 
-    public String getName() {
+    public String getName() { // 이름 출력을 위한 getter
         return name;
     }
 
