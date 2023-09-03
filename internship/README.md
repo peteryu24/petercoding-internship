@@ -1,2 +1,0 @@
-# petercoding-java
-JAVA
