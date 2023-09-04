@@ -12,7 +12,7 @@
       │
       └─ set.animal
             │
-            ├─ Set_Animal.java - 동물 생성자 정 (3가지 기능 구현 메소드)
+            ├─ Set_Animal.java - 동물 생성자 정의 (3가지 기능 구현 메소드)
             │
             └─ list.animal
                    ├─ Cat.java - 고양이 (1가지 기능 추가)
