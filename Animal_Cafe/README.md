@@ -8,11 +8,11 @@
       ├─ cafe.animal
       │     ├─ Animal_Cafe.java - 애견 카페 (입장 / 퇴장 메소드 구현)
       │     │
-      │     └─ In_Out.java - 동물 생성자 호출 / 입장과 퇴장 메소드 호출
+      │     └─ Action.java - 동물 생성자 호출 / 입장과 퇴장 메소드 호출
       │
       └─ set.animal
             │
-            ├─ Set_Animal.java - 동물 생성자 정의 (3가지 기능 구현 메소드)
+            ├─ Animal.java - 동물 생성자 정의 (3가지 기능 구현 메소드)
             │
             └─ list.animal
                    ├─ Cat.java - 고양이 (1가지 기능 추가)
