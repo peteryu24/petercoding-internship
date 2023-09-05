@@ -1,12 +1,12 @@
 package set.animal;
 
-public class Set_Animal {
+public class Animal {
 
     protected String species;
     protected String name;
     protected int age;
 
-    protected Set_Animal(String species, String name, int age) {
+    protected Animal(String species, String name, int age) {
         this.species = species;
         this.name = name;
         this.age = age;

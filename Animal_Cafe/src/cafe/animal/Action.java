@@ -3,7 +3,7 @@ package cafe.animal;
 import set.animal.list.animal.Cat;
 import set.animal.list.animal.Dog;
 
-public class In_Out {
+public class Action {
     public static void main(String args[]) {
 
         Animal_Cafe ani_caf = new Animal_Cafe();

@@ -1,8 +1,8 @@
 package set.animal.list.animal;
 
-import set.animal.Set_Animal;
+import set.animal.Animal;
 
-public class Dog extends Set_Animal {
+public class Dog extends Animal {
 
     public Dog(String species, String name, int age) {
         super(species, name, age);
