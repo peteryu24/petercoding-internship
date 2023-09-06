@@ -42,8 +42,3 @@
 
 ### 실행결과 📐
 ![실행](https://github.com/peteryu24/petercoding-java/assets/67302252/a6ee0569-b54b-4d86-93ce-1bd224bda711)
-
-
-
-arraylist size 메소드 대신  int 변수 별도 선언으로 효율성 
-이름이 null로 들어올 경우 처리
