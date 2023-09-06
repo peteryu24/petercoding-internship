@@ -13,7 +13,7 @@ public class Animal_Cafe {
     void in(Animal e) { 
         if (e instanceof Dog) { // 강아지만 입장 가능
             animal_cafe.add(e);
-            System.out.print(((Animal) e).getName() + " 강아지가 입장하였습니다. \n현재 입장한 강아지: ");
+            System.out.print(e.getName() + " 강아지가 입장하였습니다. \n현재 입장한 강아지: ");
             for (int i = 0; i < animal_cafe.size(); i++) { // 현재 현황 출력
                 System.out.print(animal_cafe.get(i).getName() + " ");
             }
@@ -27,13 +27,13 @@ public class Animal_Cafe {
         boolean isContainsDog = animal_cafe.contains(e); 
         if (isContainsDog) { // 현재 카페에 해당 강아지가 있을 경우
             animal_cafe.remove(e);
-            System.out.print(((Animal) e).getName() + " 강아지가 퇴장하였습니다.\n현재 입장한 강아지: ");
+            System.out.print(e.getName() + " 강아지가 퇴장하였습니다.\n현재 입장한 강아지: ");
             for (int i = 0; i < animal_cafe.size(); i++) { // 현재 현황 출력
                 System.out.print(animal_cafe.get(i).getName() + " ");
             }
             System.out.println("\n");
         } else { // // 현재 카페에 해당 강아지가 없을 경우
-            System.out.println("현재 " + ((Animal) e).getName() + "는 저희 카페 안에 없습니다.\n");
+            System.out.println("현재 " + (e.getName() + "는 저희 카페 안에 없습니다.\n");
         }
     }
 
