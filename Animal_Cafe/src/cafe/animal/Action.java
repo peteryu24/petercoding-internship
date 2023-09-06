@@ -6,7 +6,7 @@ import set.animal.list.animal.Dog;
 public class Action {
     public static void main(String args[]) {
 
-        Animal_Cafe ani_caf = new Animal_Cafe();
+        AnimalCafe ani_caf = new AnimalCafe();
 
         Dog dog1 = new Dog("시츄", "마루", 3);
         Dog dog2 = new Dog("허스키", "백구", 6);
