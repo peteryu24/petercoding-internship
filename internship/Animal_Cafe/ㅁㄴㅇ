@@ -1,0 +1,136 @@
+package cafe.animal;
+
+import exception.animal.AnimalTypeException;
+import exception.animal.MaximumAgeException;
+import set.animal.list.animal.Cat;
+import set.animal.list.animal.Dog;
+
+public class Action {
+	public static void main(String args[]) {
+
+		AnimalCafe ani_caf = new AnimalCafe();
+		AnimalTypeException ate = new AnimalTypeException();
+		MaximumAgeException mae = new MaximumAgeException();
+
+		Dog dog1 = new Dog("시츄", "마루", 3);
+		Dog dog2 = new Dog("허스키", "백구", 6);
+		Dog dog3 = new Dog("도베르만", "흑구", 31);
+		Dog dog4 = new Dog("닥스훈트","황구",9);
+
+		Cat cat1 = new Cat("아비니시안", "체리", 2);
+
+		/*
+		 * dog1.bite(); dog1.bark(); dog1.walk(); dog1.run();
+		 * 
+		 * cat1.scratch(); cat1.bark(); cat1.walk(); cat1.run();
+		 */
+
+		try {
+			ate.in(dog1);
+			ate.in(cat1);
+
+		} catch (AnimalTypeException e) {
+		} finally {
+			ate.finish();
+		}
+
+		try {
+			mae.in(dog1);
+			mae.in(dog3);
+		} catch (MaximumAgeException e) {
+
+		} finally {
+			mae.finish();
+		}
+		try {
+			int num= Integer.parseInt(dog4.getName());
+			System.out.println(num);
+		}catch(NumberFormatException e) {
+			System.out.println("string -> int 강제 형변환");
+		}
+		/*
+		 * ani_caf.in(dog1); ani_caf.in(dog2); ani_caf.in(dog3); ani_caf.in(cat1);
+		 * ani_caf.out(dog1); ani_caf.out(dog1);
+		 * 
+		 * ani_caf.finish();
+		 */
+
+	}
+}
+
+
+
+package exception.animal;
+
+import set.animal.Animal;
+import set.animal.list.animal.*;
+
+import java.util.*;
+
+public class AnimalTypeException extends Exception {
+
+	HashMap<String, Animal> anicafe_map = new HashMap<String, Animal>();
+
+	public void in(Animal e) throws AnimalTypeException {
+		if (!(e instanceof Dog)) {
+			System.out.println("\n강아지만 입장이 가능합니다.");
+		} else {
+			anicafe_map.put(e.getName(), e);
+			System.out.print(e.getName() + " 강아지가 입장하였습니다. \n현재 입장한 강아지: ");
+
+			for (String key : anicafe_map.keySet()) {
+				System.out.print(key + " ");
+			}
+
+		}
+		System.out.println("");
+	}
+
+	public void finish() { // 영업 종료
+		anicafe_map.clear();
+		System.out.println("영업을 종료합니다.\n");
+	}
+
+}
+
+/* throw new 를 사용하면 생성자를 만들어야하고 거기에 오류 메세지도 담아야하는데
+ * 같은 클래서에서 정의할 경우 엑션에서 객체 선언시 필드값 넣어줘야함
+ * 
+ * 예외 클래스 정의와 예외 발생시키는 클래스를 따로 만들어 발생시키는 클래서에서 throw new  룰 꼭 써야하는지
+ */
+
+
+package exception.animal;
+
+import java.util.HashMap;
+
+import set.animal.Animal;
+import set.animal.list.animal.Dog;
+
+public class MaximumAgeException extends Exception {
+	HashMap<String, Animal> anicafe_map = new HashMap<String, Animal>();
+
+	public void in(Animal e) throws MaximumAgeException {
+		if ((e.getAge() > 30)) {
+			System.out.println("\n30살 미만의 강아지만 입장이 가능합니다.");
+		} else {
+			anicafe_map.put(e.getName(), e);
+			System.out.print(e.getName() + " 강아지가 입장하였습니다. \n현재 입장한 강아지: ");
+
+			for (String key : anicafe_map.keySet()) {
+				System.out.print(key + " ");
+			}
+		}
+		System.out.println("");
+
+	}
+	public void finish() { // 영업 종료
+		anicafe_map.clear();
+		System.out.println("영업을 종료합니다.\n");
+	}
+}
+
+
+
+
+
