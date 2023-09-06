@@ -15,7 +15,6 @@ public class AnimalCafe {
             animal_cafe.add(e);
             System.out.print(e.getName() + " 강아지가 입장하였습니다. \n현재 입장한 강아지: ");
             for (int i = 0; i < animal_cafe.size(); i++) { // 현재 현황 출력
-                System.out.print(animal_cafe.get(i).getName() + " ");
             }
             System.out.println("\n");
         } else { // 고양이가 입장시
