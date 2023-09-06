@@ -33,7 +33,7 @@ public class AnimalCafe {
             }
             System.out.println("\n");
         } else { // // 현재 카페에 해당 강아지가 없을 경우
-            System.out.println("현재 " + (e.getName() + "는 저희 카페 안에 없습니다.\n");
+            System.out.println("현재 " + e.getName() + "는 저희 카페 안에 없습니다.\n");
         }
     }
 
