@@ -34,3 +34,10 @@ public class ExceptionThrower {
         }
     }
 }
+
+![1](https://github.com/peteryu24/petercoding-java/assets/67302252/98ef1561-6478-4d99-8675-53677a5132fa)
+
+![2](https://github.com/peteryu24/petercoding-java/assets/67302252/54aa5bca-a51a-48d3-9f20-95ee90d57d6b)
+
+
+
