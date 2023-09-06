@@ -46,3 +46,4 @@
 
 
 arraylist size 메소드 대신  int 변수 별도 선언으로 효율성 
+이름이 null로 들어올 경우 처리
