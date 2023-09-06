@@ -6,7 +6,7 @@ import java.util.*;
 import set.animal.*;
 import set.animal.list.animal.*;
 
-public class Animal_Cafe {
+public class AnimalCafe {
 
     ArrayList<Animal> animal_cafe = new ArrayList<>();
 
