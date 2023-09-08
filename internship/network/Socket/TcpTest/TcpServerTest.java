@@ -1,11 +1,21 @@
 package gmx.server;
 
-import java.net.*;
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-public class TcpServerTest {
+public class TcpServerTest { // 서버가 먼저 실행되어 클라이언트의 연결 요청을 기다림
 
 	public static void main(String args[]) {
+		/*
+		 * 서버 소켓을 사용하여 서버의 특정 포트에서 클라이언트의 연결요청을 처리할 준비 
+		 * 클라리언트의 연결 요청을 받으면 새로운 소켓을 생성하여 클라이언트의 소켓과 연결되도록 한다
+		 * 연결이 성공하면 서버소켓과 상관없이 1:1 통신을 한다
+		 */
 		ServerSocket ss = null;
 		Socket s;
 		OutputStream os; // 소켓에 대한 출력 스트림 반환 (데이터를 출력할 때 - 최상위 클래스)
@@ -20,21 +30,24 @@ public class TcpServerTest {
 		while (true) {
 			try {
 				System.out.println("클라이언트 대기중 ....");
-				s = ss.accept(); // 새끼 socket 넘겨줌 (socket에서 serversocket으로 넘어와서 client 접속 유무 확인 후 빠르게 실행)
+				/*
+				 * 서버소켓이 클라이언트의 연결요청을 처리할 수 있도록 대기 상태로 만든다 
+				 */
+				s = ss.accept(); 
 				System.out.println("클라이언트 접송 성공!");
-				os = s.getOutputStream();
+				os = s.getOutputStream(); // 쓰기
 				dos = new DataOutputStream(os);
-				dos.writeUTF("Welcom to connect to TCP Server!(server -> ent)");
-				is = s.getInputStream(); // 소켓에 대한 입력 스트림 반환
+				dos.writeUTF("Welcome to connect to TCP Server!(server -> ent)");
+				is = s.getInputStream(); // 소켓에 대한 입력 스트림 반환 (읽기)
 				dis = new DataInputStream(is);
 				String str = new String(dis.readUTF());
-				System.out.println(str); // 27번 라인 다음 출력
+				System.out.println(str); // "<전송 시작>" + sendString + "<전송 마침>"
 				is.close(); // 소켓 객체를 닫음
 				dis.close();
 				os.close();
 				dos.close();
 				s.close();
-				//ss.close();
+				// ss.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
