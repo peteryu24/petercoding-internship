@@ -20,7 +20,7 @@ public class TcpClientTest {
 			String sendString = "I love JEJUDO!(client -> server)";
 			s = new Socket("localhost", 5432); // 접속할 서버의 ip주소와 포트 정보로 소켓을 생성하여 서버에 연결 요청 (localhost = 127.0.0.1)
 			is = s.getInputStream();
-			dis = new DataInputStream(is);
+			dis = new DataInputStream(is); // 데이터 가져오기 ("Welcome to connect to TCP Server!(server -> ent)")
 			String str = new String(dis.readUTF()); // 문자열을 읽음(stream을 이용할 때 사용)
 			System.out.println(str); // "Welcome to connect to TCP Server!(server -> ent)"
 			os = s.getOutputStream();
