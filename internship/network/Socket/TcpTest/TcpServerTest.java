@@ -52,7 +52,7 @@ public class TcpServerTest { // 서버가 먼저 실행되어 클라이언트의
 				dis.close();
 				os.close();
 				dos.close();
-				s.close();
+				s.close();  // inputstream 과 outputstream이 close()되면 소켓도 함께 close()되는데 굳이 이유 
 				// ss.close();
 			} catch (IOException e) {
 				e.printStackTrace();
