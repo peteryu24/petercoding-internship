@@ -1,7 +1,12 @@
 package gmx.server;
 
-import java.net.*;
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ConnectException;
+import java.net.Socket;
 
 public class TcpClientTest {
 
@@ -13,11 +18,11 @@ public class TcpClientTest {
 			OutputStream os;
 			DataOutputStream dos;
 			String sendString = "I love JEJUDO!(client -> server)";
-			s = new Socket("127.0.0.1", 5432);
+			s = new Socket("localhost", 5432); // 접속할 서버의 ip주소와 포트 정보로 소켓을 생성하여 서버에 연결 요청 (localhost = 127.0.0.1)
 			is = s.getInputStream();
 			dis = new DataInputStream(is);
-			String str = new String(dis.readUTF()); // 문자열을 읽음
-			System.out.println(str); // 23번 라인 다음 출력
+			String str = new String(dis.readUTF()); // 문자열을 읽음(stream을 이용할 때 사용)
+			System.out.println(str); // "Welcome to connect to TCP Server!(server -> ent)"
 			os = s.getOutputStream();
 			dos = new DataOutputStream(os);
 			dos.writeUTF("<전송 시작>" + sendString + "<전송 마침>");
