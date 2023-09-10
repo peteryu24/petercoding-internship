@@ -22,10 +22,9 @@ public class MultiChatClient {
 			connectServer();
 			setReceiverSender();
 		} catch (IOException e) { // 연결 실패시
-			System.out.print("서버에 연결할 수 없습니다. \n재시작을 원하면 1 종료시 6: ");
+			System.out.print("서버에 연결할 수 없습니다. \n재시작을 원하면 1 종료시 4: ");
 			endCheck(); // 1 입력시 start 재귀호출
 		}
-		// setReceiverSender(); // 여기에 넣어도 되나?
 	}
 
 	void connectServer() throws IOException {
@@ -51,7 +50,7 @@ public class MultiChatClient {
 			try {
 				input = new DataInputStream(socket.getInputStream()); // 데이터 가져오기
 			} catch (IOException e) { // DataInputStream 오류
-				System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 2 종료 희망시 6: ");
+				System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 2 종료 희망시 4: ");
 				endCheck(); // 2 입력시 ClientReceiver 재귀호출
 			}
 		}
@@ -62,7 +61,7 @@ public class MultiChatClient {
 				try {
 					System.out.println(input.readUTF()); // 서버로부터 메세지 읽고 출력
 				} catch (IOException e) { // 메세지 수신 과정 오류
-					System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 2 종료 희망시 6: ");
+					System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 2 종료 희망시 4: ");
 					endCheck();
 				}
 			}
@@ -79,7 +78,7 @@ public class MultiChatClient {
 			try {
 				setDataOutputStream();
 			} catch (Exception e) { // DataOutputStream 오류
-				System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 3 종료 희망시 6: ");
+				System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 3 종료 희망시 4: ");
 				endCheck();
 			}
 		}
@@ -107,8 +106,9 @@ public class MultiChatClient {
 		void sendMessage(String msg) throws IOException {
 			Scanner sc = new Scanner(System.in);
 			msg = sc.nextLine(); // 메세지 입력
-			if (msg.equals("exit")) // exit을 입력하면 클라이언트 종료
-				System.exit(0);
+			if (msg.equals("exit")) { // exit을 입력하면 클라이언트 종료
+				System.exit(0); // 프로그램 정상 종료
+			}
 
 			output.writeUTF("[" + name + "]" + msg); // 이름과 함께 메세지 출력
 		}
@@ -124,7 +124,11 @@ public class MultiChatClient {
 			System.out.println("재시도......");
 			ClientReceiver clientReceiver = new ClientReceiver(socket);
 			clientReceiver.start();
-		} else if (i == 6) {
+		} else if (i == 3) {
+			System.out.println("재시도......");
+			ClientSender clientSender = new ClientSender(socket);
+			clientSender.start();
+		} else if (i == 4) {
 			System.out.println("포로그램을 종료합니다.");
 			System.exit(1); // 포로그램 비정상종료
 		} else {
