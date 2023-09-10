@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class MultiChatServer {
-	private HashMap<String, DataOutputStream> clients;
+	private HashMap<String, DataOutputStream> clients; // <클라이언트 이름, 출력 스트림>
 	private ServerSocket serverSocket;
 
 	public static void main(String[] args) {
@@ -20,59 +20,65 @@ public class MultiChatServer {
 	public MultiChatServer() {
 		clients = new HashMap<String, DataOutputStream>();
 		// 여러 스레드에서 접근할 것이므로 동기화
-		Collections.synchronizedMap(clients);
+		Collections.synchronizedMap(clients); // 여러 스레드에서 접근하기 때문에
 	}
 
 	public void start() {
 		try {
 			Socket socket;
 			// 리스너 소켓 생성
-			serverSocket = new ServerSocket(7777);
+			serverSocket = new ServerSocket(7777); // 루프백 주소와 포트 7777
 			System.out.println("서버가 시작되었습니다.");
 			// 클라이언트와 연결되면
-			while (true) {
-				// 통신 소켓을 생성하고 스레드 생성(소켓은 1:1로만 연결된다)
-				socket = serverSocket.accept();
-				ServerReceiver receiver = new ServerReceiver(socket);
-				receiver.start();
+			while (true) { // 통신이 종료되기 전까지 연결
+				// 서버 소켓이 클라이언트의 연결 요청을 처리할 수 있도록 대기 상태로 만든다
+				socket = serverSocket.accept(); // 연결이 수립되면 소켓 생성(receiver)
+				ServerReceiver receiver = new ServerReceiver(socket); // 소켓으로 스트림 통신 연로 개통
+				receiver.start(); // run 메소드
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("서버 소켓 생성 중 예외 발생");
 		}
 	}
 
-	class ServerReceiver extends Thread {
+	class ServerReceiver extends Thread { // client와 통신
 		Socket socket;
 		DataInputStream input;
 		DataOutputStream output;
 
-		public ServerReceiver(Socket socket) {
+		public ServerReceiver(Socket socket) { // 연결된 소켓이 인자
 			this.socket = socket;
-			try {
-				input = new DataInputStream(socket.getInputStream());
-				output = new DataOutputStream(socket.getOutputStream());
+			try { // 통신할 스트림 생성
+				input = new DataInputStream(socket.getInputStream()); // 읽기
+				output = new DataOutputStream(socket.getOutputStream()); // 쓰기
 			} catch (IOException e) {
+				System.out.println("client 소켓 생성 중 에러 발생.");
 			}
 		}
 
 		@Override
-		public void run() {
+		public void run() { // 쓰레드를 상속받은 start메소드에서 start()로 실행
 			String name = "";
 			try {
 				// 클라이언트가 서버에 접속하면 대화방에 알린다. name = input.readUTF();
-				sendToAll(
-						"#" + name + "[" + socket.getInetAddress() + ":" + socket.getPort() + "]" + "님이 대화방에 접속하였습니다.");
-				clients.put(name, output);
-				System.out.println(
-						name + "[" + socket.getInetAddress() + ":" + socket.getPort() + "]" + "님이 대화방에 접속하였습니다.");
+				sendToAll("#" + name + "[ip:" + socket.getInetAddress() + " port:" + socket.getPort() + "]"
+						+ "님이 대화방에 접속하였습니다.");
+				clients.put(name, output); // 해시맵에 추가
+				System.out.println(name + "[ip:" + socket.getInetAddress() + " port:" + socket.getPort() + "]"
+						+ "님이 대화방에 접속하였습니다.");
 				System.out.println("현재 " + clients.size() + "명이 대화방에 접속 중입니다."); // 메세지 전송
 				while (input != null) {
+					/*
+					 * DataInputStream 클래스에서 제공하는 메소드 
+					 * 바이트스트림에서 UTF-8형식의 문자열을 String 형식으로 변환
+					 */
 					sendToAll(input.readUTF());
 				}
 			} catch (IOException e) {
+				System.out.println("클라이언트와 연결이 끊김.");
 			} finally {
 				// 접속이 종료되면
-				clients.remove(name);
+				clients.remove(name); // 소켓을 닫고 맵에서 제거
 				sendToAll(
 						"#" + name + "[" + socket.getInetAddress() + ":" + socket.getPort() + "]" + "님이 대화방에서 나갔습니다.");
 				System.out.println(
@@ -81,12 +87,12 @@ public class MultiChatServer {
 			}
 		}
 
-		public void sendToAll(String message) {
-			Iterator<String> it = clients.keySet().iterator();
-			while (it.hasNext()) {
+		public void sendToAll(String message) { // 모든 client에게 알림
+			Iterator<String> it = clients.keySet().iterator(); // hashmap 반복할 때 사용가능한 객체
+			while (it.hasNext()) { // 다음 값이 있을 때까지
 				try {
 					DataOutputStream dos = clients.get(it.next());
-					dos.writeUTF(message);
+					dos.writeUTF(message); // 입장했다는 메세지
 				} catch (Exception e) {
 				}
 			}
