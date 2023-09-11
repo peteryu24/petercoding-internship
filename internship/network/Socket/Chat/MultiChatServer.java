@@ -76,13 +76,13 @@ public class MultiChatServer {
 				sendToAll("#" + name + "[ip:" + socket.getInetAddress() + " port:" + socket.getPort() + "]"
 						+ "님이 대화방에 접속하였습니다.");
 				*/
-				sendToAll(name + " 님이 대화방에 접속하였습니다.");
+				sendToAll(name + "님이 대화방에 접속하였습니다."); // 서버에서 출력
 				clients.put(name, output); // 해시맵에 추가
 				/*
 				System.out.println(name + "[ip:" + socket.getInetAddress() + " port:" + socket.getPort() + "]"
 						+ "님이 대화방에 접속하였습니다.");
 				*/
-				System.out.println(name + " 님이 대화방에 접속하였습니다.");
+				System.out.println(name + "님이 대화방에 접속하였습니다.qqq");
 				System.out.println("현재 " + clients.size() + "명이 대화방에 접속 중입니다."); // 메세지 전송
 				while (input != null) { // 클라이언트로부터 지속적으로 메세지 수신 (input - DataInputStream의 객체)
 					/*
@@ -91,7 +91,7 @@ public class MultiChatServer {
 					 */
 					sendToAll(input.readUTF());
 				}
-			} catch (Exception e) {
+			} catch (IOException e) {
 				System.out.println("클라이언트와의 연결이 끊김.");
 			} finally {
 
@@ -103,15 +103,16 @@ public class MultiChatServer {
 				System.out.println(
 						name + "[" + socket.getInetAddress() + ":" + socket.getPort() + "]" + "님이 대화방에서 나갔습니다.");
 				*/
-				sendToAll(name + " 님이 대화방에서 나갔습니다.");
-				System.out.println(name + " 님이 대화방에서 나갔습니다.");
+				sendToAll(name + "님이 대화방에서 나갔습니다.");
+				System.out.println(name + "님이 대화방에서 나갔습니다.");
 				System.out.println("현재 " + clients.size() + "명이 대화방에 접속 중입니다.");
 				try { // 스트림 통신과 소켓 전부 close
 					if (input != null) {
 						input.close();
 					}
 					if (output != null) {
-						output.close();
+						output.close(); // output.flush();
+
 					}
 					if (socket != null && !socket.isClosed()) {
 						socket.close();
@@ -124,10 +125,15 @@ public class MultiChatServer {
 		}
 
 		public void sendToAll(String message) { // 모든 client에게 알림
-			Iterator<String> it = clients.keySet().iterator(); // 해시맵 반복할 때 사용가능한 객체
-			while (it.hasNext()) { // 다음 값이 있을 때까지
+			/*
+			 * 처음부터 끝까지 단방향 반복만 가능
+			 * 값을 변경하거나 추가 불가능
+			 * 대량의 데이터를 처리할 때 속도가 느리다
+			 */
+			Iterator<String> itr = clients.keySet().iterator(); // 컬렉션 프레임워크에서(List, Set, Map, Queue)반복할 때 사용가능한 객체
+			while (itr.hasNext()) { // 다음 값이 있을 때까지
 				try {
-					DataOutputStream dos = clients.get(it.next());
+					DataOutputStream dos = clients.get(itr.next()); // next()는 다음 값을 가져오는 메소드
 					dos.writeUTF(message); // 입장했다는 메세지
 				} catch (Exception e) {
 				}
