@@ -48,9 +48,8 @@ public class TcpClientTest {
 			throw new RuntimeException("데이터 송수신 과정 에러 발생");
 		} finally {
 			try {
-				if (os != null)
-					os.flush();
-					os.close();
+				if (os != null)			
+					os.close(); // os.flush();
 				if (is != null)
 					is.close();
 			} catch (IOException e) {
