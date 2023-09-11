@@ -61,8 +61,7 @@ public class TcpServerTest {
 		} finally {
 			try {
 				if (os != null)
-					os.flush();
-					os.close();
+					os.close(); // os.flush();
 				if (is != null)
 					is.close();
 			} catch (IOException e) {
