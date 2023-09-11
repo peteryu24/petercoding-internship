@@ -22,7 +22,7 @@ public class MultiChatClient {
 			connectServer();
 			setReceiverSender();
 		} catch (IOException e) { // 연결 실패시
-			System.out.print("서버에 연결할 수 없습니다. \n재시작을 원하면 1 종료시 4: ");
+			System.out.print("서버에 연결할 수 없습니다. \n재시작을 원하면 1 종료시 6: ");
 			endCheck(); // 1 입력시 start 재귀호출
 		}
 	}
@@ -78,7 +78,7 @@ public class MultiChatClient {
 			try {
 				setDataOutputStream();
 			} catch (Exception e) { // DataOutputStream 오류
-				System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 3 종료 희망시 4: ");
+				System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 3 종료 희망시 5: ");
 				endCheck(); // 2 입력시 ClientSender 재귀호출
 			}
 		}
@@ -97,7 +97,7 @@ public class MultiChatClient {
 				try {
 					sendMessage(msg);
 				} catch (IOException e) { // 메세지 전송 과정 오류
-					System.out.println("메세지 수신 과정 오류. \n재시작을 원하면 3 종료 희망시 6: ");
+					System.out.println("메세지 수신 과정 오류. \n재시작을 원하면 3 종료 희망시 5: ");
 					endCheck(); // 2 입력시 ClientSender 재귀호출
 				}
 			}
@@ -107,10 +107,47 @@ public class MultiChatClient {
 			Scanner sc = new Scanner(System.in);
 			msg = sc.nextLine(); // 메세지 입력
 			if (msg.equals("exit")) { // exit을 입력하면 클라이언트 종료
+				try {
+					if (output != null) {
+						output.close();
+					}
+					if (socket != null && !socket.isClosed()) {
+						socket.close();
+					}
+				} catch (IOException e) {
+				}
 				System.exit(0); // 프로그램 정상 종료
 			}
 
 			output.writeUTF("[" + name + "]" + msg); // 이름과 함께 메세지 출력
+		}
+
+	}
+
+	void inputStreamClose() {
+		ClientReceiver clientReceiver = new ClientReceiver(socket);
+		try {
+			if (clientReceiver.input != null) {
+				clientReceiver.input.close();
+			}
+			if (socket != null && !socket.isClosed()) {
+				socket.close();
+			}
+		} catch (IOException e) {
+		}
+
+	}
+
+	void outputStreamClose() {
+		ClientSender clientSender = new ClientSender(socket);
+		try {
+			if (clientSender.output != null) {
+				clientSender.output.close();
+			}
+			if (socket != null && !socket.isClosed()) {
+				socket.close();
+			}
+		} catch (IOException e) {
 		}
 
 	}
@@ -129,6 +166,17 @@ public class MultiChatClient {
 			ClientSender clientSender = new ClientSender(socket);
 			clientSender.start();
 		} else if (i == 4) {
+			System.out.println("포로그램을 종료합니다.");
+			inputStreamClose();
+			// 여기에 스트림 종료 메소드들 선언?
+			System.exit(1); // 포로그램 비정상종료
+
+		} else if (i == 5) {
+			System.out.println("포로그램을 종료합니다.");
+			outputStreamClose();
+			// 여기에 스트림 종료 메소드들 선언?
+			System.exit(1); // 포로그램 비정상종료
+		} else if (i == 6) {
 			System.out.println("포로그램을 종료합니다.");
 			System.exit(1); // 포로그램 비정상종료
 		} else {
