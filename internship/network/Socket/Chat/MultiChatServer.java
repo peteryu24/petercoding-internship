@@ -20,7 +20,17 @@ public class MultiChatServer {
 	public MultiChatServer() {
 		clients = new HashMap<String, DataOutputStream>();
 		// 여러 스레드에서 접근할 것이므로 동기화
-		Collections.synchronizedMap(clients); // 여러 스레드에서 접근하기 때문에
+		Collections.synchronizedMap(clients); // 여러 스레드에서 접근하기 때문에 해시맵 동기화
+		/*
+		 * ConcurrentHashMap()
+		 * key와 value에 null을 허용하지 않음(TreeMap에 반환된 value값은 null 허용)
+		 * 읽기 작업에는 여러 쓰레드가 동시 접근 가능, 쓰기 작업에서는 특정 버킷에 대한 lock
+		 * SynchronizedMap()은 데이터 일관성이 중요할 때 사용해야 하며 
+		 * ConcurrentHashMap 읽기 작업보다 쓰기 작업에서
+		 * 맵에 훨씬 더 많은 업데이트 작업이 있는 성능이 중요한 시스템에서 사용
+		 * 
+		 * synchronizedMap vs ConcurrentHashMap 사용 적절 시기?
+		 */
 	}
 
 	public void start() {
@@ -84,11 +94,12 @@ public class MultiChatServer {
 				System.out.println(
 						name + "[" + socket.getInetAddress() + ":" + socket.getPort() + "]" + "님이 대화방에서 나갔습니다.");
 				System.out.println("현재 " + clients.size() + "명이 대화방에 접속 중입니다.");
+				//System.exit(0); // 채팅 프로그램 종료
 			}
 		}
 
 		public void sendToAll(String message) { // 모든 client에게 알림
-			Iterator<String> it = clients.keySet().iterator(); // hashmap 반복할 때 사용가능한 객체
+			Iterator<String> it = clients.keySet().iterator(); // 해시맵 반복할 때 사용가능한 객체
 			while (it.hasNext()) { // 다음 값이 있을 때까지
 				try {
 					DataOutputStream dos = clients.get(it.next());
