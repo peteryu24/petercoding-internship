@@ -109,7 +109,8 @@ public class MultiChatClient {
 			if (msg.equals("exit")) { // exit을 입력하면 클라이언트 종료
 				try {
 					if (output != null) {
-						output.close();
+						output.close(); // output.flush();
+						// 메모리 확보를 위해 항상 IO들은 close() 해주기
 					}
 					if (socket != null && !socket.isClosed()) {
 						socket.close();
@@ -142,7 +143,7 @@ public class MultiChatClient {
 		ClientSender clientSender = new ClientSender(socket);
 		try {
 			if (clientSender.output != null) {
-				clientSender.output.close();
+				clientSender.output.close(); // clientSender.output.flush();
 			}
 			if (socket != null && !socket.isClosed()) {
 				socket.close();
@@ -170,7 +171,6 @@ public class MultiChatClient {
 			inputStreamClose();
 			// 여기에 스트림 종료 메소드들 선언?
 			System.exit(1); // 포로그램 비정상종료
-
 		} else if (i == 5) {
 			System.out.println("포로그램을 종료합니다.");
 			outputStreamClose();
