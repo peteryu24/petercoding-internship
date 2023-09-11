@@ -1,4 +1,4 @@
-package gmx.test;
+package gmx.tcptest;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -27,7 +27,7 @@ public class TcpServerTest {
 		try {
 			ServerSocket serverSocket = new ServerSocket(port); // 5432 포트로 서버 소켓 생성
 			System.out.println("서버가 시작되었습니다.");
-			return serverSocket; // 근데 왜 void 메소드는 에러?
+			return serverSocket;
 		} catch (IOException e) { // 서버 소켓 생성 에러
 			e.printStackTrace();
 			throw new RuntimeException("서버 소켓 생성 중 오류 발생");
@@ -47,16 +47,26 @@ public class TcpServerTest {
 	}
 
 	private static void withClient(Socket clientSocket) {
-
+		OutputStream os = null;
+		InputStream is = null;
 		try {
-			OutputStream os = clientSocket.getOutputStream();
+			os = clientSocket.getOutputStream();
+			is = clientSocket.getInputStream();
 			DataOutputStream dos = new DataOutputStream(os);
-			InputStream is = clientSocket.getInputStream();
 			DataInputStream dis = new DataInputStream(is);
 			dos.writeUTF("Welcome to connect to TCP Server!(server -> client)"); // 메세지 전송
 			String fromClient = dis.readUTF(); // 클라이언트로부터 메시지 수신
 			System.out.println(fromClient);
 		} catch (IOException e) {
+		} finally {
+			try {
+				if (os != null)
+					os.close();
+				if (is != null)
+					is.close();
+			} catch (IOException e) {
+
+			}
 		}
 	}
 
@@ -64,7 +74,7 @@ public class TcpServerTest {
 		if (socket != null && !socket.isClosed()) { // 소켓이 존재하고 닫혀있지 않으면
 			try {
 				socket.close();
-				System.out.println("소켓이 닫혔습니다.");
+				System.out.println("성공적으로 소켓이 닫혔습니다.");
 			} catch (IOException e) {
 			}
 		}
