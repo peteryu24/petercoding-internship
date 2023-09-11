@@ -62,7 +62,7 @@ public class MultiChatClient {
 					System.out.println(input.readUTF()); // 서버로부터 메세지 읽고 출력
 				} catch (IOException e) { // 메세지 수신 과정 오류
 					System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 2 종료 희망시 4: ");
-					endCheck();
+					endCheck(); // 2 입력시 ClientReceiver 재귀호출
 				}
 			}
 		}
@@ -79,7 +79,7 @@ public class MultiChatClient {
 				setDataOutputStream();
 			} catch (Exception e) { // DataOutputStream 오류
 				System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 3 종료 희망시 4: ");
-				endCheck();
+				endCheck(); // 2 입력시 ClientSender 재귀호출
 			}
 		}
 
@@ -98,7 +98,7 @@ public class MultiChatClient {
 					sendMessage(msg);
 				} catch (IOException e) { // 메세지 전송 과정 오류
 					System.out.println("메세지 수신 과정 오류. \n재시작을 원하면 3 종료 희망시 6: ");
-					endCheck();
+					endCheck(); // 2 입력시 ClientSender 재귀호출
 				}
 			}
 		}
