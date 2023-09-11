@@ -70,31 +70,56 @@ public class MultiChatServer {
 		public void run() { // 쓰레드를 상속받은 start메소드에서 start()로 실행
 			String name = "";
 			try {
-				// 클라이언트가 서버에 접속하면 대화방에 알린다. name = input.readUTF();
+				// 클라이언트가 서버에 접속하면 대화방에 알린다.
+				name = input.readUTF();
+				/*
 				sendToAll("#" + name + "[ip:" + socket.getInetAddress() + " port:" + socket.getPort() + "]"
 						+ "님이 대화방에 접속하였습니다.");
+				*/
+				sendToAll(name + " 님이 대화방에 접속하였습니다.");
 				clients.put(name, output); // 해시맵에 추가
+				/*
 				System.out.println(name + "[ip:" + socket.getInetAddress() + " port:" + socket.getPort() + "]"
 						+ "님이 대화방에 접속하였습니다.");
+				*/
+				System.out.println(name + " 님이 대화방에 접속하였습니다.");
 				System.out.println("현재 " + clients.size() + "명이 대화방에 접속 중입니다."); // 메세지 전송
-				while (input != null) {
+				while (input != null) { // 클라이언트로부터 지속적으로 메세지 수신 (input - DataInputStream의 객체)
 					/*
 					 * DataInputStream 클래스에서 제공하는 메소드 
 					 * 바이트스트림에서 UTF-8형식의 문자열을 String 형식으로 변환
 					 */
 					sendToAll(input.readUTF());
 				}
-			} catch (IOException e) {
-				System.out.println("클라이언트와 연결이 끊김.");
+			} catch (Exception e) {
+				System.out.println("클라이언트와의 연결이 끊김.");
 			} finally {
+
 				// 접속이 종료되면
 				clients.remove(name); // 소켓을 닫고 맵에서 제거
+				/*
 				sendToAll(
 						"#" + name + "[" + socket.getInetAddress() + ":" + socket.getPort() + "]" + "님이 대화방에서 나갔습니다.");
 				System.out.println(
 						name + "[" + socket.getInetAddress() + ":" + socket.getPort() + "]" + "님이 대화방에서 나갔습니다.");
+				*/
+				sendToAll(name + " 님이 대화방에서 나갔습니다.");
+				System.out.println(name + " 님이 대화방에서 나갔습니다.");
 				System.out.println("현재 " + clients.size() + "명이 대화방에 접속 중입니다.");
-				//System.exit(0); // 채팅 프로그램 종료
+				try { // 스트림 통신과 소켓 전부 close
+					if (input != null) {
+						input.close();
+					}
+					if (output != null) {
+						output.close();
+					}
+					if (socket != null && !socket.isClosed()) {
+						socket.close();
+					}
+				} catch (IOException e) {
+
+				}
+				// System.exit(0); // 채팅 프로그램 종료
 			}
 		}
 
