@@ -49,6 +49,7 @@ public class TcpClientTest {
 		} finally {
 			try {
 				if (os != null)
+					os.flush();
 					os.close();
 				if (is != null)
 					is.close();
