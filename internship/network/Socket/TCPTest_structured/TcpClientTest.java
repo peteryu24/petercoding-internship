@@ -1,4 +1,4 @@
-package gmx.test;
+package gmx.tcptest;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -17,7 +17,6 @@ public class TcpClientTest {
 			// 서버에 연결
 			socket = new Socket("localhost", 5432);
 			System.out.println("서버에 연결되었습니다.");
-
 			// 서버와 통신 처리
 			withServer(socket);
 		} catch (ConnectException connExc) { // 연결 실패시
@@ -29,13 +28,15 @@ public class TcpClientTest {
 	}
 
 	// 서버와의 통신 처리 메서드
-	private static void withServer(Socket socket) throws IOException {
-
+	private static void withServer(Socket socket) {
+		InputStream is = null;
+		OutputStream os = null;
 		try {
-			InputStream is = socket.getInputStream();
+			is = socket.getInputStream();
+			os = socket.getOutputStream();
 			DataInputStream dis = new DataInputStream(is);
-			OutputStream os = socket.getOutputStream();
 			DataOutputStream dos = new DataOutputStream(os);
+
 			// 서버로부터 인사 메시지 수신
 			String serverMessage = dis.readUTF(); // server에서 메세지 수신
 			System.out.println(serverMessage);
@@ -44,7 +45,16 @@ public class TcpClientTest {
 			String sendString = "I love JEJUDO! (client -> server)";
 			dos.writeUTF("<전송 시작>" + sendString + "<전송 마침>"); // server에 메세지 전송
 		} catch (IOException e) {
+			throw new RuntimeException("데이터 송수신 과정 에러 발생");
+		} finally {
+			try {
+				if (os != null)
+					os.close();
+				if (is != null)
+					is.close();
+			} catch (IOException e) {
 
+			}
 		}
 	}
 
@@ -53,7 +63,6 @@ public class TcpClientTest {
 		if (socket != null && !socket.isClosed()) {
 			try {
 				socket.close();
-				System.out.print("성공적으로 ");
 			} catch (IOException e) {
 			}
 		}
