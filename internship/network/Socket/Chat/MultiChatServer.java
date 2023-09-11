@@ -82,7 +82,7 @@ public class MultiChatServer {
 				System.out.println(name + "[ip:" + socket.getInetAddress() + " port:" + socket.getPort() + "]"
 						+ "님이 대화방에 접속하였습니다.");
 				*/
-				System.out.println(name + "님이 대화방에 접속하였습니다.qqq");
+				System.out.println(name + "님이 대화방에 접속하였습니다.");
 				System.out.println("현재 " + clients.size() + "명이 대화방에 접속 중입니다."); // 메세지 전송
 				while (input != null) { // 클라이언트로부터 지속적으로 메세지 수신 (input - DataInputStream의 객체)
 					/*
@@ -91,7 +91,7 @@ public class MultiChatServer {
 					 */
 					sendToAll(input.readUTF());
 				}
-			} catch (IOException e) {
+			} catch (IOException e) { // name = input.readUTF(); 에 대한 예외 발생
 				System.out.println("클라이언트와의 연결이 끊김.");
 			} finally {
 
