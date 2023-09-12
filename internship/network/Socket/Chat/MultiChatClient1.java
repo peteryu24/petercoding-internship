@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class MultiChatClient {
+public class MultiChatClient1 {
 	private String name;
 	private Socket socket;
 	private String serverIp = "127.0.0.1"; // 루프백 주소
@@ -15,7 +15,7 @@ public class MultiChatClient {
 	Scanner scan = new Scanner(System.in);
 
 	public static void main(String[] args) {
-		new MultiChatClient().start();
+		new MultiChatClient1().start();
 	}
 
 	public void start() {
@@ -164,10 +164,8 @@ public class MultiChatClient {
 			} finally {
 				socket = null;
 			}
-			System.exit(1); // 포로그램 비정상종료
-		} else
-
-		{
+			System.exit(0); // 포로그램 정상종료
+		} else {
 			System.out.println("잘못된 숫자 입력입니다. \n 프로그램을 강제 종료합니다.");
 			System.exit(1); // 포로그램 비정상종료
 		}
