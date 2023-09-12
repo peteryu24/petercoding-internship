@@ -134,22 +134,40 @@ public class MultiChatClient {
 			start();
 		} else if (i == 2) {
 			System.out.println("포로그램을 종료합니다.");
+			// output close
 			try {
 				if (output != null) {
 					output.close();
 				}
+			} catch (IOException e) {
+				System.out.println("output close 오류");
+			} finally {
+				output = null;
+			}
+			// input close
+			try {
 				if (input != null) {
 					input.close();
 				}
+			} catch (IOException e) {
+				System.out.println("input close 오류");
+			} finally {
+				input = null;
+			}
+			// socket close
+			try {
 				if (socket != null && !socket.isClosed()) {
 					socket.close();
 				}
 			} catch (IOException e) {
-				// 예외 처리
+				System.out.println("socket close 오류");
+			} finally {
+				socket = null;
 			}
-			// 여기에 스트림 종료 메소드들 선언?
 			System.exit(1); // 포로그램 비정상종료
-		} else {
+		} else
+
+		{
 			System.out.println("잘못된 숫자 입력입니다. \n 프로그램을 강제 종료합니다.");
 			System.exit(1); // 포로그램 비정상종료
 		}
