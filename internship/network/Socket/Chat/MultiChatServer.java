@@ -41,10 +41,14 @@ public class MultiChatServer {
 			System.out.println("서버가 시작되었습니다.");
 			// 클라이언트와 연결되면
 			while (true) { // 통신이 종료되기 전까지 연결
-				// 서버 소켓이 클라이언트의 연결 요청을 처리할 수 있도록 대기 상태로 만든다
-				socket = serverSocket.accept(); // 연결이 수립되면 소켓 생성(receiver)
-				ServerReceiver receiver = new ServerReceiver(socket); // 소켓으로 스트림 통신 연로 개통
-				receiver.start(); // run 메소드
+				try {
+	                // 서버 소켓이 클라이언트의 연결 요청을 처리할 수 있도록 대기 상태로 만든다
+	                socket = serverSocket.accept(); // 연결이 수립되면 소켓 생성(receiver)
+	                ServerReceiver receiver = new ServerReceiver(socket); // 소켓으로 스트림 통신
+	                receiver.start(); // run 메소드 실행
+	            } catch (IOException e) {
+	                System.err.println("클라이언트 연결 요청 처리 중 예외 발생: " + e.getMessage());
+	            }		
 			}
 		} catch (IOException e) {
 			System.out.println("서버 소켓 생성 중 예외 발생");
