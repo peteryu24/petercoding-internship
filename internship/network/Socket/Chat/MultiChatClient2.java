@@ -15,7 +15,7 @@ public class MultiChatClient2 {
 	Scanner scan = new Scanner(System.in);
 
 	public static void main(String[] args) {
-		new MultiChatClient().start();
+		new MultiChatClient1().start();
 	}
 
 	public void start() {
@@ -107,6 +107,10 @@ public class MultiChatClient2 {
 			}
 		} catch (IOException e) {
 			// 예외 처리
+		}finally {
+			output = null;
+			input = null;
+			socket = null;
 		}
 	}
 }
