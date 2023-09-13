@@ -20,4 +20,29 @@ static을 인스턴스로 또는 그 반대로 설정 불가
 
 업캐스팅 다운캐스팅
 
+추상클래스를 상속한 자식클래스에서 추상클래스의 객체선언
+// 추상 클래스 정의
+abstract class Animal {
+    abstract void makeSound();
+}
+
+// 추상 클래스를 상속한 자식 클래스
+class Dog extends Animal {
+    @Override
+    void makeSound() {
+        System.out.println("멍멍!");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 추상 클래스 객체를 선언하고 자식 클래스의 인스턴스를 할당
+        Animal myDog = new Dog();
+        
+        // 추상 메서드 호출
+        myDog.makeSound(); // 출력: 멍멍!
+    }
+}
+
+
 
