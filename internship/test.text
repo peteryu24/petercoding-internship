@@ -22,6 +22,14 @@ static을 인스턴스로 또는 그 반대로 설정 불가
 스태틱맴버 인스턴스맴버
 싱글톤
 
+
+static 메서드는 interface 를 구현하는데 사용 될 수 없는 이유
+- 오버라이딩이 불가능하기 때문에-
+https://tecoble.techcourse.co.kr/post/2020-07-16-static-method/
+
+
+
+
 추상클래스를 상속한 자식클래스에서 추상클래스의 객체선언
 // 추상 클래스 정의
 abstract class Animal {
