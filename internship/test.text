@@ -2,6 +2,7 @@
 추상클래스도 인터페이스처럼 추상클래스가 아닌 클래스에서 상속을 받는다면 추상메소드가 있을경우 모두 구현해주어야 한다. 
 
 인터페이스는 해당 메소드의 구현을 강제 interface 
+인터페이스는 final을 붙일수 없고 인터페이스 변수들은 static이어야만 한다
 interface extends interface
 class implements interface
 
