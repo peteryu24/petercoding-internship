@@ -12,7 +12,6 @@ WHERE
 	AND t.team_id = p.team_id; -- 해당 팀의 선수들 목록
 
 
-
 --2. 각 팀별로 키가 180 이상, 몸무게 90 이하인 선수들의 카운트를 조회한다. 단. 조건으로 사용하는 부분은 반드시 문자가 아닌 숫자로 비교한다.
 SELECT 
     t.team_name
@@ -42,6 +41,7 @@ WHERE
 	AND s.stadium_id = t.stadium_id -- 수원월드컵경기장에서 결기가 예정되어 있는 팀들
 	AND t.team_id = p.team_id -- 각 팀에 소속된 선수들
 	AND p.position_name = 'DF'; -- 중에서 수비수들
+
 
 --4. 팀 이름에 'FC' 단어가 포함된 팀 이름을 조회하고 각 팀마다 'MF' 포지션을 담당하는 선수의 수를 조회한다.
 SELECT 
@@ -99,6 +99,7 @@ WHERE
 GROUP BY 
 	t.team_id
 	,t.team_name;
+
 
 -- 방법 2 (substring)
 SELECT
