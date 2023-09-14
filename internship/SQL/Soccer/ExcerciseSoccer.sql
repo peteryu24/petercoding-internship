@@ -95,6 +95,7 @@ WHERE
     t.team_id = p.team_id 
     AND p.birth_date IS NOT NULL 
     AND p.birth_date >= '1990-01-01'
+    --AND p.birth_date >= '1990'
 GROUP BY 
 	t.team_id
 	,t.team_name;
