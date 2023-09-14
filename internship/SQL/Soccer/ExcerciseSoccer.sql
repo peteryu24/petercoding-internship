@@ -64,7 +64,7 @@ UPDATE exam.player -- 생년원일에 대한 형식이 자유자재라 정렬화
 SET birth_date = (
     CASE
         WHEN birth_date IS NOT NULL 
-        THEN TO_DATE( -- NULL이 아닌 경우에만
+        THEN TO_DATE( -- NULL이 아닌 경우에만 / TO_DATE: 문자 타입을 날짜 데이터 유형으로
                 CASE
                     WHEN POSITION('-' IN birth_date) = 3 	
 			THEN -- 3번째 위치에 -가 있을 경우
