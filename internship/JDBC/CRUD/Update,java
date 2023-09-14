@@ -5,49 +5,50 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
 /**
- * UpdateNamecard 클래스는 NAMECARD 테이블의 데이터를 업데이트하는 로직을 담당합니다.
+ * Update 클래스는 exam.team 테이블의 데이터를 업데이트하는 로직을 담당합니다.
  */
 public class Update {
-    /**
-     * 메인 메소드
-     * @param args 커맨드라인 인자 (사용되지 않음)
-     */
-    public static void main(String[] args) {
-        // 필요한 변수 선언
-        Connection con = null;
-        Statement stmt = null;
+	/**
+	 * 메인 메소드
+	 * 
+	 * @param args 커맨드라인 인자 (사용되지 않음)
+	 */
+	public static void main(String[] args) {
+		// 필요한 변수 선언
+		Connection con = null;
+		Statement stmt = null;
 
-        // 업데이트를 위한 SQL 쿼리
-        String sql = "UPDATE NAMECARD " +
-                     "SET EMAIL ='gildonghong@gmail.org' " +
-                     "WHERE NO = 1";
+		// 업데이트를 위한 SQL 쿼리
+		String sql = "UPDATE exam.team " + "SET region_name ='새로운 지역', team_name='새로운 팀이름', address='새로운 주소' "
+				+ "WHERE team_id = 'K01'"; // 조건에 맞는 팀 아이디를 설정하세요
 
-        try {
-            // DBConnection 클래스를 이용하여 데이터베이스에 연결
-            con = DBConnect2.getConnection();
-            // SQL을 실행할 객체 생성
-            stmt = con.createStatement();
-            // SQL 쿼리 실행
-            stmt.executeUpdate(sql);
+		try {
+			// DBConnection 클래스를 이용하여 데이터베이스에 연결
+			con = DBConnect2.getConnection();
+			// SQL을 실행할 객체 생성
+			stmt = con.createStatement();
+			// SQL 쿼리 실행
+			stmt.executeUpdate(sql);
 
-        } catch (SQLException e) {
-            // 에러 처리
-            e.printStackTrace();
-            System.out.println(sql);
-        } finally {
-            // 리소스 해제
-            try {
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (con != null) con.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+		} catch (SQLException e) {
+			// 에러 처리
+			e.printStackTrace();
+			System.out.println(sql);
+		} finally {
+			// 리소스 해제
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
