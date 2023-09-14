@@ -62,25 +62,21 @@ GROUP BY
 -- 'MM-DD-YYYY' 형식의 날짜 값을 'YYYY-MM-DD' 형식으로 업데이트 (NULL 값은 무시)
 UPDATE exam.player -- 생년원일에 대한 형식이 자유자재라 정렬화 필요
 SET birth_date = (
-    CASE
-        WHEN birth_date IS NOT NULL 
+    CASE WHEN birth_date IS NOT NULL 
         THEN TO_DATE( -- NULL이 아닌 경우에만 / TO_DATE: 문자 타입을 날짜 데이터 유형으로
-                CASE
-                    WHEN POSITION('-' IN birth_date) = 3 
+                CASE WHEN POSITION('-' IN birth_date) = 3 
 	            --WHEN SUBSTRING(birth_date, 3, 1) = '-' 3번째 위치에 1글자가 '-' 인 경우
 			THEN -- 3번째 위치에 -가 있을 경우
 				SUBSTRING(birth_date, 7, 4) -- 년도 가져오기 
 				|| '-' || SUBSTRING(birth_date, 1, 2) -- 월 가져오기 / || 문자열 합치는 연산자
 				|| '-' || SUBSTRING(birth_date, 4, 2) -- 일 가져오기
                         -- 최종적으로 YYYY-MM-DD 형식으로 
-			ELSE -- YYYY-MM-DD 인 경우
-				birth_date
-                END, 'YYYY-MM-DD' -- To_DATE 형식 지정
-            )
-        ELSE
-            NULL -- NULL인 경우 그대로 유지
-    END
-); -- 만약 YYYY-DD-MM인 경우에는 처리 불가?
+		ELSE -- YYYY-MM-DD 인 경우
+			birth_date
+         END, 'YYYY-MM-DD') -- To_DATE 형식 지정
+         
+    ELSE NULL -- NULL인 경우 그대로 유지
+END); -- 만약 YYYY-DD-MM인 경우에는 처리 불가?
 
 -- 약간 다른 Formatting
 UPDATE exam.player
