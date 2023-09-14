@@ -6,25 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-class DBConnect2 {
-	// 데이터베이스 연결 정보
-	static final String URL = "jdbc:postgresql://127.0.0.1:5432/Sports";
-	static final String USER = "postgres";
-	static final String PASS = "0000";
-
-	// 데이터베이스 연결을 수행하는 메서드
-	public static Connection getConnection() {
-		Connection con = null; // Connection 객체를 null로 초기화
-		try {
-			Class.forName("org.postgresql.Driver"); // JDBC 드라이버 로딩
-			con = DriverManager.getConnection(URL, USER, PASS); // 데이터베이스 연결
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace(); // 예외 발생 시 스택 트레이스 출력
-		}
-		return con; // Connection 객체 반환
-	}
-}
-
 /**
  * SelectTeam 클래스는 exam.team 테이블에서 데이터를 선택(Select)하는 로직을 담당합니다.
  */
