@@ -34,6 +34,18 @@ public class Select {
                 // 각 칼럼의 값을 변수에 저장
                 String team_id = rs.getString("team_id");
                 String region_name = rs.getString("region_name");
+                String team_name = rs.getString("team_name");
+                String e_team_name = rs.getString("e_team_name");
+                String orig_yyyy = rs.getString("orig_yyyy");
+                String stadium_id = rs.getString("stadium_id");
+                String zip_code1 = rs.getString("zip_code1");
+                String zip_code2 = rs.getString("zip_code2");
+                String address = rs.getString("address");
+                String ddd = rs.getString("ddd");
+                String tel = rs.getString("tel");
+                String fax = rs.getString("fax");
+                String homepage = rs.getString("homepage");
+                String owner_name = rs.getString("owner_name");
                 
 
                 // 결과를 출력
