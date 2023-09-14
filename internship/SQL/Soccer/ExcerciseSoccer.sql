@@ -66,9 +66,9 @@ SET birth_date = (
         WHEN birth_date IS NOT NULL 
         THEN TO_DATE( -- NULL이 아닌 경우에만 / TO_DATE: 문자 타입을 날짜 데이터 유형으로
                 CASE
-                    WHEN POSITION('-' IN birth_date) = 3 	
+                    WHEN POSITION('-' IN birth_date) = 3 
+	            --WHEN SUBSTRING(birth_date, 3, 1) = '-' 3번째 위치에 1글자가 '-' 인 경우
 			THEN -- 3번째 위치에 -가 있을 경우
-                    --WHEN SUBSTRING(birth_date, 3, 1) = '-' THEN 3번째 위치에 1글자가 '-' 인 경우
 				SUBSTRING(birth_date, 7, 4) -- 년도 가져오기 
 				|| '-' || SUBSTRING(birth_date, 1, 2) -- 월 가져오기
 				|| '-' || SUBSTRING(birth_date, 4, 2) -- 일 가져오기
