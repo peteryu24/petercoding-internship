@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DeleteRecord {
+public class Delete {
     public static void main(String[] args) {
         // Connection과 Statement 객체를 null로 초기화
         Connection con = null;
