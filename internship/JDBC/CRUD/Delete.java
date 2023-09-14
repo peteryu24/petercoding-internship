@@ -5,45 +5,48 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Delete {
-    public static void main(String[] args) {
-        // Connection과 Statement 객체를 null로 초기화
-        Connection con = null;
-        Statement stmt = null;
+	public static void delete() {
+		Connection connect = null;
+		Statement state = null;
+		
+		System.out.println("\n=========================Delete=========================\n");
 
-        // 삭제할 team_id 설정 (예: "001")
-        String targetTeamId = "001";
+		// 삭제할 team_id 설정
+		String deleteWhat = "K01";
 
-        // 삭제 SQL 쿼리
-        String sql = "DELETE FROM exam.team WHERE team_id = '" + targetTeamId + "'";
+		// 삭제 SQL 쿼리
+		String sql = "DELETE FROM exam.team WHERE team_id = '" + deleteWhat + "'";
 
-        try {
-            // DBConnect 클래스를 이용하여 데이터베이스에 연결
-            con = DBConnect.getConnection();
-            // SQL을 실행할 객체 생성
-            stmt = con.createStatement();
-            // SQL 쿼리 실행
-            int rowsAffected = stmt.executeUpdate(sql);
+		try {
 
-            if (rowsAffected > 0) {
-                System.out.println("Successfully deleted the record with team_id: " + targetTeamId);
-            } else {
-                System.out.println("No record found with team_id: " + targetTeamId);
-            }
+			connect = DBConnect.getConnection();
+			state = connect.createStatement();
+			int rowsAffected = state.executeUpdate(sql); // 변경된 행의 갯수
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println(sql);
-        } finally {
-            try {
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (con != null) con.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+			if (rowsAffected > 0) {
+				System.out.println("삭제완료. team_id: " + deleteWhat);
+			} else {
+				System.out.println("해당 team_id 찾을 수 없음: " + deleteWhat); // 변경된 행의 갯수가 존재하지 않을 때
+			}
+
+		} catch (SQLException e) {
+			System.out.println("SQLException");
+			System.out.println(sql);
+		} finally {
+			Select s = new Select();
+			s.printAll();
+			try {
+				if (state != null)
+					state.close();
+			} catch (SQLException e) {
+				System.out.println("SQLException: state is null");
+			}
+			try {
+				if (connect != null)
+					connect.close();
+			} catch (SQLException e) {
+				System.out.println("SQLException: connect is null");
+			}
+		}
+	}
 }
