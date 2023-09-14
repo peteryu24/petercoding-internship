@@ -70,7 +70,7 @@ SET birth_date = (
 	            --WHEN SUBSTRING(birth_date, 3, 1) = '-' 3번째 위치에 1글자가 '-' 인 경우
 			THEN -- 3번째 위치에 -가 있을 경우
 				SUBSTRING(birth_date, 7, 4) -- 년도 가져오기 
-				|| '-' || SUBSTRING(birth_date, 1, 2) -- 월 가져오기
+				|| '-' || SUBSTRING(birth_date, 1, 2) -- 월 가져오기 / || 문자열 합치는 연산자
 				|| '-' || SUBSTRING(birth_date, 4, 2) -- 일 가져오기
                         -- 최종적으로 YYYY-MM-DD 형식으로 
 			ELSE -- YYYY-MM-DD 인 경우
