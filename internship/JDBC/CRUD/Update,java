@@ -5,15 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * Update 클래스는 exam.team 테이블의 데이터를 업데이트하는 로직을 담당합니다.
- */
 public class Update {
-	/**
-	 * 메인 메소드
-	 * 
-	 * @param args 커맨드라인 인자 (사용되지 않음)
-	 */
+	
+	// @param args 커맨드라인 인자 (사용되지 않음)
 	public static void main(String[] args) {
 		// 필요한 변수 선언
 		Connection con = null;
