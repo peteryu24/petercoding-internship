@@ -21,8 +21,8 @@ FROM
     ,exam.player p
 WHERE 
     t.team_id = p.team_id
-    AND CAST(NULLIF(p.height, '') AS INTEGER) >= 180 --NULLIF를 사용하지 않을 경우 NULL인 데이터에 대해 에러 발생
-    AND CAST(NULLIF(p.weight, '') AS INTEGER) <= 90
+    AND CAST(NULLIF(p.height, '') AS INTEGER) >= 180 --NULLIF를 사용하지 않을 경우 CAST 함수 떄문에 NULL인 데이터에 대해 에러 발생
+    AND CAST(NULLIF(p.weight, '') AS INTEGER) <= 90 -- NULLIF(asd,'')인 경우 앞과 뒤를 비교해 같으면 NULL
 GROUP BY 
     t.team_name; -- 팀별로
 
