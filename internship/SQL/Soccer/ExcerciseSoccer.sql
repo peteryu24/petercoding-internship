@@ -82,6 +82,19 @@ SET birth_date = (
     END
 ); -- 만약 YYYY-DD-MM인 경우에는 처리 불가?
 
+-- 약간 다른 Formatting
+UPDATE exam.player
+set birth_date =(
+	case when birth_date IS NOT NULL
+		then to_date(
+			case when position('-' in birth_date) =3
+				then substring(birth_date,7,4) || '-' || substring(birth_date,1,2) || '-' || substring(birth_date,4,2)
+			else birth_date
+		end, 'YYYY-MM-DD'
+		)
+	else null
+end);
+
 
 -- 방법 1 (직접비교)
 SELECT
