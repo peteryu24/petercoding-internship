@@ -30,8 +30,7 @@ GROUP BY
 --3. 수원월드컵경기장에서 경기가 예정되어 있는 팀에서 'DF' 포지션을 담당하는 선수의 정보를 조회
 SELECT 
 	t.team_name	
-	,p.player_name
-	,p.position_name
+	,p.*
 FROM 
 	exam.stadium s
 	,exam.team t
