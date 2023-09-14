@@ -22,4 +22,14 @@ public class DBConnect {
 		return con; // Connection 객체 반환
 	}
 
+	public static void main(String [] args){
+		Create c = new Create();
+		Insert i = new Insert();
+		Select s = new Select();
+		Update u = new Update();
+		Delete d = new Delete();
+
+		c.createTable();
+	}
+
 }
