@@ -6,11 +6,12 @@ import java.sql.Statement;
 
 public class Insert {
 	public static void main(String[] args) {
-		Connection con = null;
-		Statement stmt = null;
+		Connection con = null;  // Connection 객체 null로 초기화
+		Statement stmt = null;  // Statement 객체 null로 초기화
 
+		// 데이터 삽입 위한 SQL 쿼리 
 		String[] insertQueries = {
-				"INSERT INTO exam.team VALUES ('K05','전북','현대모터스','CHUNBUK HYUNDAI MOTORS FC','1995','D03','560','190','전북 전주시 덕진구 반월동 763-1 전주월드컵경기장 내','063','273-1763','273-1762','http://www.hyundai-motorsfc.com','')",
+			"INSERT INTO exam.team VALUES ('K05','전북','현대모터스','CHUNBUK HYUNDAI MOTORS FC','1995','D03','560','190','전북 전주시 덕진구 반월동 763-1 전주월드컵경기장 내','063','273-1763','273-1762','http://www.hyundai-motorsfc.com','')",
 				"INSERT INTO exam.team VALUES ('K08','성남','일화천마','SEONGNAM ILHWA CHUNMA FC','1988','B02','462','130','경기도 성남시 분당구 야탑동 486번지 성남 제2종합운동장 내','031','753-3956','753-4443','http://www.esifc.com','')",
 				"INSERT INTO exam.team VALUES ('K03','포항','스틸러스','FC POHANG STEELERS','1973','C06','790','050','경북 포항시 죽도동 614-8 동양빌딩 7층','054','282-2002','282-5955','http://www.steelers.co.kr','')",
 				"INSERT INTO exam.team VALUES ('K07','전남','드래곤즈','CHUNNAM DRAGONS FC','1994','D01','544','010','전남 광양시 중동 1318-5 신한은행빌딩 2층','061','792-5600','792-5605','http://www.dragons.co.kr','')",
@@ -24,36 +25,45 @@ public class Insert {
 				"INSERT INTO exam.team VALUES ('K06','부산','아이파크','BUSAN IPARK FC','1983','C02','570','050','부산광역시 강서구 대저1동 2155번지 강서체육공원 내','051','555-7101','555-7103','http://www.busanipark.co.kr','')",
 				"INSERT INTO exam.team VALUES ('K13','강원','강원FC','GANGWON FC','2008','A03','333','444','강원 춘천시 중앙로 7 강원도 개발공사 빌딩 내','033','459-3631','459-3630','http://www.gangwon-fc.com','')",
 				"INSERT INTO exam.team VALUES ('K14','제주','제주유나이티드FC','JEJU UNITED FC','1982','A04','555','666','제주 서귀포시 강정동 3355-5','064','3631-2460','3631-2468','http://www.jeju-utd.com','')",
-				"INSERT INTO exam.team VALUES ('K15','대구','대구FC','DAEGU FC','2002','A05','777','888','대구광역시 수성구 대흥동 504 대구스타디움 내','053','5566-3967','5566-3970','http://www.daegufc.co.kr','')" };
+				"INSERT INTO exam.team VALUES ('K15','대구','대구FC','DAEGU FC','2002','A05','777','888','대구광역시 수성구 대흥동 504 대구스타디움 내','053','5566-3967','5566-3970','http://www.daegufc.co.kr','')"
+		};
 
 		try {
-			con = DBConnect.getConnection(); // 데이터베이스 연결
-			stmt = con.createStatement(); // Statement 객체 생성
+			con = DBConnect.getConnection();  // 데이터베이스 연결 수립
+			stmt = con.createStatement();  // Statement 객체 생성
 
-			for (String query : insertQueries) {
-				stmt.executeUpdate(query); // SQL 쿼리 실행
+			// 모든 쿼리를 순회하면서 데이터 삽입
+			for (int i = 0; i < insertQueries.length; i++) {
+				String query = insertQueries[i];
+				try {
+					stmt.executeUpdate(query);  // SQL 쿼리 실행
+					System.out.println("쿼리문 성공: " + query);
+				} catch (SQLException e) {
+					System.err.println("쿼리문 실패: " + query);
+					e.printStackTrace();
+				}
 			}
 
-			System.out.println("Data has been inserted.");
+			System.out.println("데이터가 성공적으로 삽입되었습니다.");  // 삽입이 성공적으로 끝난 경우 메시지 출력
 		} catch (SQLException e) {
-			e.printStackTrace(); // 예외 발생 시 스택 트레이스 출력
+			e.printStackTrace();  
 		} finally {
-			// Statement 객체 자원 해제
+			// Statement 객체 닫
 			try {
 				if (stmt != null) {
 					stmt.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				e.printStackTrace();  
 			}
 
-			// Connection 객체 자원 해제
+			// Connection 객체 닫
 			try {
 				if (con != null) {
 					con.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				e.printStackTrace();  
 			}
 		}
 	}
