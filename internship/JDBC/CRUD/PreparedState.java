@@ -27,8 +27,9 @@ public class PreparedState {
 			 */
 			preState.setString(1, "춘천FC"); // 첫 번째 ?의 값
 			preState.setString(2, "K02"); // 두 번째 ?의 값
-			// 쿼리 실행
+			// 쿼리 update
 			preState.executeUpdate();
+			System.out.println("PreparedState으로 update 완료");
 		} catch (SQLException e) {
 			System.out.println("SQLException");
 			System.out.println(sql);
