@@ -19,6 +19,9 @@ public class Create {
 		 * SQL 쿼리를 DB에 전달하고 실행하는 역할
 		 * Connection 객체를 통해 Statement 객체 생성 가능
 		 * 쿼리 CRUD에 사용
+		 * 
+		 * 스스로는 SQL 구문 이해 못하고 전달 역할
+		 * SQL 관리는 하지만 연결 정보는 없음
 		 */
 		System.out.println("=========================Create Table=========================\n");
 
@@ -51,20 +54,18 @@ public class Create {
 			System.out.println(createTable); // 실패한 SQL 쿼리를 출력
 
 		} finally { // 역순으로 닫아주기
-			// Statement 닫기
 			try {
 				if (state != null)
 					state.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				System.out.println("SQLException: state is null");
 			}
 
-			// Connection 닫기
 			try {
 				if (connect != null)
 					connect.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				System.out.println("SQLException: connect is null");
 			}
 		}
 	}
