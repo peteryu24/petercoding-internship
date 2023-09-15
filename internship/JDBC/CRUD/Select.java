@@ -50,16 +50,19 @@ public class Select {
 				if (rs != null)
 					rs.close();
 			} catch (SQLException e) {
+				System.out.println("SQLException: rs is null");
 			}
 			try {
 				if (state != null)
 					state.close();
 			} catch (SQLException e) {
+				System.out.println("SQLException: state is null");
 			}
 			try {
 				if (connect != null)
 					connect.close();
 			} catch (SQLException e) {
+				System.out.println("SQLException: connect is null");
 			}
 		}
 	}
