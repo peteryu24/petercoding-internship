@@ -35,11 +35,14 @@ public class DBConnect {
 	public static void main(String[] args) {
 		getConnection();
 
-		Create.createTable(getConnection()); // 매번 Connection을 하는건 비효율적
+		Create.createTable(getConnection()); // 매번 Class.forName을 하는건 비효율적
 		Insert.insertValue(getConnection());
 		Select.printAll(getConnection());
 		Update.updateValue(getConnection());
 		Delete.delete(getConnection());
+		
+		PreparedState.pState(getConnection());
+		Transaction.tranSaction(getConnection());
 	}
 
 }
