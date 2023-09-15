@@ -7,8 +7,7 @@ import java.sql.Statement;
 
 public class Select {
 
-	public static void printAll() {
-		Connection connect = null;
+	public static void printAll(Connection connect) {
 		Statement state = null;
 		ResultSet rs = null;
 		
@@ -19,7 +18,6 @@ public class Select {
 				+ "ORDER BY team_id ASC";
 
 		try {
-			connect = DBConnect.getConnection(); // DB 연결
 			state = connect.createStatement();
 			rs = state.executeQuery(sql); // 쿼리 실행.
 
