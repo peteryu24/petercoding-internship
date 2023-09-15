@@ -52,16 +52,15 @@ public class Insert {
 					state.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				System.out.println("SQLException: state is null");
 			}
-
 			// Connection 닫기
 			try {
 				if (connect != null) {
 					connect.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				System.out.println("SQLException: connect is null");
 			}
 		}
 	}
