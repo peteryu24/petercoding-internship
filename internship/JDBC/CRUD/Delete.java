@@ -5,8 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Delete {
-	public static void delete() {
-		Connection connect = null;
+	public static void delete(Connection connect) {
 		Statement state = null;
 		
 		System.out.println("\n=========================Delete=========================\n");
@@ -18,8 +17,6 @@ public class Delete {
 		String sql = "DELETE FROM exam.team WHERE team_id = '" + deleteWhat + "'";
 
 		try {
-
-			connect = DBConnect.getConnection();
 			state = connect.createStatement();
 			int rowsAffected = state.executeUpdate(sql); // 변경된 행의 갯수
 
@@ -33,8 +30,7 @@ public class Delete {
 			System.out.println("SQLException");
 			System.out.println(sql);
 		} finally {
-			Select s = new Select();
-			s.printAll();
+			Select.printAll(connect);
 			try {
 				if (state != null)
 					state.close();
