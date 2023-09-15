@@ -24,7 +24,6 @@ public class Update {
 			System.out.println("update 되었습니다. " + sql);
 
 		} catch (SQLException e) {
-
 			System.out.println("SQLException");
 			System.out.println(sql);
 		} finally {
@@ -33,13 +32,13 @@ public class Update {
 				if (state != null)
 					state.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				System.out.println("SQLException: state is null");
 			}
 			try {
 				if (connect != null)
 					connect.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				System.out.println("SQLException: connect is null");
 			}
 		}
 	}
