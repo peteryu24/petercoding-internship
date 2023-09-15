@@ -2,7 +2,6 @@ package gmx.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 
 public class DBConnect {
@@ -32,14 +31,15 @@ public class DBConnect {
 		}
 		return connect;
 	}
+
 	public static void main(String[] args) {
 		getConnection();
-		
-		Create.createTable();
-		Insert.insertValue();
-		Select.printAll();
-		Update.updateValue();
-		Delete.delete();
+
+		Create.createTable(getConnection()); // 매번 Connection을 하는건 비효율적
+		Insert.insertValue(getConnection());
+		Select.printAll(getConnection());
+		Update.updateValue(getConnection());
+		Delete.delete(getConnection());
 	}
 
 }
