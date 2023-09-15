@@ -11,7 +11,12 @@ public class Transaction {
 		String sql = "UPDATE exam.team SET team_name = ? WHERE team_id = ?";
 		try {
 			// 트랜잭션 시작
-			connect.setAutoCommit(false); // 수동으로 제어하기 위해
+			/*
+			 * JDBC의 자동 커밋 모드 비활성화
+			 * 수동으로 커밋을 제어하기 위해
+			 * commit()를 명시적으로 호출해야지만 커밋
+			 */
+			connect.setAutoCommit(false);
 			// 1번째 과제
 			preState = connect.prepareStatement(sql);
 			preState.setString(1, "원주FC");
