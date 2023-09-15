@@ -5,10 +5,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Insert {
-	public static void insertValue() {
-		Connection connect = null;
+	public static void insertValue(Connection connect) {
 		Statement state = null;
-		
+
 		System.out.println("\n=========================Insert Values=========================\n");
 
 		// 데이터 삽입 위한 SQL 쿼리
@@ -30,7 +29,6 @@ public class Insert {
 				"INSERT INTO exam.team VALUES ('K15','대구','대구FC','DAEGU FC','2002','A05','777','888','대구광역시 수성구 대흥동 504 대구스타디움 내','053','5566-3967','5566-3970','http://www.daegufc.co.kr','')" };
 
 		try {
-			connect = DBConnect.getConnection(); // 데이터베이스 연결
 			state = connect.createStatement(); // Statement 객체 생성
 
 			// 데이터 삽입
@@ -44,7 +42,6 @@ public class Insert {
 
 				}
 			}
-
 			System.out.println("데이터가 성공적으로 삽입되었습니다."); // 삽입 성공
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -66,6 +63,6 @@ public class Insert {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}		
+		}
 	}
 }
