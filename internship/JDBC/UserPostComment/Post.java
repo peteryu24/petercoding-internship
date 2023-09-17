@@ -269,16 +269,16 @@ public class Post {
 		String deleteWhat = "";
 
 		// 삭제 SQL 쿼리
-		String sql = "DELETE FROM exam.Post WHERE user_id = '" + deleteWhat + "'";
+		String sql = "DELETE FROM exam.Post WHERE post_id = '" + deleteWhat + "'";
 
 		try {
 			state = connect.createStatement();
 			int rowsAffected = state.executeUpdate(sql); // 변경된 행의 갯수
 
 			if (rowsAffected > 0) {
-				System.out.println("삭제완료. user_id: " + deleteWhat);
+				System.out.println("삭제완료. post_id: " + deleteWhat);
 			} else {
-				System.out.println("해당 user_id 찾을 수 없음: " + deleteWhat); // 변경된 행의 갯수가 존재하지 않을 때
+				System.out.println("해당 post_id 찾을 수 없음: " + deleteWhat); // 변경된 행의 갯수가 존재하지 않을 때
 			}
 
 		} catch (SQLException e) {
