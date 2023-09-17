@@ -98,7 +98,7 @@ public class Post {
 		System.out.println("=========================Create Table=========================\n");
 
 		// 쿼리 문자열을 정의
-		String createPostTable = "CREATE TABLE Post (" + "post_id INT PRIMARY KEY AUTO_INCREMENT, " // 게시글 식별
+		String createPostTable = "CREATE TABLE exam.Post (" + "post_id INT PRIMARY KEY AUTO_INCREMENT, " // 게시글 식별
 				+ "user_id INT, " // user table의 PK를 FK로 받음
 				+ "title VARCHAR(100), " // 제목
 				+ "content TEXT, " // 내용
@@ -146,7 +146,9 @@ public class Post {
 		System.out.println("\n=========================Insert Values=========================\n");
 
 		// 데이터 삽입 위한 SQL 쿼리
-		String[] insertQuery = {};
+		String[] insertQuery = { "INSERT INTO exam.Post (user_id, title, content) VALUES (1, 'Google', '구글입니다.')",
+				"INSERT INTO exam.Post (user_id, title, content) VALUES (2, 'Apple', '사과입니다.')",
+				"INSERT INTO exam.Post (user_id, title, content) VALUES (3, 'Samsung', '삼성입니다.')" };
 
 		try {
 			state = connect.createStatement(); // Statement 객체 생성
