@@ -134,7 +134,7 @@ public class User {
 				throw new SQLException("실패하였습니다.");
 			}
 			state.executeUpdate(createTable);
-			System.out.println("Table 'exam.team' 생성완료.");
+			System.out.println("Table User 생성완료.");
 
 		} catch (SQLException e) {
 			System.out.println("SQLException");
