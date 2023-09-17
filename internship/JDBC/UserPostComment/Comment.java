@@ -89,7 +89,7 @@ public class Comment {
 		System.out.println("=========================Create Table=========================\n");
 
 		// 쿼리 문자열을 정의
-		String createCommentTable = "CREATE TABLE Comment (" + "comment_id INT PRIMARY KEY AUTO_INCREMENT, "
+		String createCommentTable = "CREATE TABLE exam.Comment (" + "comment_id INT PRIMARY KEY AUTO_INCREMENT, "
 				+ "user_id INT, " + "post_id INT, " + "comment TEXT, "
 				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
 				+ "FOREIGN KEY (user_id) REFERENCES User(user_id), "
@@ -135,7 +135,13 @@ public class Comment {
 		System.out.println("\n=========================Insert Values=========================\n");
 
 		// 데이터 삽입 위한 SQL 쿼리
-		String[] insertQuery = {};
+		// 데이터 삽입 위한 SQL 쿼리
+		String[] insertQuery = {
+		    "INSERT INTO exam.Comment (user_id, post_id, comment) VALUES (1, 1, 'Google에 대한 댓글')",
+		    "INSERT INTO exam.Comment (user_id, post_id, comment) VALUES (2, 1, 'Apple에 대한 댓글입니다.')",
+		    "INSERT INTO exam.Comment (user_id, post_id, comment) VALUES (1, 2, 'Samsung 댓글임.')"
+		};
+
 
 		try {
 			state = connect.createStatement(); // Statement 객체 생성
