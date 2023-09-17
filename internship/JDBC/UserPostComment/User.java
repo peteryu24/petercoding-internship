@@ -1,5 +1,5 @@
 /*
-  CREATE TABLE User (
+  CREATE TABLE exam.User (
     user_id INT PRIMARY KEY AUTO_INCREMENT, -- 사용자  ID
     nickname VARCHAR(50) NOT NULL, -- 사용자 닉네임
     email VARCHAR(50) UNIQUE NOT NULL, -- 사용자 메일 주소
@@ -7,7 +7,7 @@
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 계정 생성 날짜
 );
 
-CREATE TABLE Post (
+CREATE TABLE exam.Post (
     post_id INT PRIMARY KEY AUTO_INCREMENT, -- 게시글 식별
     user_id INT, -- user table의 PK를 FK로 받음
     title VARCHAR(100), -- 제목
@@ -17,7 +17,7 @@ CREATE TABLE Post (
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
 
-CREATE TABLE Comment (
+CREATE TABLE exam.Comment (
     comment_id INT PRIMARY KEY AUTO_INCREMENT, -- 댓글 식별
     user_id INT, -- user table의 PK를 FK로 받음
     post_id INT, -- post table의 PK를 FK로 받음
@@ -119,7 +119,7 @@ public class User {
 		System.out.println("=========================Create Table=========================\n");
 
 		// 쿼리 문자열을 정의
-		String createTable = "CREATE TABLE User (" + "user_id INT PRIMARY KEY AUTO_INCREMENT, "
+		String createTable = "CREATE TABLE exam.User (" + "user_id INT PRIMARY KEY AUTO_INCREMENT, "
 				+ "nickname VARCHAR(50) NOT NULL, " + "email VARCHAR(50) UNIQUE NOT NULL, "
 				+ "password VARCHAR(256) NOT NULL, " + "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
 
@@ -134,7 +134,7 @@ public class User {
 				throw new SQLException("실패하였습니다.");
 			}
 			state.executeUpdate(createTable);
-			System.out.println("Table User 생성완료.");
+			System.out.println("Table 'exam.team' 생성완료.");
 
 		} catch (SQLException e) {
 			System.out.println("SQLException");
@@ -163,7 +163,12 @@ public class User {
 		System.out.println("\n=========================Insert Values=========================\n");
 
 		// 데이터 삽입 위한 SQL 쿼리
-		String[] insertQuery = {};
+		String[] insertQuery = {
+			    "INSERT INTO User (nickname, email, password) VALUES ('Dillan', 'dillan123@gmail.com', 'secret123')",
+			    "INSERT INTO User (nickname, email, password) VALUES ('Matt', 'matt456@yahoo.com', 'secret456')",
+			    "INSERT INTO User (nickname, email, password) VALUES ('Bob', 'bob789@naver.com', 'secret789')"
+			};
+
 
 		try {
 			state = connect.createStatement(); // Statement 객체 생성
