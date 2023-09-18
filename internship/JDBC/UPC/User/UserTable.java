@@ -1,32 +1,3 @@
-/*
-  CREATE TABLE exam.users (
-    user_id INT PRIMARY KEY NOT NULL, -- 사용자  ID
-    nickname VARCHAR(50) NOT NULL, -- 사용자 닉네임
-    email VARCHAR(50) UNIQUE NOT NULL, -- 사용자 메일 주소
-    password VARCHAR(256) NOT NULL, -- 사용자 비밀번호
-    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 계정 생성 날짜
-);
-
-CREATE TABLE exam.post (
-    post_id INT PRIMARY KEY NOT NULL, -- 게시글 식별
-    user_id INT, -- user table의 PK를 FK로 받음
-    title VARCHAR(100) NOT NULL, -- 제목
-    content TEXT, -- 내용
-    view INT DEFAULT 0, -- 조회수
-    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 게시글 작성 날짜
-    FOREIGN KEY (user_id) REFERENCES exam.users(user_id)
-);
-
-CREATE TABLE exam.comment (
-    comment_id INT PRIMARY KEY NOT NULL, -- 댓글 식별
-    user_id INT, -- user table의 PK를 FK로 받음
-    post_id INT, -- post table의 PK를 FK로 받음
-    comment TEXT NOT NULL, -- 댓글 내용
-    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 댓글 작성 날짜
-    FOREIGN KEY (user_id) REFERENCES exam.users(user_id),
-    FOREIGN KEY (post_id) REFERENCES exam.post(post_id)
-);
-*/
 
 package gmx.upc.user;
 
@@ -62,10 +33,17 @@ public class UserTable {
 		PreparedStatement preState = null;
 		System.out.println("=========================Create Table=========================\n");
 
-		// 테이블 생성 쿼리를 변경
+		// Change table creation query
 		String createUserTable = "CREATE TABLE exam.users (" + "user_id INT PRIMARY KEY NOT NULL, "
-				+ "nickname VARCHAR(50) NOT NULL, " + "email VARCHAR(50) UNIQUE NOT NULL, "
-				+ "password VARCHAR(256) NOT NULL, " + "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
+				+ "nickname VARCHAR(10) NOT NULL, " + "email VARCHAR(50) NOT NULL, " + "password VARCHAR(15) NOT NULL, "
+				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
+
+		String commentOnUserTable = "COMMENT ON TABLE exam.users IS '유저 정보 테이블'; "
+				+ "COMMENT ON COLUMN exam.users.user_id IS '사용자 식별 id'; "
+				+ "COMMENT ON COLUMN exam.users.nickname IS '사용자 닉네임'; "
+				+ "COMMENT ON COLUMN exam.users.email IS '사용자 이메일'; "
+				+ "COMMENT ON COLUMN exam.users.password IS '사용자 비밀번호'; "
+				+ "COMMENT ON COLUMN exam.users.create_time IS '사용자 계정 생성 시간';";
 
 		try {
 			connect = UserTable.getConnection();
@@ -74,18 +52,22 @@ public class UserTable {
 			}
 
 			preState = connect.prepareStatement(createUserTable);
-
 			if (preState == null) {
 				throw new SQLException("실패하였습니다.");
 			}
 
 			preState.executeUpdate();
 			System.out.println("users table 생성완료.");
+
+			preState = connect.prepareStatement(commentOnUserTable);
+			preState.execute();
+			System.out.println("users table에 코멘트 추가 완료.");
+
 		} catch (SQLException e) {
 			System.out.println("SQLException");
-			System.out.println(createUserTable); // 실패한 SQL 쿼리를 출력
+			System.out.println(createUserTable);
 			e.printStackTrace();
-		} finally { // 역순으로 닫아주기
+		} finally {
 			try {
 				if (preState != null)
 					preState.close();
