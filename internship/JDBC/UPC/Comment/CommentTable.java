@@ -50,8 +50,8 @@ public class CommentTable {
 				+ "post_id SERIAL, " // post table의 PK를 FK로 받음
 				+ "comment TEXT NOT NULL, " // 댓글 내용
 				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " // 댓글 작성 날짜
-				+ "FOREIGN KEY (user_id) REFERENCES exam.users(user_id) ON UPDATE CASCADE ON DELETE CASCADE, " // 외래키 설정
-				+ "FOREIGN KEY (post_id) REFERENCES exam.post(post_id) ON UPDATE CASCADE ON DELETE CASCADE); " // 외래키 설정
+				+ "FOREIGN KEY (user_id) REFERENCES exam.users(user_id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE, " // 외래키 설정
+				+ "FOREIGN KEY (post_id) REFERENCES exam.post(post_id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE); " // 외래키 설정
 				+ "COMMENT ON TABLE exam.comment IS '댓글 테이블'; "
 				+ "COMMENT ON COLUMN exam.comment.comment_id IS '댓글 식별 id'; "
 				+ "COMMENT ON COLUMN exam.comment.user_id IS '댓글 작성자 식별 id(외래키)'; "
