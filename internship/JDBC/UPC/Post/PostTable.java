@@ -50,7 +50,7 @@ public class PostTable {
 				+ "content TEXT, " // 내용
 				+ "view INT DEFAULT 0, " // 조회수
 				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " // 게시글 작성 날짜
-				+ "FOREIGN KEY (user_id) REFERENCES exam.users(user_id) ON UPDATE CASCADE ON DELETE CASCADE); " // 외래키 설정
+				+ "FOREIGN KEY (user_id) REFERENCES exam.users(user_id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE); " // 외래키 설정
 				+ "COMMENT ON TABLE exam.post IS '게시글 테이블'; " + "COMMENT ON COLUMN exam.post.post_id IS '게시글 식별 id'; "
 				+ "COMMENT ON COLUMN exam.post.user_id IS '게시글을 작성한 사용자 식별 id(외래키)'; "
 				+ "COMMENT ON COLUMN exam.post.title IS '게시글 제목'; "
