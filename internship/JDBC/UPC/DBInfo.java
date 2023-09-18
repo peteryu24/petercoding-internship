@@ -1,6 +1,6 @@
 /*
   CREATE TABLE exam.users (
-    user_id INT PRIMARY KEY NOT NULL, -- 사용자  ID
+    user_id SERIAL PRIMARY KEY NOT NULL, -- 사용자  ID
     nickname VARCHAR(10) NOT NULL, -- 사용자 닉네임
     email VARCHAR(50) NOT NULL, -- 사용자 메일 주소
     password VARCHAR(15) NOT NULL, -- 사용자 비밀번호
@@ -14,13 +14,13 @@ COMMENT ON COLUMN exam.users.password IS '사용자 비밀번호';
 COMMENT ON COLUMN exam.users.create_time IS '사용자 계정 생성 시간';
 
 CREATE TABLE exam.post (
-    post_id INT PRIMARY KEY NOT NULL, -- 게시글 식별
+    post_id SERIAL PRIMARY KEY NOT NULL, -- 게시글 식별
     user_id INT, -- user table의 PK를 FK로 받음
     title VARCHAR(50) NOT NULL, -- 제목
     content TEXT, -- 내용
     view INT DEFAULT 0, -- 조회수
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 게시글 작성 날짜
-    FOREIGN KEY (user_id) REFERENCES exam.users(user_id)
+    FOREIGN KEY (user_id) REFERENCES exam.users(user_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 COMMENT ON TABLE exam.post IS '게시글 테이블';
 COMMENT ON COLUMN exam.post.post_id IS '게시글 식별 id';
@@ -31,13 +31,13 @@ COMMENT ON COLUMN exam.post.view IS '조회수';
 COMMENT ON COLUMN exam.post.create_time IS '게시글 작성 시간';
 
 CREATE TABLE exam.comment (
-    comment_id INT PRIMARY KEY NOT NULL, -- 댓글 식별
+    comment_id SERIAL PRIMARY KEY NOT NULL, -- 댓글 식별
     user_id INT, -- user table의 PK를 FK로 받음
     post_id INT, -- post table의 PK를 FK로 받음
     comment TEXT NOT NULL, -- 댓글 내용
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 댓글 작성 날짜
-    FOREIGN KEY (user_id) REFERENCES exam.users(user_id),
-    FOREIGN KEY (post_id) REFERENCES exam.post(post_id)
+    FOREIGN KEY (user_id) REFERENCES exam.users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES exam.post(post_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 COMMENT ON TABLE exam.comment IS '댓글 테이블';
 COMMENT ON COLUMN exam.comment.comment_id IS '댓글 식별 id';
