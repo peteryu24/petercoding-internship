@@ -35,11 +35,11 @@
     <div>
    		 <h2><i><u>Welcome</u></i></h2>
          <!--이탈릭한(i) 제목(h2)에 밑줄(u)-->
-        <label for="fname"> ID</label><br> 
-        <input type="text" id="fname"name="fname" value=""><br>
+        <label for="userid"> ID</label><br> 
+        <input type="text" id="userid"name="userid" value=""><br>
         <!--텍스트를 입력할 수 있는 상자-->
-        <label for="lname">PW</label><br>
-        <input type="password" id="lname" name="lname" value="">
+        <label for="pw">PW</label><br>
+        <input type="password" id="pw" name="pw" value="">
         <!--입력한 텍스트는 별표로 표시-->
         <button class="login button" type="button" style='width:50pt; height:50pt;'>LOGIN</button>
         <!--버튼-->
