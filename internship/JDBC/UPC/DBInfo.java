@@ -20,7 +20,7 @@ CREATE TABLE exam.post (
     content TEXT, -- 내용
     view INT DEFAULT 0, -- 조회수
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 게시글 작성 날짜
-    FOREIGN KEY (user_id) REFERENCES exam.users(user_id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES exam.users(user_id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 COMMENT ON TABLE exam.post IS '게시글 테이블';
 COMMENT ON COLUMN exam.post.post_id IS '게시글 식별 id';
@@ -36,8 +36,8 @@ CREATE TABLE exam.comment (
     post_id INT, -- post table의 PK를 FK로 받음
     comment TEXT NOT NULL, -- 댓글 내용
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 댓글 작성 날짜
-    FOREIGN KEY (user_id) REFERENCES exam.users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (post_id) REFERENCES exam.post(post_id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES exam.users(user_id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES exam.post(post_id)  MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 COMMENT ON TABLE exam.comment IS '댓글 테이블';
 COMMENT ON COLUMN exam.comment.comment_id IS '댓글 식별 id';
