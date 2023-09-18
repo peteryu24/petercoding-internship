@@ -1,0 +1,294 @@
+package gmx.upc.post;
+
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class PostTable {
+	// DB 연결 정보
+	static final String URL = "jdbc:postgresql://127.0.0.1:5432/UsersPostsComments";
+	static final String USER = "postgres";
+	static final String PASS = "0000";
+
+	// 연결 수행
+	public static Connection getConnection() {
+		Connection connect = null;
+		try {
+			Class.forName("org.postgresql.Driver");
+			connect = DriverManager.getConnection(URL, USER, PASS);
+		} catch (ClassNotFoundException e) {
+			System.out.println("ClassNotFoundException");
+		} catch (SQLException e) {
+			System.out.println("SQLException");
+		}
+		return connect;
+	}
+
+	public static void createTable() {
+		Connection connect = null;
+		/*
+		 * DB에 대한 실제 연결을 나타냄
+		 * Connection을 통해 쿼리를 실행하거나 트랜잭션을 관리하거나 DB 메타데이터에 엑세스
+		 * 
+		 * 메타데이터란 
+		 * DB의 구조, 스키마, 테이블, 칼럼등에 대한 정보
+		 */
+		PreparedStatement preState = null;
+		System.out.println("=========================Create Table=========================\n");
+
+		// 쿼리 문자열을 정의
+		String createPostTable = "CREATE TABLE exam.post (" + "post_id SERIAL PRIMARY KEY, " + "user_id INT, "
+				+ "title VARCHAR(100) NOT NULL, " + "content TEXT, " + "view INT DEFAULT 0, "
+				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+				+ "FOREIGN KEY (user_id) REFERENCES exam.users(user_id));";
+
+		try {
+			connect = PostTable.getConnection();
+			if (connect == null) {
+				throw new SQLException("DB 연결에 실패하였습니다.");
+			}
+
+			preState = connect.prepareStatement(createPostTable);
+			if (preState == null) {
+				throw new SQLException("실패하였습니다.");
+			}
+			preState.executeUpdate(); // create Post Table
+			System.out.println("post table 생성완료.");
+
+		} catch (SQLException e) {
+			System.out.println("SQLException");
+			System.out.println(createPostTable); // 실패한 SQL 쿼리를 출력
+			e.printStackTrace();
+
+		} finally { // 역순으로 닫아주기
+			try {
+				if (preState != null)
+					preState.close();
+			} catch (SQLException e) {
+				System.out.println("SQLException: state is null");
+			}
+
+			try {
+				if (connect != null)
+					connect.close();
+			} catch (SQLException e) {
+				System.out.println("SQLException: connect is null");
+			}
+		}
+	}
+
+	public static void insertValue() { // null 예외처리 필요
+		Connection connect = null;
+		PreparedStatement preState = null;
+
+		System.out.println("\n=========================Insert Values=========================\n");
+
+		try {
+			connect = PostTable.getConnection();
+			if (connect == null) {
+				throw new SQLException("DB 연결 실패");
+			}
+
+			connect.setAutoCommit(false);
+			String insertQuery = "INSERT INTO exam.post (post_id, user_id, title, content) VALUES (?, ?, ?, ?)";
+			preState = connect.prepareStatement(insertQuery);
+
+			// 첫 번째 쿼리
+			preState.setInt(1, 2);
+			preState.setInt(2, 2);
+			preState.setString(3, "Apple");
+			preState.setString(4, "사과입니다.");
+			preState.executeUpdate();
+
+			// 두 번째 쿼리
+			preState.setInt(1, 3);
+			preState.setInt(2, 3);
+			preState.setString(3, "Samsung");
+			preState.setString(4, "삼성입니다.");
+			preState.executeUpdate();
+
+			connect.commit();
+
+			System.out.println("데이터가 성공적으로 삽입되었습니다.");
+
+		} catch (SQLException e) {
+			try {
+				// 롤백
+				if (connect != null) {
+					connect.rollback();
+				}
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+				if (connect != null) {
+					connect.setAutoCommit(true);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				if (preState != null) {
+					preState.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("SQLException: pstmt is null");
+			}
+
+			try {
+				if (connect != null) {
+					connect.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("SQLException: connect is null");
+			}
+		}
+	}
+
+	public static ArrayList<PostVo> input() {
+		Connection connect = null;
+		PreparedStatement preState = null;
+		ResultSet rs = null;
+		ArrayList<PostVo> postList = new ArrayList<>();
+
+		String sql = "SELECT post_id, user_id, title, content, view, create_time FROM exam.post ORDER BY post_id ASC";
+		try {
+			connect = PostTable.getConnection();
+			preState = connect.prepareStatement(sql);
+			rs = preState.executeQuery();
+
+			while (rs.next()) {
+				PostVo post = new PostVo();
+				post.setPost_id(rs.getInt("post_id"));
+				post.setUser_id(rs.getInt("user_id"));
+				post.setTitle(rs.getString("title"));
+				post.setContent(rs.getString("content"));
+				post.setView(rs.getInt("view"));
+				post.setCreate_time(rs.getString("create_time"));
+
+				postList.add(post);
+			}
+		} catch (SQLException e) {
+			System.out.println("SQLException");
+			System.out.println(sql);
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (preState != null)
+					preState.close();
+				if (connect != null)
+					connect.close();
+			} catch (SQLException e) {
+				System.out.println("SQLException: " + e.getMessage());
+			}
+		}
+		return postList;
+	}
+
+	public static void update() {
+		System.out.println("\n=========================PreparedState=========================\n");
+		Connection connect = null;
+		PreparedStatement preState = null;
+		String sql = "UPDATE exam.post " + "SET content = ? WHERE post_id = ?";
+		try {
+			connect = PostTable.getConnection();
+			// 객체 생성
+			preState = connect.prepareStatement(sql);
+			/*
+			 * SQL 구문을 사전에 컴파일 데이터 삽입 준비
+			 * 
+			 * 리턴된 preState은 쿼리에 데이터를 삽입하고, 실행
+			 */
+			preState.setString(1, "지오멕스소프트 짱"); // 첫 번째 ?의 값
+			preState.setInt(2, 2); // 두 번째 ?의 값
+			// 쿼리 update
+			preState.executeUpdate();
+			System.out.println("PreparedState으로 update 완료");
+		} catch (SQLException e) {
+			System.out.println("SQLException");
+			System.out.println(sql);
+		} finally {
+			try {
+				preState.close();
+			} catch (SQLException e) {
+				System.out.println("SQLException: preState.close() 불가");
+			}
+			try {
+				connect.close();
+			} catch (SQLException e) {
+				System.out.println("SQLException: connect.close() 불가");
+			}
+		}
+	}
+
+	public static void delete() {
+		Connection connect = null;
+		PreparedStatement preState = null;
+
+		System.out.println("\n=========================Delete=========================\n");
+
+		// 삭제할 계정 id 설정
+		int deleteWhat = 2;
+
+		// 삭제 SQL 쿼리
+		String sql = "DELETE FROM exam.post WHERE post_id = ?";
+
+		try {
+			connect = PostTable.getConnection();
+			preState = connect.prepareStatement(sql);
+			preState.setInt(1, deleteWhat);
+
+			int affectedRows = preState.executeUpdate();
+
+			if (affectedRows > 0) {
+				System.out.println("삭제완료. post_id: " + deleteWhat);
+			} else {
+				System.out.println("해당 post_id 찾을 수 없음: " + deleteWhat); // 변경된 행의 갯수가 존재하지 않을 때
+			}
+
+		} catch (SQLException e) {
+			System.out.println("SQLException");
+			System.out.println(sql);
+			e.printStackTrace();
+		} finally {
+			try {
+				if (preState != null)
+					preState.close();
+			} catch (SQLException e) {
+				System.out.println("SQLException: state is null");
+			}
+			try {
+				if (connect != null)
+					connect.close();
+			} catch (SQLException e) {
+				System.out.println("SQLException: connect is null");
+			}
+		}
+	}
+
+	public static void print() {
+		System.out.println("\n=========================Print Post=========================\n");
+		ArrayList<PostVo> posts = input();
+
+		int postLengthSize = posts.size();
+		for (int i = 0; i < postLengthSize; i++) {
+			PostVo post = posts.get(i);
+			System.out.println("게시물 ID: " + post.getPost_id());
+			System.out.println("사용자 ID: " + post.getUser_id());
+			System.out.println("제목: " + post.getTitle());
+			System.out.println("내용: " + post.getContent());
+			System.out.println("조회수: " + post.getView());
+			System.out.println("생성 시간: " + post.getCreate_time());
+			System.out.println("-------------------------------");
+		}
+	}
+
+}
