@@ -1,4 +1,3 @@
-
 package gmx.upc.user;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class UserTable {
 		System.out.println("=========================Create Table=========================\n");
 
 		String userTable = "CREATE TABLE exam.users (" 
-	            + "user_id INT PRIMARY KEY NOT NULL, "
+	            + "user_id SERIAL PRIMARY KEY NOT NULL, "
 	            + "nickname VARCHAR(10) NOT NULL, "
 	            + "email VARCHAR(50) NOT NULL, "
 	            + "password VARCHAR(15) NOT NULL, "
