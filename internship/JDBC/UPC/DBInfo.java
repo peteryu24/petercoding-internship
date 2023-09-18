@@ -53,36 +53,38 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBInfo {
-    
-    private static final String URL = "jdbc:postgresql://127.0.0.1:5432/UsersPostsComments";
-    private static final String USER = "postgres";
-    private static final String PASS = "0000";
-    
-    private static Connection connect = null;
-    private static DBInfo dbconnect = null;
 
-    private DBInfo() {
-        try {
-            Class.forName("org.postgresql.Driver");
-            connect = DriverManager.getConnection(URL, USER, PASS);
-        } catch (ClassNotFoundException e) {
-            System.out.println("ClassNotFoundException");
-        } catch (SQLException e) {
-            System.out.println("SQLException");
-            e.printStackTrace();
-        }
-    }
-    
-    public static synchronized DBInfo getInstance() {
-        if (dbconnect == null) {
-            dbconnect = new DBInfo();
-        }
-        return dbconnect;
-    }
+	private final String URL = "jdbc:postgresql://127.0.0.1:5432/UsersPostsComments";
+	private final String USER = "postgres";
+	private final String PASS = "0000";
 
-    public Connection getConnection() {
-        return connect;
-    }
+	private Connection connect = null;
+	private static DBInfo dbconnect = null;
+
+	private DBInfo() {
+		try {
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println("ClassNotFoundException");
+		}
+	}
+
+	public static DBInfo getInstance() {
+		if (dbconnect == null) {
+			dbconnect = new DBInfo();
+		}
+		return dbconnect;
+	}
+
+	public Connection getConnection() {
+		try {
+			connect = DriverManager.getConnection(URL, USER, PASS);
+		} catch (SQLException e) {
+			System.out.println("SQLException");
+			e.printStackTrace();
+		}
+
+		return connect;
+	}
+
 }
-
-//connect = DBConnectionManager.getInstance().getConnection();
