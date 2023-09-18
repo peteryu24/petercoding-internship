@@ -118,3 +118,4 @@ public class DBInfo {
     }
 }
 
+//connect = DBConnectionManager.getInstance().getConnection();
