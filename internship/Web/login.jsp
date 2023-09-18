@@ -3,7 +3,7 @@
 <html>
 <!--html 문서의 시작-->
 <style>
-<!--css코드-->  
+/*css코드(css용 주석)*/
 	label, input{
     	width: 150px;
         height:20px;
