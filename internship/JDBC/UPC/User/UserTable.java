@@ -34,16 +34,18 @@ public class UserTable {
 		System.out.println("=========================Create Table=========================\n");
 
 		// Change table creation query
-		String createUserTable = "CREATE TABLE exam.users (" + "user_id INT PRIMARY KEY NOT NULL, "
-				+ "nickname VARCHAR(10) NOT NULL, " + "email VARCHAR(50) NOT NULL, " + "password VARCHAR(15) NOT NULL, "
-				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP);";
-
-		String commentOnUserTable = "COMMENT ON TABLE exam.users IS '유저 정보 테이블'; "
-				+ "COMMENT ON COLUMN exam.users.user_id IS '사용자 식별 id'; "
-				+ "COMMENT ON COLUMN exam.users.nickname IS '사용자 닉네임'; "
-				+ "COMMENT ON COLUMN exam.users.email IS '사용자 이메일'; "
-				+ "COMMENT ON COLUMN exam.users.password IS '사용자 비밀번호'; "
-				+ "COMMENT ON COLUMN exam.users.create_time IS '사용자 계정 생성 시간';";
+		String combinedSQL = "CREATE TABLE exam.users (" 
+	            + "user_id INT PRIMARY KEY NOT NULL, "
+	            + "nickname VARCHAR(10) NOT NULL, "
+	            + "email VARCHAR(50) NOT NULL, "
+	            + "password VARCHAR(15) NOT NULL, "
+	            + "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP); "
+	            + "COMMENT ON TABLE exam.users IS '유저 정보 테이블'; "
+	            + "COMMENT ON COLUMN exam.users.user_id IS '사용자 식별 id'; "
+	            + "COMMENT ON COLUMN exam.users.nickname IS '사용자 닉네임'; "
+	            + "COMMENT ON COLUMN exam.users.email IS '사용자 이메일'; "
+	            + "COMMENT ON COLUMN exam.users.password IS '사용자 비밀번호'; "
+	            + "COMMENT ON COLUMN exam.users.create_time IS '사용자 계정 생성 시간';";
 
 		try {
 			connect = UserTable.getConnection();
@@ -51,7 +53,7 @@ public class UserTable {
 				throw new SQLException("DB 연결에 실패하였습니다.");
 			}
 
-			preState = connect.prepareStatement(createUserTable);
+			preState = connect.prepareStatement(combinedSQL);
 			if (preState == null) {
 				throw new SQLException("실패하였습니다.");
 			}
@@ -59,13 +61,11 @@ public class UserTable {
 			preState.executeUpdate();
 			System.out.println("users table 생성완료.");
 
-			preState = connect.prepareStatement(commentOnUserTable);
-			preState.execute();
-			System.out.println("users table에 코멘트 추가 완료.");
+			
 
 		} catch (SQLException e) {
 			System.out.println("SQLException");
-			System.out.println(createUserTable);
+			System.out.println(combinedSQL);
 			e.printStackTrace();
 		} finally {
 			try {
