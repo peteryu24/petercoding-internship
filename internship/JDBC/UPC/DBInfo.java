@@ -45,39 +45,6 @@ COMMENT ON COLUMN exam.comment.user_id IS '댓글 작성자 식별 id(외래키)
 COMMENT ON COLUMN exam.comment.post_id IS '댓글이 달린 게시글 식별 id(외래키)';
 COMMENT ON COLUMN exam.comment.comment IS '댓글 내용';
 COMMENT ON COLUMN exam.comment.create_time IS '댓글 작성 시간';
-
--- Table: exam.comment
-
--- DROP TABLE exam.comment;
-
-CREATE TABLE exam.comment
-(
-  comment_id integer NOT NULL, -- 댓글 식별 id
-  user_id integer, -- 댓글 작성자 식별 id(외래키)
-  post_id integer, -- 댓글이 달린 게시글 식별 id(외래키)
-  comment text NOT NULL, -- 댓글 내용
-  create_time timestamp without time zone DEFAULT CURRENT_TIMESTAMP, -- 댓글 작성 시간
-  CONSTRAINT comment_pkey PRIMARY KEY (comment_id),
-  CONSTRAINT comment_post_id_fkey FOREIGN KEY (post_id)
-      REFERENCES exam.post (post_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT comment_user_id_fkey FOREIGN KEY (user_id)
-      REFERENCES exam.users (user_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE exam.comment
-  OWNER TO postgres;
-COMMENT ON TABLE exam.comment
-  IS '댓글 테이블';
-COMMENT ON COLUMN exam.comment.comment_id IS '댓글 식별 id';
-COMMENT ON COLUMN exam.comment.user_id IS '댓글 작성자 식별 id(외래키)';
-COMMENT ON COLUMN exam.comment.post_id IS '댓글이 달린 게시글 식별 id(외래키)';
-COMMENT ON COLUMN exam.comment.comment IS '댓글 내용';
-COMMENT ON COLUMN exam.comment.create_time IS '댓글 작성 시간';
-
 */
 package gmx.upc;
 
