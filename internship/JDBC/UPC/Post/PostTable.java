@@ -40,22 +40,18 @@ public class PostTable {
 		System.out.println("=========================Create Table=========================\n");
 
 		// 쿼리 문자열을 정의
-		String createPostTable = "CREATE TABLE exam.post ("
-    + "post_id INT PRIMARY KEY NOT NULL, "  // 게시글 식별
-    + "user_id INT, "  // user table의 PK를 FK로 받음
-    + "title VARCHAR(50) NOT NULL, "  // 제목
-    + "content TEXT, "  // 내용
-    + "view INT DEFAULT 0, "  // 조회수
-    + "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "  // 게시글 작성 날짜
-    + "FOREIGN KEY (user_id) REFERENCES exam.users(user_id)); "  // 외래키 설정
-    + "COMMENT ON TABLE exam.post IS '게시글 테이블'; "
-    + "COMMENT ON COLUMN exam.post.post_id IS '게시글 식별 id'; "
-    + "COMMENT ON COLUMN exam.post.user_id IS '게시글을 작성한 사용자 식별 id(외래키)'; "
-    + "COMMENT ON COLUMN exam.post.title IS '게시글 제목'; "
-    + "COMMENT ON COLUMN exam.post.content IS '게시글 내용'; "
-    + "COMMENT ON COLUMN exam.post.view IS '조회수'; "
-    + "COMMENT ON COLUMN exam.post.create_time IS '게시글 작성 시간';";
-
+		String createPostTable = "CREATE TABLE exam.post (" + "post_id INT PRIMARY KEY NOT NULL, " // 게시글 식별
+				+ "user_id INT, " // user table의 PK를 FK로 받음
+				+ "title VARCHAR(50) NOT NULL, " // 제목
+				+ "content TEXT, " // 내용
+				+ "view INT DEFAULT 0, " // 조회수
+				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " // 게시글 작성 날짜
+				+ "FOREIGN KEY (user_id) REFERENCES exam.users(user_id)); " // 외래키 설정
+				+ "COMMENT ON TABLE exam.post IS '게시글 테이블'; " + "COMMENT ON COLUMN exam.post.post_id IS '게시글 식별 id'; "
+				+ "COMMENT ON COLUMN exam.post.user_id IS '게시글을 작성한 사용자 식별 id(외래키)'; "
+				+ "COMMENT ON COLUMN exam.post.title IS '게시글 제목'; "
+				+ "COMMENT ON COLUMN exam.post.content IS '게시글 내용'; " + "COMMENT ON COLUMN exam.post.view IS '조회수'; "
+				+ "COMMENT ON COLUMN exam.post.create_time IS '게시글 작성 시간';";
 
 		try {
 			connect = PostTable.getConnection();
