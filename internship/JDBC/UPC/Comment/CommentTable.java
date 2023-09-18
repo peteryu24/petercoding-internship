@@ -2,14 +2,16 @@ package gmx.upc.comment;
 
 import java.util.ArrayList;
 
+import gmx.upc.DBInfo;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CommentTable {
 	// DB 연결 정보
+	/*
 	static final String URL = "jdbc:postgresql://127.0.0.1:5432/UsersPostsComments";
 	static final String USER = "postgres";
 	static final String PASS = "0000";
@@ -28,7 +30,8 @@ public class CommentTable {
 		}
 		return connect;
 	}
-
+	*/
+	
 	public static void createTable() {
 		Connection connect = null;
 		/*
@@ -42,7 +45,7 @@ public class CommentTable {
 		System.out.println("=========================Create Table=========================\n");
 
 		// 쿼리 문자열을 정의
-		String createCommentTable = "CREATE TABLE exam.comment (" + "comment_id INT PRIMARY KEY NOT NULL, " // 댓글 식별
+		String commentTable = "CREATE TABLE exam.comment (" + "comment_id INT PRIMARY KEY NOT NULL, " // 댓글 식별
 				+ "user_id INT, " // user table의 PK를 FK로 받음
 				+ "post_id INT, " // post table의 PK를 FK로 받음
 				+ "comment TEXT NOT NULL, " // 댓글 내용
@@ -57,12 +60,12 @@ public class CommentTable {
 				+ "COMMENT ON COLUMN exam.comment.create_time IS '댓글 작성 시간';";
 
 		try {
-			connect = CommentTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			if (connect == null) {
 				throw new SQLException("DB 연결에 실패하였습니다.");
 			}
 
-			preState = connect.prepareStatement(createCommentTable);
+			preState = connect.prepareStatement(commentTable);
 			if (preState == null) {
 				throw new SQLException("실패하였습니다.");
 			}
@@ -71,7 +74,7 @@ public class CommentTable {
 
 		} catch (SQLException e) {
 			System.out.println("SQLException");
-			System.out.println(createCommentTable); // 실패한 SQL 쿼리를 출력
+			System.out.println(commentTable); // 실패한 SQL 쿼리를 출력
 
 		} finally { // 역순으로 닫아주기
 			try {
@@ -97,7 +100,7 @@ public class CommentTable {
 		System.out.println("\n=========================Insert Values=========================\n");
 
 		try {
-			connect = CommentTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			if (connect == null) {
 				throw new SQLException("DB 연결 실패");
 			}
@@ -162,7 +165,7 @@ public class CommentTable {
 		String sql = "SELECT comment_id, user_id, post_id, comment, create_time FROM exam.comment ORDER BY comment_id ASC";
 
 		try {
-			connect = CommentTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			preState = connect.prepareStatement(sql);
 			rs = preState.executeQuery();
 
@@ -201,7 +204,7 @@ public class CommentTable {
 		PreparedStatement preState = null;
 		String sql = "UPDATE exam.comment " + "SET comment = ? WHERE comment_id = ?";
 		try {
-			connect = CommentTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			// 객체 생성
 			preState = connect.prepareStatement(sql);
 			/*
@@ -245,7 +248,7 @@ public class CommentTable {
 		String sql = "DELETE FROM exam.comment WHERE comment_id = ?";
 
 		try {
-			connect = CommentTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			preState = connect.prepareStatement(sql);
 			preState.setInt(1, deleteWhat);
 
