@@ -42,21 +42,19 @@ public class CommentTable {
 		System.out.println("=========================Create Table=========================\n");
 
 		// 쿼리 문자열을 정의
-		String createCommentTable = "CREATE TABLE exam.comment ("
-    + "comment_id INT PRIMARY KEY NOT NULL, "  // 댓글 식별
-    + "user_id INT, "  // user table의 PK를 FK로 받음
-    + "post_id INT, "  // post table의 PK를 FK로 받음
-    + "comment TEXT NOT NULL, "  // 댓글 내용
-    + "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "  // 댓글 작성 날짜
-    + "FOREIGN KEY (user_id) REFERENCES exam.users(user_id), "  // 외래키 설정
-    + "FOREIGN KEY (post_id) REFERENCES exam.post(post_id)); "  // 외래키 설정
-    + "COMMENT ON TABLE exam.comment IS '댓글 테이블'; "
-    + "COMMENT ON COLUMN exam.comment.comment_id IS '댓글 식별 id'; "
-    + "COMMENT ON COLUMN exam.comment.user_id IS '댓글 작성자 식별 id(외래키)'; "
-    + "COMMENT ON COLUMN exam.comment.post_id IS '댓글이 달린 게시글 식별 id(외래키)'; "
-    + "COMMENT ON COLUMN exam.comment.comment IS '댓글 내용'; "
-    + "COMMENT ON COLUMN exam.comment.create_time IS '댓글 작성 시간';";
-
+		String createCommentTable = "CREATE TABLE exam.comment (" + "comment_id INT PRIMARY KEY NOT NULL, " // 댓글 식별
+				+ "user_id INT, " // user table의 PK를 FK로 받음
+				+ "post_id INT, " // post table의 PK를 FK로 받음
+				+ "comment TEXT NOT NULL, " // 댓글 내용
+				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " // 댓글 작성 날짜
+				+ "FOREIGN KEY (user_id) REFERENCES exam.users(user_id), " // 외래키 설정
+				+ "FOREIGN KEY (post_id) REFERENCES exam.post(post_id)); " // 외래키 설정
+				+ "COMMENT ON TABLE exam.comment IS '댓글 테이블'; "
+				+ "COMMENT ON COLUMN exam.comment.comment_id IS '댓글 식별 id'; "
+				+ "COMMENT ON COLUMN exam.comment.user_id IS '댓글 작성자 식별 id(외래키)'; "
+				+ "COMMENT ON COLUMN exam.comment.post_id IS '댓글이 달린 게시글 식별 id(외래키)'; "
+				+ "COMMENT ON COLUMN exam.comment.comment IS '댓글 내용'; "
+				+ "COMMENT ON COLUMN exam.comment.create_time IS '댓글 작성 시간';";
 
 		try {
 			connect = CommentTable.getConnection();
@@ -194,7 +192,6 @@ public class CommentTable {
 			}
 		}
 		return commentList;
-	
 
 	}
 
@@ -253,7 +250,7 @@ public class CommentTable {
 			preState.setInt(1, deleteWhat);
 
 			int rowsAffected = preState.executeUpdate();
-			
+
 			if (rowsAffected > 0) {
 				System.out.println("삭제완료. comment_id: " + deleteWhat);
 			} else {
@@ -278,21 +275,21 @@ public class CommentTable {
 			}
 		}
 	}
+
 	public static void print() {
-	    System.out.println("\n=========================Print Comment=========================\n");
-	    ArrayList<CommentVo> comments = input();  
+		System.out.println("\n=========================Print Comment=========================\n");
+		ArrayList<CommentVo> comments = input();
 
-	    int commentLengthSize = comments.size();
-	    for (int i = 0; i < commentLengthSize; i++) {
-	        CommentVo comment = comments.get(i);
-	        System.out.println("댓글 ID: " + comment.getComment_id());
-	        System.out.println("사용자 ID: " + comment.getUser_id());
-	        System.out.println("게시물 ID: " + comment.getPost_id());
-	        System.out.println("댓글 내용: " + comment.getComment());
-	        System.out.println("생성 시간: " + comment.getCreate_time());
-	        System.out.println("-------------------------------");
-	    }
+		int commentLengthSize = comments.size();
+		for (int i = 0; i < commentLengthSize; i++) {
+			CommentVo comment = comments.get(i);
+			System.out.println("댓글 ID: " + comment.getComment_id());
+			System.out.println("사용자 ID: " + comment.getUser_id());
+			System.out.println("게시물 ID: " + comment.getPost_id());
+			System.out.println("댓글 내용: " + comment.getComment());
+			System.out.println("생성 시간: " + comment.getCreate_time());
+			System.out.println("-------------------------------");
+		}
 	}
-
 
 }
