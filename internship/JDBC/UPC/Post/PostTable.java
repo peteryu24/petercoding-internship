@@ -1,14 +1,17 @@
 package gmx.upc.post;
 
 import java.util.ArrayList;
+
+import gmx.upc.DBInfo;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PostTable {
 	// DB 연결 정보
+	/*
 	static final String URL = "jdbc:postgresql://127.0.0.1:5432/UsersPostsComments";
 	static final String USER = "postgres";
 	static final String PASS = "0000";
@@ -26,6 +29,7 @@ public class PostTable {
 		}
 		return connect;
 	}
+	*/
 
 	public static void createTable() {
 		Connection connect = null;
@@ -40,7 +44,7 @@ public class PostTable {
 		System.out.println("=========================Create Table=========================\n");
 
 		// 쿼리 문자열을 정의
-		String createPostTable = "CREATE TABLE exam.post (" + "post_id INT PRIMARY KEY NOT NULL, " // 게시글 식별
+		String postTable = "CREATE TABLE exam.post (" + "post_id INT PRIMARY KEY NOT NULL, " // 게시글 식별
 				+ "user_id INT, " // user table의 PK를 FK로 받음
 				+ "title VARCHAR(50) NOT NULL, " // 제목
 				+ "content TEXT, " // 내용
@@ -54,12 +58,12 @@ public class PostTable {
 				+ "COMMENT ON COLUMN exam.post.create_time IS '게시글 작성 시간';";
 
 		try {
-			connect = PostTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			if (connect == null) {
 				throw new SQLException("DB 연결에 실패하였습니다.");
 			}
 
-			preState = connect.prepareStatement(createPostTable);
+			preState = connect.prepareStatement(postTable);
 			if (preState == null) {
 				throw new SQLException("실패하였습니다.");
 			}
@@ -68,7 +72,7 @@ public class PostTable {
 
 		} catch (SQLException e) {
 			System.out.println("SQLException");
-			System.out.println(createPostTable); // 실패한 SQL 쿼리를 출력
+			System.out.println(postTable); // 실패한 SQL 쿼리를 출력
 			e.printStackTrace();
 
 		} finally { // 역순으로 닫아주기
@@ -95,7 +99,7 @@ public class PostTable {
 		System.out.println("\n=========================Insert Values=========================\n");
 
 		try {
-			connect = PostTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			if (connect == null) {
 				throw new SQLException("DB 연결 실패");
 			}
@@ -167,7 +171,7 @@ public class PostTable {
 
 		String sql = "SELECT post_id, user_id, title, content, view, create_time FROM exam.post ORDER BY post_id ASC";
 		try {
-			connect = PostTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			preState = connect.prepareStatement(sql);
 			rs = preState.executeQuery();
 
@@ -207,7 +211,7 @@ public class PostTable {
 		PreparedStatement preState = null;
 		String sql = "UPDATE exam.post " + "SET content = ? WHERE post_id = ?";
 		try {
-			connect = PostTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			// 객체 생성
 			preState = connect.prepareStatement(sql);
 			/*
@@ -250,7 +254,7 @@ public class PostTable {
 		String sql = "DELETE FROM exam.post WHERE post_id = ?";
 
 		try {
-			connect = PostTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			preState = connect.prepareStatement(sql);
 			preState.setInt(1, deleteWhat);
 
