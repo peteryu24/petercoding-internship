@@ -99,7 +99,7 @@ public class Post {
 
 		// 쿼리 문자열을 정의
 		String createPostTable = "CREATE TABLE exam.post (" + "post_id SERIAL PRIMARY KEY, " + "user_id INT, "
-				+ "title VARCHAR(100), " + "content TEXT, " + "view INT DEFAULT 0, "
+				+ "title VARCHAR(100) NOT NULL, " + "content TEXT, " + "view INT DEFAULT 0, "
 				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
 				+ "FOREIGN KEY (user_id) REFERENCES exam.users(user_id));";
 
@@ -140,59 +140,75 @@ public class Post {
 
 	public static void insertValue() {
 		Connection connect = null;
-		Statement state = null;
+		PreparedStatement pstmt = null;
 
 		System.out.println("\n=========================Insert Values=========================\n");
 
-		// 데이터 삽입 위한 SQL 쿼리
-		String[] insertQuery = {
-				"INSERT INTO exam.post (post_id, user_id, title, content) VALUES (2, 2, 'Apple', '사과입니다.')",
-				"INSERT INTO exam.post (post_id, user_id, title, content) VALUES (3, 3, 'Samsung', '삼성입니다.')" };
 		try {
 			connect = Post.getConnection();
 			if (connect == null) {
 				throw new SQLException("DB 연결 실패");
 			}
 
-			try {
-				state = connect.createStatement(); // Statement 객체 생성
+			connect.setAutoCommit(false);
+			String insertQuery = "INSERT INTO exam.post (post_id, user_id, title, content) VALUES (?, ?, ?, ?)";
+			pstmt = connect.prepareStatement(insertQuery);
 
-				// 데이터 삽입
-				for (int i = 0; i < insertQuery.length; i++) {
-					String query = insertQuery[i];
-					try {
-						state.executeUpdate(query); // SQL 쿼리 실행
-						System.out.println("쿼리문 성공: " + query);
-					} catch (SQLException e) {
-						System.out.println("쿼리문 실패: " + query);
-						e.printStackTrace();
-					}
+			// 첫 번째 쿼리
+			pstmt.setInt(1, 2);
+			pstmt.setInt(2, 2);
+			pstmt.setString(3, "Apple");
+			pstmt.setString(4, "사과입니다.");
+			pstmt.executeUpdate();
+
+			// 두 번째 쿼리
+			pstmt.setInt(1, 3);
+			pstmt.setInt(2, 3);
+			pstmt.setString(3, "Samsung");
+			pstmt.setString(4, "삼성입니다.");
+			pstmt.executeUpdate();
+
+			connect.commit();
+
+			System.out.println("데이터가 성공적으로 삽입되었습니다.");
+
+		} catch (SQLException e) {
+			try {
+				// 롤백
+				if (connect != null) {
+					connect.rollback();
 				}
-				System.out.println("데이터가 성공적으로 삽입되었습니다."); // 삽입 성공
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+				if (connect != null) {
+					connect.setAutoCommit(true);
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-			} finally {
-				// Statement 닫기
-				try {
-					if (state != null) {
-						state.close();
-					}
-				} catch (SQLException e) {
-					System.out.println("SQLException: state is null");
-				}
-				// Connection 닫기
-				try {
-					if (connect != null) {
-						connect.close();
-					}
-				} catch (SQLException e) {
-					System.out.println("SQLException: connect is null");
-				}
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("SQLException: pstmt is null");
+			}
+
+			try {
+				if (connect != null) {
+					connect.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("SQLException: connect is null");
+			}
 		}
 	}
+
 
 	public static void printAll() {
 		Connection connect = null;
@@ -214,7 +230,7 @@ public class Post {
 				post.setTitle(rs.getString("title"));
 				post.setContent(rs.getString("content"));
 				post.setView(rs.getInt("view"));
-				post.setCreate_time(rs.getString("create_time")); 
+				post.setCreate_time(rs.getString("create_time"));
 
 				postList.add(post);
 			}
