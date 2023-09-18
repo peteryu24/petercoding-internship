@@ -10,7 +10,7 @@
 CREATE TABLE exam.post (
     post_id INT PRIMARY KEY NOT NULL, -- 게시글 식별
     user_id INT, -- user table의 PK를 FK로 받음
-    title VARCHAR(100), -- 제목
+    title VARCHAR(100) NOT NULL, -- 제목
     content TEXT, -- 내용
     view INT DEFAULT 0, -- 조회수
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 게시글 작성 날짜
@@ -21,7 +21,7 @@ CREATE TABLE exam.comment (
     comment_id INT PRIMARY KEY NOT NULL, -- 댓글 식별
     user_id INT, -- user table의 PK를 FK로 받음
     post_id INT, -- post table의 PK를 FK로 받음
-    comment TEXT, -- 댓글 내용
+    comment TEXT NOT NULL, -- 댓글 내용
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 댓글 작성 날짜
     FOREIGN KEY (user_id) REFERENCES exam.users(user_id),
     FOREIGN KEY (post_id) REFERENCES exam.post(post_id)
@@ -151,14 +151,9 @@ public class Users {
 
 	public static void insertValue() {
 		Connection connect = null;
-		Statement state = null;
-		System.out.println("\n=========================Insert Values=========================\n");
+		PreparedStatement pstmt = null;
 
-		// 데이터 삽입 위한 SQL 쿼리
-		String[] insertQuery = {
-				"INSERT INTO exam.users (user_id, nickname, email, password) VALUES ('1','Dillan', 'dillan123@gmail.com', 'secret123')",
-				"INSERT INTO exam.users (user_id,nickname, email, password) VALUES ('2','Matt', 'matt456@yahoo.com', 'secret456')",
-				"INSERT INTO exam.users (user_id,nickname, email, password) VALUES ('3','Bob', 'bob789@naver.com', 'secret789')" };
+		System.out.println("\n=========================Insert Values=========================\n");
 
 		try {
 			connect = Users.getConnection();
@@ -166,43 +161,70 @@ public class Users {
 				throw new SQLException("DB 연결 실패");
 			}
 
-			try {
-				state = connect.createStatement(); // Statement 객체 생성
+			connect.setAutoCommit(false);
 
-				// 데이터 삽입
-				for (int i = 0; i < insertQuery.length; i++) {
-					String query = insertQuery[i];
-					try {
-						state.executeUpdate(query); // SQL 쿼리 실행
-						System.out.println("쿼리문 성공: " + query);
-					} catch (SQLException e) {
-						System.out.println("쿼리문 실패: " + query);
-						e.printStackTrace();
-					}
+			String insertQuery = "INSERT INTO exam.users (user_id, nickname, email, password) VALUES (?, ?, ?, ?)";
+			pstmt = connect.prepareStatement(insertQuery);
+
+			// 첫 번째 쿼리
+			pstmt.setInt(1, 1);
+			pstmt.setString(2, "Dillan");
+			pstmt.setString(3, "dillan123@gmail.com");
+			pstmt.setString(4, "secret123");
+			pstmt.executeUpdate();
+
+			// 두 번째 쿼리
+			pstmt.setInt(1, 2);
+			pstmt.setString(2, "Matt");
+			pstmt.setString(3, "matt456@yahoo.com");
+			pstmt.setString(4, "secret456");
+			pstmt.executeUpdate();
+
+			// 세 번째 쿼리
+			pstmt.setInt(1, 3);
+			pstmt.setString(2, "Bob");
+			pstmt.setString(3, "bob789@naver.com");
+			pstmt.setString(4, "secret789");
+			pstmt.executeUpdate();
+
+			connect.commit();
+			System.out.println("데이터가 성공적으로 삽입되었습니다.");
+
+		} catch (SQLException e) {
+			try {
+
+				if (connect != null) {
+					connect.rollback();
 				}
-				System.out.println("데이터가 성공적으로 삽입되었습니다."); // 삽입 성공
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+
+				if (connect != null) {
+					connect.setAutoCommit(true);
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-			} finally {
-				// Statement 닫기
-				try {
-					if (state != null) {
-						state.close();
-					}
-				} catch (SQLException e) {
-					System.out.println("SQLException: state is null");
-				}
-				// Connection 닫기
-				try {
-					if (connect != null) {
-						connect.close();
-					}
-				} catch (SQLException e) {
-					System.out.println("SQLException: connect is null");
-				}
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("SQLException: pstmt is null");
+			}
+
+			try {
+				if (connect != null) {
+					connect.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("SQLException: connect is null");
+			}
 		}
 	}
 
@@ -215,7 +237,7 @@ public class Users {
 		String sql = "SELECT user_id, nickname, email, password, create_time FROM exam.users ORDER BY user_id ASC";
 
 		try {
-			connect = Users.getConnection(); // 직접 Connection 객체 생성
+			connect = Users.getConnection();
 
 			state = connect.createStatement();
 			rs = state.executeQuery(sql);
@@ -226,7 +248,7 @@ public class Users {
 				user.setNickname(rs.getString("nickname"));
 				user.setEmail(rs.getString("email"));
 				user.setPassword(rs.getString("password"));
-				user.setCreate_time(rs.getString("create_time")); 
+				user.setCreate_time(rs.getString("create_time"));
 
 				userList.add(user);
 			}
@@ -274,7 +296,7 @@ public class Users {
 			 * 리턴된 preState은 쿼리에 데이터를 삽입하고, 실행
 			 */
 			preState.setString(1, "1q2w3e4r!"); // 첫 번째 ?의 값
-			preState.setInt(2, 1); // 두 번째 ?의 값 (user_id를 적절한 값으로 설정해야 함)
+			preState.setInt(2, 1); // 두 번째 ?의 값
 			// 쿼리 update
 			preState.executeUpdate();
 			System.out.println("PreparedState으로 update 완료");
