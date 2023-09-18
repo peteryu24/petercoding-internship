@@ -91,7 +91,7 @@ public class Comment {
 
 		// 쿼리 문자열을 정의
 		String createCommentTable = "CREATE TABLE exam.comment (" + "comment_id SERIAL PRIMARY KEY, " + "user_id INT, "
-				+ "post_id INT, " + "comment TEXT, " + "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+				+ "post_id INT, " + "comment TEXT NOT NULL, " + "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
 				+ "FOREIGN KEY (user_id) REFERENCES exam.users(user_id), "
 				+ "FOREIGN KEY (post_id) REFERENCES exam.post(post_id));";
 
@@ -131,57 +131,64 @@ public class Comment {
 
 	public static void insertValue() {
 		Connection connect = null;
-		Statement state = null;
+		PreparedStatement pstmt = null;
 
 		System.out.println("\n=========================Insert Values=========================\n");
 
-		// 데이터 삽입 위한 SQL 쿼리
-		// 데이터 삽입 위한 SQL 쿼리
-		String[] insertQuery = {
-				"INSERT INTO exam.comment (comment_id,user_id, post_id, comment) VALUES (3,3, 3, 'Samsung 댓글임.')" };
 		try {
 			connect = Comment.getConnection();
 			if (connect == null) {
 				throw new SQLException("DB 연결 실패");
 			}
 
-			try {
-				state = connect.createStatement(); // Statement 객체 생성
+			connect.setAutoCommit(false);
 
-				// 데이터 삽입
-				for (int i = 0; i < insertQuery.length; i++) {
-					String query = insertQuery[i];
-					try {
-						state.executeUpdate(query); // SQL 쿼리 실행
-						System.out.println("쿼리문 성공: " + query);
-					} catch (SQLException e) {
-						System.out.println("쿼리문 실패: " + query);
-						e.printStackTrace();
-					}
+			String insertQuery = "INSERT INTO exam.comment (comment_id, user_id, post_id, comment) VALUES (?, ?, ?, ?)";
+			pstmt = connect.prepareStatement(insertQuery);
+
+			// 첫 번째 쿼리
+			pstmt.setInt(1, 3);
+			pstmt.setInt(2, 3);
+			pstmt.setInt(3, 3);
+			pstmt.setString(4, "Samsung 댓글임.");
+			pstmt.executeUpdate();
+
+			connect.commit();
+			System.out.println("데이터가 성공적으로 삽입되었습니다.");
+
+		} catch (SQLException e) {
+			try {
+				if (connect != null) {
+					connect.rollback();
 				}
-				System.out.println("데이터가 성공적으로 삽입되었습니다."); // 삽입 성공
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+				if (connect != null) {
+					connect.setAutoCommit(true);
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-			} finally {
-				// Statement 닫기
-				try {
-					if (state != null) {
-						state.close();
-					}
-				} catch (SQLException e) {
-					System.out.println("SQLException: state is null");
-				}
-				// Connection 닫기
-				try {
-					if (connect != null) {
-						connect.close();
-					}
-				} catch (SQLException e) {
-					System.out.println("SQLException: connect is null");
-				}
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("SQLException: pstmt is null");
+			}
+
+			try {
+				if (connect != null) {
+					connect.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("SQLException: connect is null");
+			}
 		}
 	}
 
@@ -204,7 +211,7 @@ public class Comment {
 				comment.setUser_id(rs.getInt("user_id"));
 				comment.setPost_id(rs.getInt("post_id"));
 				comment.setComment(rs.getString("comment"));
-				comment.setCreate_time(rs.getString("create_time")); 
+				comment.setCreate_time(rs.getString("create_time"));
 
 				commentList.add(comment);
 			}
@@ -223,18 +230,17 @@ public class Comment {
 				System.out.println("SQLException: " + e.getMessage());
 			}
 		}
-		int commentListLength=commentList.size();
-		 for (int i = 0; i < commentListLength; i++) {
+		int commentListLength = commentList.size();
+		for (int i = 0; i < commentListLength; i++) {
 			CommentVO comment = commentList.get(i);
-		        System.out.println("Comment ID: " + comment.getComment_id());
-		        System.out.println("User ID: " + comment.getUser_id());
-		        System.out.println("Post ID: " + comment.getPost_id());
-		        System.out.println("Comment: " + comment.getComment());
-		        System.out.println("Create Time: " + comment.getCreate_time());
-		        System.out.println();
-		    }
+			System.out.println("Comment ID: " + comment.getComment_id());
+			System.out.println("User ID: " + comment.getUser_id());
+			System.out.println("Post ID: " + comment.getPost_id());
+			System.out.println("Comment: " + comment.getComment());
+			System.out.println("Create Time: " + comment.getCreate_time());
+			System.out.println();
+		}
 
-		
 	}
 
 	public static void update() {
