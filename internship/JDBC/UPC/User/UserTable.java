@@ -2,14 +2,17 @@
 package gmx.upc.user;
 
 import java.util.ArrayList;
+
+import gmx.upc.DBInfo;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserTable {
 	// DB 연결 정보
+	/*
 	static final String URL = "jdbc:postgresql://127.0.0.1:5432/UsersPostsComments";
 	static final String USER = "postgres";
 	static final String PASS = "0000";
@@ -27,14 +30,14 @@ public class UserTable {
 		}
 		return connect;
 	}
+	*/
 
 	public static void createTable() {
 		Connection connect = null;
 		PreparedStatement preState = null;
 		System.out.println("=========================Create Table=========================\n");
 
-		// Change table creation query
-		String combinedSQL = "CREATE TABLE exam.users (" 
+		String userTable = "CREATE TABLE exam.users (" 
 	            + "user_id INT PRIMARY KEY NOT NULL, "
 	            + "nickname VARCHAR(10) NOT NULL, "
 	            + "email VARCHAR(50) NOT NULL, "
@@ -48,12 +51,12 @@ public class UserTable {
 	            + "COMMENT ON COLUMN exam.users.create_time IS '사용자 계정 생성 시간';";
 
 		try {
-			connect = UserTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			if (connect == null) {
 				throw new SQLException("DB 연결에 실패하였습니다.");
 			}
 
-			preState = connect.prepareStatement(combinedSQL);
+			preState = connect.prepareStatement(userTable);
 			if (preState == null) {
 				throw new SQLException("실패하였습니다.");
 			}
@@ -65,7 +68,7 @@ public class UserTable {
 
 		} catch (SQLException e) {
 			System.out.println("SQLException");
-			System.out.println(combinedSQL);
+			System.out.println(userTable);
 			e.printStackTrace();
 		} finally {
 			try {
@@ -86,12 +89,12 @@ public class UserTable {
 
 	public static void insertValue() {
 		Connection connect = null;
-		PreparedStatement pstmt = null;
+		PreparedStatement preState = null;
 
 		System.out.println("\n=========================Insert Values=========================\n");
 
 		try {
-			connect = UserTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			if (connect == null) {
 				throw new SQLException("DB 연결 실패");
 			}
@@ -99,28 +102,28 @@ public class UserTable {
 			connect.setAutoCommit(false);
 
 			String insertQuery = "INSERT INTO exam.users (user_id, nickname, email, password) VALUES (?, ?, ?, ?)";
-			pstmt = connect.prepareStatement(insertQuery);
+			preState = connect.prepareStatement(insertQuery);
 
 			// 첫 번째 쿼리
-			pstmt.setInt(1, 1);
-			pstmt.setString(2, "Dillan");
-			pstmt.setString(3, "dillan123@gmail.com");
-			pstmt.setString(4, "secret123");
-			pstmt.executeUpdate();
+			preState.setInt(1, 1);
+			preState.setString(2, "Dillan");
+			preState.setString(3, "dillan123@gmail.com");
+			preState.setString(4, "secret123");
+			preState.executeUpdate();
 
 			// 두 번째 쿼리
-			pstmt.setInt(1, 2);
-			pstmt.setString(2, "Matt");
-			pstmt.setString(3, "matt456@yahoo.com");
-			pstmt.setString(4, "secret456");
-			pstmt.executeUpdate();
+			preState.setInt(1, 2);
+			preState.setString(2, "Matt");
+			preState.setString(3, "matt456@yahoo.com");
+			preState.setString(4, "secret456");
+			preState.executeUpdate();
 
 			// 세 번째 쿼리
-			pstmt.setInt(1, 3);
-			pstmt.setString(2, "Bob");
-			pstmt.setString(3, "bob789@naver.com");
-			pstmt.setString(4, "secret789");
-			pstmt.executeUpdate();
+			preState.setInt(1, 3);
+			preState.setString(2, "Bob");
+			preState.setString(3, "bob789@naver.com");
+			preState.setString(4, "secret789");
+			preState.executeUpdate();
 
 			connect.commit();
 			System.out.println("데이터가 성공적으로 삽입되었습니다.");
@@ -146,8 +149,8 @@ public class UserTable {
 			}
 
 			try {
-				if (pstmt != null) {
-					pstmt.close();
+				if (preState != null) {
+					preState.close();
 				}
 			} catch (SQLException e) {
 				System.out.println("SQLException: pstmt is null");
@@ -172,7 +175,7 @@ public class UserTable {
 		String sql = "SELECT user_id, nickname, email, password, create_time FROM exam.users ORDER BY user_id ASC";
 
 		try {
-			connect = UserTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 
 			preState = connect.prepareStatement(sql);
 			rs = preState.executeQuery();
@@ -215,7 +218,7 @@ public class UserTable {
 		String sql = "UPDATE exam.users SET password = ? WHERE user_id = ?";
 
 		try {
-			connect = UserTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			preState = connect.prepareStatement(sql);
 			preState.setString(1, "1q2w3e4r!");
 			preState.setInt(2, 1);
@@ -252,7 +255,7 @@ public class UserTable {
 		String sql = "DELETE FROM exam.users WHERE user_id = ?";
 
 		try {
-			connect = UserTable.getConnection();
+			connect = DBInfo.getInstance().getConnection();
 			preState = connect.prepareStatement(sql);
 			preState.setInt(1, deleteWhat);
 
