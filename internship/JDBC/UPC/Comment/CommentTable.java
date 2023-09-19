@@ -15,7 +15,7 @@ public class CommentTable {
 	static final String URL = "jdbc:postgresql://127.0.0.1:5432/UsersPostsComments";
 	static final String USER = "postgres";
 	static final String PASS = "0000";
-
+	
 	// 연결 수행
 	public static Connection getConnection() {
 		Connection connect = null;
@@ -31,8 +31,8 @@ public class CommentTable {
 		return connect;
 	}
 	*/
-	
-	public static void createTable() {
+
+	public void createTable() {
 		Connection connect = null;
 		/*
 		 * DB에 대한 실제 연결을 나타냄
@@ -50,8 +50,10 @@ public class CommentTable {
 				+ "post_id SERIAL, " // post table의 PK를 FK로 받음
 				+ "comment TEXT NOT NULL, " // 댓글 내용
 				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " // 댓글 작성 날짜
-				+ "FOREIGN KEY (user_id) REFERENCES exam.users(user_id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE, " // 외래키 설정
-				+ "FOREIGN KEY (post_id) REFERENCES exam.post(post_id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE); " // 외래키 설정
+				+ "FOREIGN KEY (user_id) REFERENCES exam.users(user_id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE, " // 외래키
+																															// 설정
+				+ "FOREIGN KEY (post_id) REFERENCES exam.post(post_id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE); " // 외래키
+																															// 설정
 				+ "COMMENT ON TABLE exam.comment IS '댓글 테이블'; "
 				+ "COMMENT ON COLUMN exam.comment.comment_id IS '댓글 식별 id'; "
 				+ "COMMENT ON COLUMN exam.comment.user_id IS '댓글 작성자 식별 id(외래키)'; "
@@ -93,7 +95,7 @@ public class CommentTable {
 		}
 	}
 
-	public static void insertValue() { // null 예외처리 필요
+	public void insertValue() { // null 예외처리 필요
 		Connection connect = null;
 		PreparedStatement preState = null;
 
@@ -156,7 +158,7 @@ public class CommentTable {
 		}
 	}
 
-	public static ArrayList<CommentVo> input() {
+	public ArrayList<CommentVo> input() {
 		Connection connect = null;
 		PreparedStatement preState = null;
 		ResultSet rs = null;
@@ -198,7 +200,7 @@ public class CommentTable {
 
 	}
 
-	public static void update() {
+	public void update() {
 		System.out.println("\n=========================PreparedState=========================\n");
 		Connection connect = null;
 		PreparedStatement preState = null;
@@ -235,7 +237,7 @@ public class CommentTable {
 		}
 	}
 
-	public static void delete() {
+	public void delete() {
 		Connection connect = null;
 		PreparedStatement preState = null;
 
@@ -279,7 +281,7 @@ public class CommentTable {
 		}
 	}
 
-	public static void print() {
+	public void print() {
 		System.out.println("\n=========================Print Comment=========================\n");
 		ArrayList<CommentVo> comments = input();
 
@@ -294,5 +296,4 @@ public class CommentTable {
 			System.out.println("-------------------------------");
 		}
 	}
-
 }
