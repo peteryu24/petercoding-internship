@@ -1,4 +1,3 @@
-
 package gmx.upc.user;
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ public class UserTable {
 	static final String URL = "jdbc:postgresql://127.0.0.1:5432/UsersPostsComments";
 	static final String USER = "postgres";
 	static final String PASS = "0000";
-
+	
 	// 연결 수행
 	public static Connection getConnection() {
 		Connection connect = null;
@@ -32,23 +31,19 @@ public class UserTable {
 	}
 	*/
 
-	public static void createTable() {
+	public void createTable() {
 		Connection connect = null;
 		PreparedStatement preState = null;
 		System.out.println("=========================Create Table=========================\n");
 
-		String userTable = "CREATE TABLE exam.users (" 
-	            + "user_id SERIAL PRIMARY KEY NOT NULL, "
-	            + "nickname VARCHAR(10) NOT NULL, "
-	            + "email VARCHAR(50) NOT NULL, "
-	            + "password VARCHAR(15) NOT NULL, "
-	            + "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP); "
-	            + "COMMENT ON TABLE exam.users IS '유저 정보 테이블'; "
-	            + "COMMENT ON COLUMN exam.users.user_id IS '사용자 식별 id'; "
-	            + "COMMENT ON COLUMN exam.users.nickname IS '사용자 닉네임'; "
-	            + "COMMENT ON COLUMN exam.users.email IS '사용자 이메일'; "
-	            + "COMMENT ON COLUMN exam.users.password IS '사용자 비밀번호'; "
-	            + "COMMENT ON COLUMN exam.users.create_time IS '사용자 계정 생성 시간';";
+		String userTable = "CREATE TABLE exam.users (" + "user_id SERIAL PRIMARY KEY NOT NULL, "
+				+ "nickname VARCHAR(10) NOT NULL, " + "email VARCHAR(50) NOT NULL, " + "password VARCHAR(15) NOT NULL, "
+				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP); " + "COMMENT ON TABLE exam.users IS '유저 정보 테이블'; "
+				+ "COMMENT ON COLUMN exam.users.user_id IS '사용자 식별 id'; "
+				+ "COMMENT ON COLUMN exam.users.nickname IS '사용자 닉네임'; "
+				+ "COMMENT ON COLUMN exam.users.email IS '사용자 이메일'; "
+				+ "COMMENT ON COLUMN exam.users.password IS '사용자 비밀번호'; "
+				+ "COMMENT ON COLUMN exam.users.create_time IS '사용자 계정 생성 시간';";
 
 		try {
 			connect = DBInfo.getInstance().getConnection();
@@ -63,8 +58,6 @@ public class UserTable {
 
 			preState.executeUpdate();
 			System.out.println("users table 생성완료.");
-
-			
 
 		} catch (SQLException e) {
 			System.out.println("SQLException");
@@ -87,7 +80,7 @@ public class UserTable {
 		}
 	}
 
-	public static void insertValue() {
+	public void insertValue() {
 		Connection connect = null;
 		PreparedStatement preState = null;
 
@@ -166,7 +159,7 @@ public class UserTable {
 		}
 	}
 
-	public static ArrayList<UserVo> input() {
+	public ArrayList<UserVo> input() {
 		Connection connect = null;
 		PreparedStatement preState = null;
 		ResultSet rs = null;
@@ -209,7 +202,7 @@ public class UserTable {
 		return userList;
 	}
 
-	public static void update() {
+	public void update() {
 		System.out.println("\n=========================PreparedState Update=========================\n");
 		Connection connect = null;
 		PreparedStatement preState = null;
@@ -244,7 +237,7 @@ public class UserTable {
 		}
 	}
 
-	public static void delete() {
+	public void delete() {
 		System.out.println("\n=========================Delete=========================\n");
 		Connection connect = null;
 		PreparedStatement preState = null;
@@ -280,7 +273,7 @@ public class UserTable {
 		}
 	}
 
-	public static void print() {
+	public void print() {
 		System.out.println("\n=========================Print User=========================\n");
 		ArrayList<UserVo> users = input();
 
@@ -295,5 +288,4 @@ public class UserTable {
 			System.out.println("-------------------------------");
 		}
 	}
-
 }
