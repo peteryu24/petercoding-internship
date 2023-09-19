@@ -41,7 +41,7 @@ div {
 			<i><u>Welcome</u></i>
 			<!--이탈릭한(i) 제목(h2)에 밑줄(u)-->
 		</h2>
-	<form action="LoginAction.jsp" method="post">
+	<form action="LoginCheck.jsp" method="post">
 		<label for="email"> email</label><br> <input type="text"
 			id="email" name="email" value=""><br>
 		<!--텍스트를 입력할 수 있는 상자-->
