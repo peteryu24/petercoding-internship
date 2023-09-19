@@ -31,7 +31,7 @@ div {
 <title>로그인 페이지 구현 과제</title>
 </head>
 <body
-	style="background-image: url('https://e0.pxfuel.com/wallpapers/934/955/desktop-wallpaper-blue-two-tone-mural.jpg')">
+	style="background-color: #eee6c4">
 	<!--실제로 화면에 보여지는-->
 
 
@@ -51,7 +51,7 @@ div {
 		<button class="login button" type="button"
 			style='width: 70pt; height: 70pt;'>LOGIN</button>
 		<!--버튼-->
-		<button class="register button" type="button"
+		<button class="register button" type="button" onclick="location='Register.jsp'"
 			style='width: 70pt; height: 70pt;'>REGISTER</button>
 	</div>
 </body>
