@@ -15,7 +15,7 @@ public class PostTable {
 	static final String URL = "jdbc:postgresql://127.0.0.1:5432/UsersPostsComments";
 	static final String USER = "postgres";
 	static final String PASS = "0000";
-
+	
 	// 연결 수행
 	public static Connection getConnection() {
 		Connection connect = null;
@@ -31,7 +31,7 @@ public class PostTable {
 	}
 	*/
 
-	public static void createTable() {
+	public void createTable() {
 		Connection connect = null;
 		/*
 		 * DB에 대한 실제 연결을 나타냄
@@ -50,7 +50,8 @@ public class PostTable {
 				+ "content TEXT, " // 내용
 				+ "view INT DEFAULT 0, " // 조회수
 				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " // 게시글 작성 날짜
-				+ "FOREIGN KEY (user_id) REFERENCES exam.users(user_id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE); " // 외래키 설정
+				+ "FOREIGN KEY (user_id) REFERENCES exam.users(user_id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE); " // 외래키
+																															// 설정
 				+ "COMMENT ON TABLE exam.post IS '게시글 테이블'; " + "COMMENT ON COLUMN exam.post.post_id IS '게시글 식별 id'; "
 				+ "COMMENT ON COLUMN exam.post.user_id IS '게시글을 작성한 사용자 식별 id(외래키)'; "
 				+ "COMMENT ON COLUMN exam.post.title IS '게시글 제목'; "
@@ -92,7 +93,7 @@ public class PostTable {
 		}
 	}
 
-	public static void insertValue() { // null 예외처리 필요
+	public void insertValue() { // null 예외처리 필요
 		Connection connect = null;
 		PreparedStatement preState = null;
 
@@ -163,7 +164,7 @@ public class PostTable {
 		}
 	}
 
-	public static ArrayList<PostVo> input() {
+	public ArrayList<PostVo> input() {
 		Connection connect = null;
 		PreparedStatement preState = null;
 		ResultSet rs = null;
@@ -205,7 +206,7 @@ public class PostTable {
 		return postList;
 	}
 
-	public static void update() {
+	public void update() {
 		System.out.println("\n=========================PreparedState=========================\n");
 		Connection connect = null;
 		PreparedStatement preState = null;
@@ -241,7 +242,7 @@ public class PostTable {
 		}
 	}
 
-	public static void delete() {
+	public void delete() {
 		Connection connect = null;
 		PreparedStatement preState = null;
 
@@ -286,7 +287,7 @@ public class PostTable {
 		}
 	}
 
-	public static void print() {
+	public void print() {
 		System.out.println("\n=========================Print Post=========================\n");
 		ArrayList<PostVo> posts = input();
 
@@ -302,5 +303,4 @@ public class PostTable {
 			System.out.println("-------------------------------");
 		}
 	}
-
 }
