@@ -42,8 +42,8 @@ div {
 			<!--이탈릭한(i) 제목(h2)에 밑줄(u)-->
 		</h2>
 
-		<label for="userid"> ID</label><br> <input type="text"
-			id="userid" name="userid" value=""><br>
+		<label for="email"> email</label><br> <input type="text"
+			id="email" name="email" value=""><br>
 		<!--텍스트를 입력할 수 있는 상자-->
 		<label for="pw">PW</label><br> <input type="password" id="pw"
 			name="pw" value="">
