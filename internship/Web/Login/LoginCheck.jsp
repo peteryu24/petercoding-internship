@@ -20,7 +20,7 @@
 
       if(rs.next()) {
           // 로그인 성공, aaa.jsp로 리다이렉트
-          response.sendRedirect("aaa.jsp");
+          response.sendRedirect("ShowTable.jsp");
       } else {
           // 로그인 실패, 다시 로그인 페이지로
           response.sendRedirect("Login.jsp");
