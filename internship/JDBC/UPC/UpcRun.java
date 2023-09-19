@@ -6,31 +6,36 @@ import gmx.upc.user.UserTable;
 
 public class UpcRun {
 	public static void main(String[] args) {
-		UserTable.createTable();
-		UserTable.insertValue();
-		UserTable.input();
-		UserTable.print();
-		UserTable.update();
-		UserTable.print();
-		UserTable.delete();
-		UserTable.print();
-		
-		PostTable.createTable();
-		PostTable.insertValue();
-		PostTable.input();
-		PostTable.print();
-		PostTable.update();
-		PostTable.print();
-		PostTable.delete();
-		PostTable.print();
-		
-		CommentTable.createTable();
-		CommentTable.insertValue();
-		CommentTable.input();
-		CommentTable.print();
-		CommentTable.update();
-		CommentTable.print();
-		CommentTable.delete();
-		CommentTable.print();
+
+		UserTable ut = new UserTable();
+		PostTable pt = new PostTable();
+		CommentTable ct = new CommentTable();
+
+		ut.createTable();
+		ut.insertValue();
+		ut.input();
+		ut.print();
+		ut.update();
+		ut.print();
+		ut.delete();
+		ut.print();
+
+		pt.createTable();
+		pt.insertValue();
+		pt.input();
+		pt.print();
+		pt.update();
+		pt.print();
+		pt.delete();
+		pt.print();
+
+		ct.createTable();
+		ct.insertValue();
+		ct.input();
+		ct.print();
+		ct.update();
+		ct.print();
+		ct.delete();
+		ct.print();
 	}
 }
