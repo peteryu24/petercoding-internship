@@ -49,8 +49,10 @@ div {
 			name="pw" value="">
 		<!--입력한 텍스트는 별표로 표시-->
 		<button class="login button" type="button"
-			style='width: 50pt; height: 50pt;'>LOGIN</button>
+			style='width: 70pt; height: 70pt;'>LOGIN</button>
 		<!--버튼-->
+		<button class="register button" type="button"
+			style='width: 70pt; height: 70pt;'>REGISTER</button>
 	</div>
 </body>
 </html>
