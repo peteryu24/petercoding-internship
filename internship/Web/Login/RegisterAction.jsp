@@ -13,12 +13,11 @@
         DBInfo dbInfo = DBInfo.getInstance();
         conn = dbInfo.getConnection();
 
-        String sql = "INSERT INTO exam.users (user_id, email, nickname, password) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO exam.users (email, nickname, password) VALUES (?, ?, ?)";
         pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, userid);
-        pstmt.setString(2, email);
-        pstmt.setString(3, nickname);
-        pstmt.setString(4, password);
+        pstmt.setString(1, email);
+        pstmt.setString(2, nickname);
+        pstmt.setString(3, password);
         pstmt.executeUpdate();
     } catch (SQLException e) {
         e.printStackTrace();
