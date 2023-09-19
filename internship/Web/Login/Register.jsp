@@ -42,9 +42,6 @@ div {
 			<!--이탈릭한(i) 제목(h2)-->
 		</h2>
 
-		<label for="userid">SET ID</label><br> <input type="text"
-			id="userid" name="userid" value=""><br>
-		<!--아이디 상자-->
 		<label for="email">SET e-mail</label><br> <input type="text"
 			id="email" name="email" value=""><br>
 		<!--이메일 상자-->
