@@ -41,7 +41,7 @@ div {
 			<i>Hello</i>
 			<!--이탈릭한(i) 제목(h2)-->
 		</h2>
-	<form action="RegisterAction.jsp" method="post">
+	<form action="RegisterCheck.jsp" method="post">
 		<label for="email">SET e-mail</label><br> <input type="text"
 			id="email" name="email" value=""><br>
 		<!--이메일 상자-->
