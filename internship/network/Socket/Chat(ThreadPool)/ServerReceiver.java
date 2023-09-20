@@ -1,4 +1,4 @@
-package gmx.chat;
+package gmx.chat.server;
 
 import java.io.*;
 import java.net.*;
@@ -12,15 +12,15 @@ public class ServerReceiver implements Runnable {
 	public ServerReceiver(Socket socket, Server server) {
 		this.socket = socket;
 		this.server = server;
-		initStreams();
+		makeStream();
 	}
 
-	private void initStreams() {
+	private void makeStream() {
 		try {
 			input = new DataInputStream(socket.getInputStream());
 			output = new DataOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
-			server.displayError("통신 스트림 생성 중 오류 발생", e);
+			server.showError("스트림 생성 에러", e);
 		}
 	}
 
@@ -39,27 +39,28 @@ public class ServerReceiver implements Runnable {
 		} catch (IOException e) {
 			System.out.println(name + "님의 연결이 끊어졌습니다: " + e.getMessage());
 		} finally {
-			clientDisconnect(name);
+			disconnect(name);
 		}
 	}
 
-	private void clientDisconnect(String name) {
+	private void disconnect(String name) {
 		server.getClients().remove(name);
 		server.sendToAll(name + "님이 대화방에서 나갔습니다.");
 		System.out.println("현재 " + server.getClients().size() + "명이 대화방에 접속 중입니다.");
 
-		closeResource(input, "입력 스트림 해제 중 오류 발생");
-		closeResource(output, "출력 스트림 해제 중 오류 발생");
-		closeResource(socket, "소켓 해제 중 오류 발생");
+		closeIO(input, "입력 스트림 해제 에러");
+		closeIO(output, "출력 스트림 해제 에러");
+		closeIO(socket, "소켓 해제 에러");
 	}
 
-	private void closeResource(Closeable resource, String errorMsg) {
-		if (resource != null) {
+	private void closeIO(Closeable io, String error) {
+		if (io != null) {
 			try {
-				resource.close();
+				io.close();
 			} catch (IOException e) {
-				server.displayError(errorMsg, e);
+				server.showError(error, e);
 			}
 		}
 	}
+
 }
