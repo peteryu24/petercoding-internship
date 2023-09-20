@@ -41,7 +41,7 @@ div {
 			<i>Hello</i>
 			<!--이탈릭한(i) 제목(h2)-->
 		</h2>
-	<form action="RegisterCheck.jsp" method="post">
+	<form action="RegisterUpdate.jsp" method="post">
 		<label for="email">SET e-mail</label><br> <input type="text"
 			id="email" name="email" value=""><br>
 		<!--이메일 상자-->
@@ -55,7 +55,7 @@ div {
 		<button class="button" id="go back" type="button"
 			onclick="location='Login.jsp'" style='width: 60pt; height: 60pt;'>Go
 			Back</button>
-		<button class="button" id="register" type="button"
+		<button class="button" id="register" type="submit"
 			style='width: 60pt; height: 60pt;'>
 			REGISTER <br>NOW
 		</button>
