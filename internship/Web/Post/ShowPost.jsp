@@ -41,35 +41,6 @@ body {
 </head>
 <body>
 
-	<h2>User</h2>
-	<table id="user">
-		<thead>
-			<tr>
-				<th>User ID</th>
-				<th>Nickname</th>
-				<th>Email</th>
-				<th>Password</th>
-				<th>Create Time</th>
-			</tr>
-		</thead>
-		<tbody>
-			<%
-				for (int i = 0; i < userList.size(); i++) {
-					UserVo user = userList.get(i);
-			%>
-			<tr>
-				<td><%=user.getUser_id()%></td>
-				<td><%=user.getNickname()%></td>
-				<td><%=user.getEmail()%></td>
-				<td><%=user.getPassword()%></td>
-				<td><%=user.getCreate_time()%></td>
-			</tr>
-			<%
-				}
-			%>
-		</tbody>
-	</table>
-
 	<h2>Post</h2>
 	<table id="post">
 		<thead>
@@ -95,40 +66,16 @@ body {
 				<td><%=post.getView()%></td>
 				<td><%=post.getCreate_time()%></td>
 			</tr>
+			<tr></tr>
 			<%
 				}
 			%>
+			
+			<button class="register button" type="button"
+				onclick="location='CreatePost.jsp'" style='width: 70pt; height: 70pt;'>Write</button>
 		</tbody>
 	</table>
 
-	<h2>Comments</h2>
-	<table id="comment">
-		<thead>
-			<tr>
-				<th>Comment ID</th>
-				<th>User ID</th>
-				<th>Post ID</th>
-				<th>Comment</th>
-				<th>Create Time</th>
-			</tr>
-		</thead>
-		<tbody>
-			<%
-				for (int i = 0; i < commentList.size(); i++) {
-					CommentVo comment = commentList.get(i);
-			%>
-			<tr>
-				<td><%=comment.getComment_id()%></td>
-				<td><%=comment.getUser_id()%></td>
-				<td><%=comment.getPost_id()%></td>
-				<td><%=comment.getComment()%></td>
-				<td><%=comment.getCreate_time()%></td>
-			</tr>
-			<%
-				}
-			%>
-		</tbody>
-	</table>
 
 </body>
 </html>
