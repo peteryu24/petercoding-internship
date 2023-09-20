@@ -9,7 +9,7 @@
 	Boolean isCheck = ut.loginCheck(email, password);
 
 	if (isCheck) {
-		session.setAttribute("userEmail", email);
+		//session.setAttribute("userEmail", email);
 		out.println("<script>alert('로그인 성공하셨습니다.');</script>");
 		out.println("<script>location.href='../Post/ShowPost.jsp'</script>");
 
