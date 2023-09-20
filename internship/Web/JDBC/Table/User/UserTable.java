@@ -1,4 +1,3 @@
-
 package gmx.upc.user;
 
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ public class UserTable {
 				if (preState != null)
 					preState.close();
 			} catch (SQLException e) {
-				System.out.println("SQLException: pstmt is null");
+				System.out.println("SQLException: preState is null");
 			}
 
 			try {
@@ -81,10 +80,15 @@ public class UserTable {
 		}
 	}
 
-	public void insertValue() {
+	public boolean insertValue(String nickname, String email, String password) {
+		boolean nullCheck = true;
+		if ((nickname == "") || (email == "") || (password == "")) {
+			nullCheck = false;
+			return nullCheck;
+		}
 		Connection connect = null;
 		PreparedStatement preState = null;
-		UserVo uv = new UserVo();
+		// UserVo uv = new UserVo();
 
 		System.out.println("\n=========================Insert Values=========================\n");
 
@@ -100,11 +104,10 @@ public class UserTable {
 			preState = connect.prepareStatement(insertQuery);
 
 			// 첫 번째 쿼리
-			preState.setString(1, uv.getNickname());
-			preState.setString(2, uv.getEmail());
-			preState.setString(3, uv.getPassword());
+			preState.setString(1, nickname);
+			preState.setString(2, email);
+			preState.setString(3, password);
 			preState.executeUpdate();
-
 
 			connect.commit();
 			System.out.println("데이터가 성공적으로 삽입되었습니다.");
@@ -134,7 +137,7 @@ public class UserTable {
 					preState.close();
 				}
 			} catch (SQLException e) {
-				System.out.println("SQLException: pstmt is null");
+				System.out.println("SQLException: preState is null");
 			}
 
 			try {
@@ -145,6 +148,7 @@ public class UserTable {
 				System.out.println("SQLException: connect is null");
 			}
 		}
+		return nullCheck;
 	}
 
 	public ArrayList<UserVo> input() {
@@ -163,7 +167,7 @@ public class UserTable {
 
 			while (rs.next()) {
 				UserVo user = new UserVo();
-				user.setUser_id(rs.getInt("user_id"));
+				user.setUserId(rs.getString("userId"));
 				user.setNickname(rs.getString("nickname"));
 				user.setEmail(rs.getString("email"));
 				user.setPassword(rs.getString("password"));
@@ -268,13 +272,56 @@ public class UserTable {
 		int userLengthSize = users.size();
 		for (int i = 0; i < userLengthSize; i++) {
 			UserVo user = users.get(i);
-			System.out.println("사용자 ID: " + user.getUser_id());
+			System.out.println("사용자 ID: " + user.getUserId());
 			System.out.println("별명: " + user.getNickname());
 			System.out.println("이메일: " + user.getEmail());
 			System.out.println("비밀번호: " + user.getPassword());
 			System.out.println("생성 시간: " + user.getCreate_time());
 			System.out.println("-------------------------------");
 		}
+	}
+
+	public boolean loginCheck(String email, String password) {
+		Connection connect = null;
+		PreparedStatement preState = null;
+		ResultSet rs = null;
+		Boolean isCheck = false;
+		try {
+
+			String sql = "SELECT * FROM exam.users WHERE email = ? AND password = ?";
+			connect = DBInfo.getInstance().getConnection();
+			preState = connect.prepareStatement(sql);
+			preState.setString(1, email);
+			preState.setString(2, password);
+			rs = preState.executeQuery();
+			if (rs.next()) {
+				isCheck = true;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+
+				}
+			}
+			if (preState != null) {
+				try {
+					preState.close();
+				} catch (SQLException e) {
+				}
+			}
+			if (connect != null) {
+				try {
+					connect.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return isCheck;
 	}
 
 }
