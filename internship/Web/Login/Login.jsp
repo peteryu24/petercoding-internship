@@ -30,8 +30,7 @@ div {
 <meta charset="UTF-8">
 <title>로그인 페이지 구현 과제</title>
 </head>
-<body
-	style="background-color: #eee6c4">
+<body style="background-color: #eee6c4">
 	<!--실제로 화면에 보여지는-->
 
 
@@ -41,19 +40,19 @@ div {
 			<i><u>Welcome</u></i>
 			<!--이탈릭한(i) 제목(h2)에 밑줄(u)-->
 		</h2>
-	<form action="LoginCheck.jsp" method="post">
-		<label for="email"> email</label><br> <input type="text"
-			id="email" name="email" value=""><br>
-		<!--텍스트를 입력할 수 있는 상자-->
-		<label for="pw">PW</label><br> <input type="password" id="pw"
-			name="pw" value="">
-		<!--입력한 텍스트는 별표로 표시-->
-		<button class="login button" type="button"
-			style='width: 70pt; height: 70pt;'>LOGIN</button>
-		<!--버튼-->
-		<button class="register button" type="button" onclick="location='Register.jsp'"
-			style='width: 70pt; height: 70pt;'>REGISTER</button>
-	</form>
+		<form action="LoginCheck.jsp" method="post">
+			<label for="email"> email</label><br> <input type="text"
+				id="email" name="email" value=""><br>
+			<!--텍스트를 입력할 수 있는 상자-->
+			<label for="password">PW</label><br> <input type="password"
+				id="pw" name="password" value="">
+			<!--입력한 텍스트는 별표로 표시-->
+			<button class="login button" type="submit"
+				style='width: 70pt; height: 70pt;'>LOGIN</button>
+			<!--버튼-->
+			<button class="register button" type="button"
+				onclick="location='Register.jsp'" style='width: 70pt; height: 70pt;'>REGISTER</button>
+		</form>
 	</div>
 </body>
 </html>
