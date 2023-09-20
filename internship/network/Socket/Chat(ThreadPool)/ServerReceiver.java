@@ -39,11 +39,11 @@ public class ServerReceiver implements Runnable {
 		} catch (IOException e) {
 			System.out.println(name + "님의 연결이 끊어졌습니다: " + e.getMessage());
 		} finally {
-			disconnect(name);
+			disConnect(name);
 		}
 	}
 
-	private void disconnect(String name) {
+	private void disConnect(String name) {
 		server.getClients().remove(name);
 		server.sendToAll(name + "님이 대화방에서 나갔습니다.");
 		System.out.println("현재 " + server.getClients().size() + "명이 대화방에 접속 중입니다.");
