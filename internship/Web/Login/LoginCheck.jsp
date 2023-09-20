@@ -11,7 +11,7 @@
 	if (isCheck) {
 		session.setAttribute("userEmail", email);
 		out.println("<script>alert('로그인 성공하셨습니다.');</script>");
-		out.println("<script>location.href='../Table/ShowTable.jsp'</script>");
+		out.println("<script>location.href='../Post/ShowPost.jsp'</script>");
 
 	} else {
 		out.println("<script>alert('로그인 실패하셨습니다.');</script>");
