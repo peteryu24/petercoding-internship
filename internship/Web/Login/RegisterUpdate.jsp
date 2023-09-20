@@ -7,13 +7,13 @@
 	String password = request.getParameter("password");
 
 	UserTable ut = new UserTable();
-	
-	Boolean nullCheck = ut.insertValue(email, nickname, password);
 
-	if (nullCheck) {
+	Boolean isCheck = ut.insertValue(email, nickname, password);
+
+	if (isCheck) {
 		out.println("<script>alert('회원가입 성공하셨습니다.');</script>");
 		out.println("<script>location.href='Login.jsp'</script>");
-	}else{
+	} else {
 		out.println("<script>alert('모든 정보를 입력하세요.');</script>");
 		out.println("<script>location.href='Register.jsp'</script>");
 	}
