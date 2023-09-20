@@ -1,35 +1,22 @@
-<%@ page import="java.sql.*" %>
-<%@ page import="gmx.upc.DBInfo" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page import="gmx.upc.user.UserTable"%>
+
 <%
-  String email = request.getParameter("userid");
-  String password = request.getParameter("pw");
+	String email = request.getParameter("email");
+	String password = request.getParameter("password");
+	UserTable ut = new UserTable();
+	Boolean isCheck = ut.loginCheck(email, password);
 
-  Connection conn = null;
-  PreparedStatement pstmt = null;
-  ResultSet rs = null;
+	if (isCheck) {
+		session.setAttribute("userEmail", email);
+		out.println("<script>alert('로그인 성공하셨습니다.');</script>");
+		out.println("<script>location.href='../Table/ShowTable.jsp'</script>");
 
-  try {
-      DBInfo dbInfo = DBInfo.getInstance();
-      conn = dbInfo.getConnection();
+	} else {
+		out.println("<script>alert('로그인 실패하셨습니다.');</script>");
+		out.println("<script>location.href='Login.jsp'</script>");
 
-      String sql = "SELECT * FROM exam.users WHERE email = ? AND password = ?";
-      pstmt = conn.prepareStatement(sql);
-      pstmt.setString(1, email);
-      pstmt.setString(2, password);
-      rs = pstmt.executeQuery();
-
-      if(rs.next()) {
-          // 로그인 성공, aaa.jsp로 리다이렉트
-          response.sendRedirect("ShowTable.jsp");
-      } else {
-          // 로그인 실패, 다시 로그인 페이지로
-          response.sendRedirect("Login.jsp");
-      }
-  } catch(SQLException e) {
-      e.printStackTrace();
-  } finally {
-      if(rs != null) try { rs.close(); } catch(SQLException e) {}
-      if(pstmt != null) try { pstmt.close(); } catch(SQLException e) {}
-      if(conn != null) try { conn.close(); } catch(SQLException e) {}
-  }
+	}
 %>
+
