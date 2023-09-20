@@ -1,4 +1,4 @@
-package gmx.chat;
+package gmx.chat.server;
 
 import java.io.*;
 import java.net.*;
@@ -25,25 +25,25 @@ public class Server {
 		while (true) {
 			try {
 				serverSocket = new ServerSocket(chatPort);
-				System.out.println("서버가 포트 " + chatPort + "에서 시작되었습니다.");
+				System.out.println("포트번호 (  " + chatPort + " )에서 서버 시작.");
 
 				while (true) {
 					Socket socket = serverSocket.accept();
 					ServerReceiver receiver = new ServerReceiver(socket, this);
-					threadPool.execute(receiver);
+					threadPool.execute(receiver); // 쓰레드 풀 시작
 				}
 			} catch (BindException e) {
-				System.out.println("포트 " + chatPort + "이(가) 사용 중입니다. 다른 포트로 시도합니다.");
+				System.out.println("포트번호 ( " + chatPort + " ) 이미 사용 중입니다.");
 				chatPort++;
 			} catch (IOException e) {
-				displayError("서버 시작 중 오류 발생", e);
+				showError("서버 에러", e);
 				break;
 			}
 		}
 	}
 
-	void displayError(String message, Exception e) {
-		System.out.println(message + ": " + e.getMessage());
+	void showError(String str, Exception e) {
+		System.out.println(str + ": " + e.getMessage());
 	}
 
 	public Map<String, DataOutputStream> getClients() {
@@ -56,7 +56,7 @@ public class Server {
 				try {
 					dos.writeUTF(message);
 				} catch (Exception e) {
-					displayError("메시지 전송 중 오류 발생", e);
+					showError("메시지 전송 중 오류 발생", e);
 				}
 			}
 		}
