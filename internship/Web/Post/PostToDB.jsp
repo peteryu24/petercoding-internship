@@ -7,9 +7,9 @@
 	String content = request.getParameter("content");
 
 	PostTable pt = new PostTable();
-	Boolean nullCheck = pt.insertValue(title, content);
+	Boolean isCheck = pt.insertValue(title, content);
 
-	if (nullCheck) {
+	if (isCheck) {
 		out.println("<script>alert('게시글 작성 성공.');</script>");
 		out.println("<script>location.href='ShowPost.jsp'</script>");
 	} else {
