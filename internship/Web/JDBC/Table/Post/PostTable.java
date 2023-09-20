@@ -93,10 +93,15 @@ public class PostTable {
 		}
 	}
 
-	public void insertValue() { // null 예외처리 필요
+	public boolean insertValue(String title, String content) { // null 예외처리 필요
+		boolean nullCheck = true;
+		if ((title == "")) {
+			nullCheck = false;
+			return nullCheck;
+		}
 		Connection connect = null;
 		PreparedStatement preState = null;
-		PostVo pv = new PostVo();
+		// PostVo pv = new PostVo();
 
 		System.out.println("\n=========================Insert Values=========================\n");
 
@@ -111,8 +116,8 @@ public class PostTable {
 			preState = connect.prepareStatement(insertQuery);
 
 			// 첫 번째 쿼리
-			preState.setString(1, pv.getTitle());
-			preState.setString(2, pv.getContent());
+			preState.setString(1, title);
+			preState.setString(2, content);
 			preState.executeUpdate();
 
 			connect.commit();
@@ -154,6 +159,7 @@ public class PostTable {
 				System.out.println("SQLException: connect is null");
 			}
 		}
+		return nullCheck;
 	}
 
 	public ArrayList<PostVo> input() {
