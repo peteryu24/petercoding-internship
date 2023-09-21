@@ -25,13 +25,13 @@ public class ServerReceiver implements Runnable {
 	}
 
 	@Override
-	public void run() {
+	public void run() { // 이름 중복 검열 추가
 		String name = "";
 		try {
 			name = input.readUTF();
+			server.setClient(name, output);
 			server.sendToAll(name + "님이 대화방에 접속하였습니다.");
-			server.getClients().put(name, output);
-			System.out.println("현재 " + server.getClients().size() + "명이 대화방에 접속 중입니다.");
+			System.out.println("현재 " + server.getClient().size() + "명이 대화방에 접속 중입니다.");
 
 			while (true) {
 				server.sendToAll(input.readUTF());
@@ -44,9 +44,25 @@ public class ServerReceiver implements Runnable {
 	}
 
 	private void disConnect(String name) {
-		server.getClients().remove(name);
+		server.removeClient(name);
 		server.sendToAll(name + "님이 대화방에서 나갔습니다.");
-		System.out.println("현재 " + server.getClients().size() + "명이 대화방에 접속 중입니다.");
+		System.out.println("현재 " + server.getSize() + "명이 대화방에 접속 중입니다.");
+		/*
+		try { // 스트림 통신과 소켓 전부 close
+			if (input != null) {
+				input.close();
+			}
+			if (output != null) {
+				output.close(); // output.flush();
+		
+			}
+			if (socket != null && !socket.isClosed()) {
+				socket.close();
+			}
+		} catch (IOException e) {
+		
+		}
+		*/
 
 		closeIO(input, "입력 스트림 해제 에러");
 		closeIO(output, "출력 스트림 해제 에러");
