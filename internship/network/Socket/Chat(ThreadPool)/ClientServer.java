@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClientServer {
 	public String name;
@@ -12,9 +14,12 @@ public class ClientServer {
 	private String serverIp = "127.0.0.1"; // 루프백 주소
 	DataInputStream input;
 	DataOutputStream output;
+	private ExecutorService threadPool;
+
 	Scanner scan = new Scanner(System.in);
 
 	public void start() {
+		threadPool = Executors.newFixedThreadPool(2);
 		try {
 			connectServer(); // 소켓 연결
 			setReceiverSender(); // 스트림 연결
@@ -34,8 +39,8 @@ public class ClientServer {
 		ClientReceiver clientReceiver = new ClientReceiver(socket);
 		ClientSender clientSender = new ClientSender(socket, this); // ClientServer 자체를 던져줌
 
-		clientReceiver.start();
-		clientSender.start();
+		threadPool.execute(clientReceiver);
+		threadPool.execute(clientSender);
 	}
 
 	public void endCheck() {
@@ -45,6 +50,9 @@ public class ClientServer {
 			start();
 		} else if (i == 2) {
 			System.out.println("포로그램을 종료합니다.");
+			if (threadPool != null && !threadPool.isShutdown()) {
+				threadPool.shutdown(); // 쓰레드 풀 종료
+			}
 			// output close
 			try {
 				if (output != null) {
