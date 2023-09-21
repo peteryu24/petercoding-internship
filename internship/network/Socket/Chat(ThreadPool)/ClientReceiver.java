@@ -1,55 +1,38 @@
-package gmx.chat;
+package gmx.chat.client;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class ClientReceiver extends Thread {
-    private DataInputStream input;
+public class ClientReceiver extends Thread { // 서버에서 메세지를 수신하고 출력
+	Socket socket;
+	DataInputStream input;
+	ClientServer cs = new ClientServer();
 
-    public ClientReceiver(Socket socket) {
-        try {
-            input = new DataInputStream(socket.getInputStream());
-        } catch (IOException e) {
-            handleStreamError("데이터를 가져올 수 없습니다.");
-        }
-    }
+	public ClientReceiver(Socket socket) {
+		this.socket = socket;
+		try {
+			input = createDataInputStream(socket); // 메소드를 사용하여 초기화
+		} catch (IOException e) { // DataInputStream 오류
+			System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 1 종료 희망시 2: ");
+			cs.endCheck();
+		}
+	}
 
-    @Override
-    public void run() {
-        try {
-            while (input != null) {
-                System.out.println(input.readUTF());
-            }
-        } catch (IOException e) {
-            handleStreamError("데이터를 가져올 수 없습니다.");
-        }
-    }
+	@Override
+	public void run() {
+		while (input != null) { // 입력이 없을 때까지
+			try {
+				System.out.println(input.readUTF()); // 서버로부터 메세지 읽고 출력
+			} catch (IOException e) { // 메세지 수신 과정 오류
+				System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 1 종료 희망시 2: ");
+				cs.endCheck();
+			}
+		}
+	}
 
-    private void handleStreamError(String errorMessage) {
-        System.out.println(errorMessage);
-        System.out.print("재시작을 원하면 해당 숫자를 입력하세요 (2: 데이터 수신 재시작, 3: 데이터 전송 재시작, 4~6: 종료): ");
-        int choice = Client.scanner.nextInt();
-        Client.scanner.nextLine();
+	private DataInputStream createDataInputStream(Socket s) throws IOException {
+		return new DataInputStream(s.getInputStream());
+	}
 
-        switch (choice) {
-            case 2:
-                Client.threadPool.submit(new ClientReceiver(Client.socket));
-                break;
-            case 3:
-                Client.threadPool.submit(new ClientSender(Client.socket, Client.name));
-                break;
-            case 4:
-            case 5:
-            case 6:
-                System.out.println("프로그램을 종료합니다.");
-                Client.threadPool.shutdown();  // 스레드 풀 종료
-                System.exit(1);
-                break;
-            default:
-                System.out.println("잘못된 선택입니다.");
-                Client.threadPool.shutdown();  // 스레드 풀 종료
-                System.exit(1);
-        }
-    }
 }
