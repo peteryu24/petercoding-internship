@@ -32,7 +32,7 @@ public class ClientServer {
 
 	private void setReceiverSender() {
 		ClientReceiver clientReceiver = new ClientReceiver(socket);
-		ClientSender clientSender = new ClientSender(socket);
+		ClientSender clientSender = new ClientSender(socket, this); // ClientServer 자체를 던져줌
 
 		clientReceiver.start();
 		clientSender.start();
