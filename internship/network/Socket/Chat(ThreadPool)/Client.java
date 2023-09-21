@@ -162,9 +162,9 @@ public class Client {
     }
 }
 */
-package gmx.chat;
+package gmx.chat.client;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.BindException;
 import java.net.Socket;
 import java.util.Scanner;
@@ -172,66 +172,73 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Client {
-    static String name;
-    static Socket socket;
-    private final String serverIP = "127.0.0.1";
-    private int chatPort = 7777;
-    static Scanner scanner = new Scanner(System.in);
+	static String name;
+	static Socket socket;
+	private final String serverIP = "127.0.0.1";
+	private int chatPort = 7777;
+	static Scanner scan = new Scanner(System.in);
 
-    // 스레드 풀 선언
-    final static ExecutorService threadPool = Executors.newFixedThreadPool(2);
+	// 스레드 풀 선언
+	final static ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
-    public static void main(String[] args) {
-        new Client().start();
-    }
+	public static void main(String[] args) {
+		new Client().start();
+	}
 
-    public void start() {
-        try {
-            connectServer();
-            startChat();
-        } catch (IOException e) {
-            connectionError();
-        }
-    }
+	public void start() {
+		try {
+			connectServer();
+			startChat();
+		} catch (IOException e) {
+			connectionError();
+		}
+	}
 
-    private void connectServer() throws IOException {
-        while (true) {
-            try {
-                socket = new Socket(serverIP, chatPort);
-                System.out.print("서버와 연결되었습니다. 대화명을 입력하세요: ");
-                name = scanner.nextLine();
-                break;
-            } catch (BindException e) {
-                System.out.println("포트 " + chatPort + "이(가) 사용 중입니다. 다른 포트로 시도합니다.");
-                chatPort++;
-            }
-        }
-    }
+	private void connectServer() throws IOException {
+		while (true) {
+			try {
+				socket = new Socket(serverIP, chatPort);
+				System.out.print("서버와 연결되었습니다. 대화명을 입력하세요: ");
+				name = scan.nextLine();
+				break; // while문 탈출
+			} catch (BindException e) {
+				System.out.println("포트 " + chatPort + "이(가) 사용 중입니다. 다른 포트로 시도합니다.");
+				chatPort++;
+			}
+		}
+	}
 
-    private void startChat() {
-        threadPool.submit(new ClientReceiver(socket));
-        threadPool.submit(new ClientSender(socket, name));
-    }
+	private void startChat() {
+		threadPool.submit(new ClientReceiver(socket));
+		threadPool.submit(new ClientSender(socket, name));
+	}
 
-    private void connectionError() {
-        System.out.println("서버에 연결할 수 없습니다.");
-        System.out.print("재시작을 원하면 1을 입력하세요. 종료하려면 6을 입력하세요: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+	private void connectionError() {
+		System.out.println("서버에 연결할 수 없습니다.");
+		System.out.print("재시작을 원하면 1을 입력하세요. 종료하려면 2를 입력하세요: ");
+		int i = scan.nextInt();
+		scan.nextLine();
 
-        switch (choice) {
-            case 1:
-                start();
-                break;
-            case 6:
-                threadPool.shutdown();  // 스레드 풀 종료
-                System.exit(1);
-                break;
-            default:
-                System.out.println("잘못된 선택입니다.");
-                threadPool.shutdown();  // 스레드 풀 종료
-                System.exit(1);
-        }
-    }
+		switch (i) {
+		case 1:
+			start();
+			break;
+		case 2:
+			threadPool.shutdown(); // 스레드 풀 종료
+			System.exit(1);
+			break;
+		default:
+			System.out.println("잘못된 선택입니다.");
+			threadPool.shutdown(); // 스레드 풀 종료
+			System.exit(1);
+		}
+	}
+	public void closeIO() {
+		try {
+			if (socket != null && !socket.isClosed())
+				socket.close();
+		} catch (IOException e) {
+			System.out.println("자원 해제 중 오류 발생");
+		}
+	}
 }
-
