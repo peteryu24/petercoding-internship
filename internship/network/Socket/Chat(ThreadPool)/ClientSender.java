@@ -23,10 +23,10 @@ public class ClientSender extends Thread { // 사용자가 입력한 메세지�
 		}
 	}
 
-	void setDataOutputStream(Socket s) throws IOException {
+	void setDataOutputStream(Socket s) throws IOException { // ClientServer의 소켓과 name
 		output = new DataOutputStream(s.getOutputStream());
 		output.writeUTF(cs.name);
-		System.out.println(cs.name);
+		System.out.println(cs.name+"님 대화를 입력하세요.(exit 입력시 종료)");
 	}
 
 	@Override
@@ -44,6 +44,7 @@ public class ClientSender extends Thread { // 사용자가 입력한 메세지�
 	}
 
 	private void sendMessage(String msg) throws IOException {
+		System.out.println(",,,");
 		Scanner scan = new Scanner(System.in);
 		msg = scan.nextLine(); // 메세지 입력
 		if (msg.equals("exit")) { // exit을 입력하면 클라이언트 종료
@@ -57,8 +58,9 @@ public class ClientSender extends Thread { // 사용자가 입력한 메세지�
 					socket.close();
 				}
 			} catch (IOException e) {
+			} finally {
+				System.exit(0); // 프로그램 정상 종료
 			}
-			System.exit(0); // 프로그램 정상 종료
 		}
 
 		output.writeUTF("[" + cs.name + "]" + msg); // 이름과 함께 메세지 출력
