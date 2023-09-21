@@ -9,19 +9,21 @@ public class ClientSender extends Thread { // 사용자가 입력한 메세지�
 
 	Socket socket;
 	DataOutputStream output;
-	ClientServer cs = new ClientServer();
+	ClientServer cs;
 
-	public ClientSender(Socket socket) {
+	public ClientSender(Socket socket, ClientServer cs) { // 소켓과 ClientServer 자체를 받아서 처리
 		this.socket = socket;
+		this.cs = cs; // name 을 사용하기 위해
 		try {
 			setDataOutputStream(socket);
 		} catch (Exception e) { // DataOutputStream 오류
+			e.printStackTrace();
 			System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 1 종료 희망시 2: ");
 			cs.endCheck();
 		}
 	}
 
-	private void setDataOutputStream(Socket s) throws IOException {
+	void setDataOutputStream(Socket s) throws IOException {
 		output = new DataOutputStream(s.getOutputStream());
 		output.writeUTF(cs.name);
 		System.out.println(cs.name);
@@ -42,8 +44,8 @@ public class ClientSender extends Thread { // 사용자가 입력한 메세지�
 	}
 
 	private void sendMessage(String msg) throws IOException {
-		Scanner sc = new Scanner(System.in);
-		msg = sc.nextLine(); // 메세지 입력
+		Scanner scan = new Scanner(System.in);
+		msg = scan.nextLine(); // 메세지 입력
 		if (msg.equals("exit")) { // exit을 입력하면 클라이언트 종료
 			try {
 				if (output != null) {
