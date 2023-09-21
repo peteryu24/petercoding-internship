@@ -1,78 +1,65 @@
-package gmx.chat;
+package gmx.chat.client;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ClientSender extends Thread {
-    private DataOutputStream output;
-    private Socket socket;
-    private String name;
-    private Scanner scanner = new Scanner(System.in);
+public class ClientSender extends Thread { // 사용자가 입력한 메세지를 서버로 전송
 
-    public ClientSender(Socket socket, String name) {
-        this.socket = socket;
-        this.name = name;
-        try {
-            output = new DataOutputStream(socket.getOutputStream());
-            output.writeUTF(name);
-            System.out.println(name + "님이 대화방에 입장하였습니다.\n채팅을 입력하세요 (exit 입력시 종료): ");
-        } catch (IOException e) {
-            handleStreamError("데이터를 전송할 수 없습니다.");
-        }
-    }
+	Socket socket;
+	DataOutputStream output;
+	ClientServer cs = new ClientServer();
 
-    @Override
-    public void run() {
-        try {
-            while (output != null) {
-                String str = scanner.nextLine();
-                if ("exit".equalsIgnoreCase(str)) {
-                    closeIO();
-                    Client.threadPool.shutdown();  // 스레드 풀 종료
-                    System.exit(0);
-                }
-                output.writeUTF("[" + name + "]" + str);
-            }
-        } catch (IOException e) {
-            handleStreamError("메세지 전송 오류.");
-        }
-    }
+	public ClientSender(Socket socket) {
+		this.socket = socket;
+		try {
+			setDataOutputStream(socket);
+		} catch (Exception e) { // DataOutputStream 오류
+			System.out.print("데이터를 가져올 수 없습니다. \n재시작을 원하면 1 종료 희망시 2: ");
+			cs.endCheck();
+		}
+	}
 
-    private void closeIO() {
-        try {
-            if (socket != null && !socket.isClosed())
-                socket.close();
-        } catch (IOException e) {
-            System.out.println("자원 해제 중 오류 발생");
-        }
-    }
+	private void setDataOutputStream(Socket s) throws IOException {
+		output = new DataOutputStream(s.getOutputStream());
+		output.writeUTF(cs.name);
+		System.out.println(cs.name);
+	}
 
-    private void handleStreamError(String errorMessage) {
-        System.out.println(errorMessage);
-        System.out.print("재시작을 원하면 해당 숫자를 입력하세요 (2: 데이터 수신 재시작, 3: 데이터 전송 재시작, 4~6: 종료): ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+	@Override
+	public void run() {
 
-        switch (choice) {
-            case 2:
-                Client.threadPool.submit(new ClientReceiver(Client.socket));
-                break;
-            case 3:
-                Client.threadPool.submit(new ClientSender(Client.socket, Client.name));
-                break;
-            case 4:
-            case 5:
-            case 6:
-                System.out.println("프로그램을 종료합니다.");
-                Client.threadPool.shutdown();  // 스레드 풀 종료
-                System.exit(1);
-                break;
-            default:
-                System.out.println("잘못된 선택입니다.");
-                Client.threadPool.shutdown();  // 스레드 풀 종료
-                System.exit(1);
-        }
-    }
+		String msg = "";
+		while (output != null) {
+			try {
+				sendMessage(msg);
+			} catch (IOException e) { // 메세지 전송 과정 오류
+				System.out.println("메세지 수신 과정 오류. \n재시작을 원하면 1 종료 희망시 2: ");
+				cs.endCheck();
+			}
+		}
+	}
+
+	private void sendMessage(String msg) throws IOException {
+		Scanner sc = new Scanner(System.in);
+		msg = sc.nextLine(); // 메세지 입력
+		if (msg.equals("exit")) { // exit을 입력하면 클라이언트 종료
+			try {
+				if (output != null) {
+					output.close(); // output.flush();
+					// 메모리 확보를 위해 항상 IO들은 close() 해주기
+					// flush()는 일정 크기를 넘어섰지만, 계속 사용해야 할 때
+				}
+				if (socket != null && !socket.isClosed()) {
+					socket.close();
+				}
+			} catch (IOException e) {
+			}
+			System.exit(0); // 프로그램 정상 종료
+		}
+
+		output.writeUTF("[" + cs.name + "]" + msg); // 이름과 함께 메세지 출력
+	}
+
 }
