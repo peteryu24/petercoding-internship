@@ -110,15 +110,14 @@ public class Server {
 				byte[] buffer = new byte[1024];
 				int bytesRead;
 
-				// Get the name
-				sendMessage("Enter your name: ");
+				sendMessage("이름을 입력하세요: ");
 				bytesRead = in.read(buffer);
 				name = new String(buffer, 0, bytesRead).trim();
 
 				while (true) {
-					sendMessage("1. Create a new room");
-					sendMessage("2. Join an existing room");
-					sendMessage("Enter your choice: ");
+					sendMessage("1. 신규 방 생성");
+					sendMessage("2. 기존 방 입장");
+					sendMessage("입력: ");
 
 					bytesRead = in.read(buffer);
 					int choice = Integer.parseInt(new String(buffer, 0, bytesRead).trim());
@@ -127,11 +126,11 @@ public class Server {
 					case 1:
 						currentRoom = server.createRoom();
 						currentRoom.addClient(this);
-						sendMessage("Created and joined room with ID: " + currentRoom.getId());
+						sendMessage("방 생성 완료. 현재 입장한 방ID: " + currentRoom.getId());
 						break;
 					case 2:
-						sendMessage("Available rooms: " + server.getAllRoomIds());
-						sendMessage("Enter room ID: ");
+						sendMessage("개설된 방 목록: " + server.getAllRoomIds());
+						sendMessage("입장 희망하는 방 ID 입력: ");
 
 						bytesRead = in.read(buffer);
 						int roomId = Integer.parseInt(new String(buffer, 0, bytesRead).trim());
@@ -139,9 +138,9 @@ public class Server {
 						currentRoom = server.getRoom(roomId);
 						if (currentRoom != null) {
 							currentRoom.addClient(this);
-							sendMessage("Joined room with ID: " + roomId);
+							sendMessage("방 입장 완료. 현재 입장한 방ID: " + roomId);
 						} else {
-							sendMessage("Room not found");
+							sendMessage("방 조회되지 않음.");
 						}
 						break;
 					}
@@ -152,7 +151,7 @@ public class Server {
 
 						if (message.equalsIgnoreCase("exit")) {
 							currentRoom.removeClient(name);
-							sendMessage("Left the room");
+							sendMessage("방을 나갔습니다.");
 							currentRoom = null;
 						} else {
 							currentRoom.broadcast(name + ": " + message, name);
