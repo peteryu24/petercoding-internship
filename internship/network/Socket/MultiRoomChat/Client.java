@@ -1,14 +1,13 @@
 package gmx.room;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 public class Client {
 	private static final String SERVER_ADDRESS = "localhost";
-	private static final int SERVER_PORT = 12345;
+	private static final int SERVER_PORT = 7777;
 	private volatile boolean running = true;
 
 	public static void main(String[] args) {
@@ -17,29 +16,34 @@ public class Client {
 
 	public void startClient() {
 		try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-				BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in))) {
+				InputStream in = socket.getInputStream();
+				OutputStream out = socket.getOutputStream()) {
 
 			// 메시지를 수신하고 출력하는 별도의 스레드 시작
-			Thread readerThread = new Thread(() -> {
-				try {
-					String message;
-					while (running && (message = in.readLine()) != null) {
-						System.out.println(message);
-					}
-				} catch (IOException e) {
-					if (running) {
-						e.printStackTrace();
+			Thread readerThread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					byte[] buffer = new byte[1024];
+					int bytesRead;
+					try {
+						while (running && (bytesRead = in.read(buffer)) != -1) {
+							String received = new String(buffer, 0, bytesRead);
+							System.out.print(received);
+						}
+					} catch (IOException e) {
+						if (running) {
+							e.printStackTrace();
+						}
 					}
 				}
 			});
 			readerThread.start();
 
 			// 사용자 입력을 읽고 서버에 전송
-			String userInput;
-			while ((userInput = consoleInput.readLine()) != null) {
-				out.println(userInput);
+			byte[] userInputBuffer = new byte[1024];
+			int bytesRead;
+			while (running && (bytesRead = System.in.read(userInputBuffer)) != -1) {
+				out.write(userInputBuffer, 0, bytesRead);
 			}
 
 			running = false;
