@@ -1,9 +1,8 @@
 package gmx.room;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
@@ -12,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class Server {
-	private static final int PORT = 12345;
+	private static final int PORT = 7777;
 	private Map<Integer, Room> rooms = new ConcurrentHashMap<>();
 	private static int nextRoomId = 1;
 
@@ -79,7 +78,7 @@ public class Server {
 	static class Client implements Runnable {
 		private Socket socket;
 		private Server server;
-		private PrintWriter out;
+		private OutputStream out;
 		private String name;
 		private Room currentRoom;
 
@@ -93,50 +92,67 @@ public class Server {
 		}
 
 		public void sendMessage(String message) {
-			if (out != null) {
-				out.println(message);
+			try {
+				if (out != null) {
+					out.write((message + "\n").getBytes());
+					out.flush();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 
 		@Override
 		public void run() {
-			try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-				out = new PrintWriter(socket.getOutputStream(), true);
+			try {
+				InputStream in = socket.getInputStream();
+				out = socket.getOutputStream();
+				byte[] buffer = new byte[1024];
+				int bytesRead;
 
-				out.println("Enter your name: ");
-				name = in.readLine();
+				// Get the name
+				sendMessage("Enter your name: ");
+				bytesRead = in.read(buffer);
+				name = new String(buffer, 0, bytesRead).trim();
 
 				while (true) {
-					out.println("1. Create a new room");
-					out.println("2. Join an existing room");
-					out.println("Enter your choice: ");
-					int choice = Integer.parseInt(in.readLine());
+					sendMessage("1. Create a new room");
+					sendMessage("2. Join an existing room");
+					sendMessage("Enter your choice: ");
+
+					bytesRead = in.read(buffer);
+					int choice = Integer.parseInt(new String(buffer, 0, bytesRead).trim());
 
 					switch (choice) {
 					case 1:
 						currentRoom = server.createRoom();
 						currentRoom.addClient(this);
-						out.println("Created and joined room with ID: " + currentRoom.getId());
+						sendMessage("Created and joined room with ID: " + currentRoom.getId());
 						break;
 					case 2:
-						out.println("Available rooms: " + server.getAllRoomIds());
-						out.println("Enter room ID: ");
-						int roomId = Integer.parseInt(in.readLine());
+						sendMessage("Available rooms: " + server.getAllRoomIds());
+						sendMessage("Enter room ID: ");
+
+						bytesRead = in.read(buffer);
+						int roomId = Integer.parseInt(new String(buffer, 0, bytesRead).trim());
+
 						currentRoom = server.getRoom(roomId);
 						if (currentRoom != null) {
 							currentRoom.addClient(this);
-							out.println("Joined room with ID: " + roomId);
+							sendMessage("Joined room with ID: " + roomId);
 						} else {
-							out.println("Room not found");
+							sendMessage("Room not found");
 						}
 						break;
 					}
 
 					while (currentRoom != null) {
-						String message = in.readLine();
+						bytesRead = in.read(buffer);
+						String message = new String(buffer, 0, bytesRead).trim();
+
 						if (message.equalsIgnoreCase("exit")) {
 							currentRoom.removeClient(name);
-							out.println("Left the room");
+							sendMessage("Left the room");
 							currentRoom = null;
 						} else {
 							currentRoom.broadcast(name + ": " + message, name);
