@@ -20,8 +20,8 @@ public class Server {
 			System.out.println("Server started on port " + PORT);
 
 			while (true) {
-				Socket clientSocket = serverSocket.accept();
-				Helper client = new Helper(clientSocket, this);
+				Socket socket = serverSocket.accept();
+				Helper client = new Helper(socket, this);
 				new Thread(client).start();
 			}
 		} catch (BindException e) {
