@@ -1,14 +1,15 @@
 package gmx.multichatroom.room;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
+import java.util.ArrayList;
 
 import gmx.multiroomchat.server.Server;
 
 public class ChatRoom {
 	Server server = Server.getInstance();
 
-	private ConcurrentHashMap<String, Helper> clients = new ConcurrentHashMap<>();
+	private ConcurrentMap<String, Helper> clients = new ConcurrentHashMap<>();
 
 	public ChatRoom() { // 채팅방 이름 설정
 	}
@@ -42,7 +43,7 @@ public class ChatRoom {
 		return server.roomManager.get(roomName);
 	}
 
-	public Set<String> getRoomName() { // 생성시기 오름차순으로 변경 희망 ConcurrentHashMap은 순서가 없음.
-		return server.roomManager.keySet();
+	public ArrayList<String> getRoomName() {
+		return new ArrayList<>(server.roomManager.keySet());
 	}
 }
