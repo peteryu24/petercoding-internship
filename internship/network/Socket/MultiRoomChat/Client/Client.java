@@ -1,54 +1,55 @@
 package gmx.multiroomchat.client;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class Client {
-	private static final String SERVER_ADDRESS = "localhost";
-	private static final int SERVER_PORT = 7777;
-	private volatile boolean running = true;
+    private static final String SERVER_ADDRESS = "localhost";
+    private static final int SERVER_PORT = 7777;
+    private volatile boolean running = true;
 
+    public void startClient() {
+        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+             DataInputStream in = new DataInputStream(socket.getInputStream());
+             DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
 
+            Thread readerThread = startReaderThread(in);
 
-	public void startClient() {
-		try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-				InputStream in = socket.getInputStream();
-				OutputStream out = socket.getOutputStream()) {
+            String userInput;
+            while (running && !(userInput = new java.util.Scanner(System.in).nextLine()).isEmpty()) {
+                out.writeUTF(userInput);
+            }
 
-			// 메시지를 수신하고 출력하는 별도의 스레드 시작
-			Thread readerThread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					byte[] buffer = new byte[1024];
-					int bytesRead;
-					try {
-						while (running && (bytesRead = in.read(buffer)) != -1) {
-							String received = new String(buffer, 0, bytesRead);
-							System.out.print(received);
-						}
-					} catch (IOException e) {
-						if (running) {
-							e.printStackTrace();
-						}
-					}
-				}
-			});
-			readerThread.start();
+            running = false;
+            readerThread.join();
 
-			// 사용자 입력을 읽고 서버에 전송
-			byte[] userInputBuffer = new byte[1024];
-			int bytesRead;
-			while (running && (bytesRead = System.in.read(userInputBuffer)) != -1) {
-				out.write(userInputBuffer, 0, bytesRead);
-			}
+        } catch (UnknownHostException e) {
+            System.err.println("오류: 알 수 없는 호스트: " + SERVER_ADDRESS);
+        } catch (Exception e) {
+            System.err.println("오류: 클라이언트 문제 발생: " + e.getMessage());
+        }
+    }
 
-			running = false;
-			readerThread.join();
+    private Thread startReaderThread(DataInputStream in) {
+        Thread readerThread = new Thread(() -> {
+            try {
+                while (running) {
+                    String received = in.readUTF();
+                    System.out.println(received);
+                }
+            } catch (Exception e) {
+                if (running) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        readerThread.start();
+        return readerThread;
+    }
 
-		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+    public static void main(String[] args) {
+        new Client().startClient();
+    }
 }
