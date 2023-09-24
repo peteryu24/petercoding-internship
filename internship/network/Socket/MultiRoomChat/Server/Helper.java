@@ -4,18 +4,18 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import gmx.multiroomchat.server.Server;
 
 public class Helper implements Runnable {
 	private Socket socket;
-	private Server server;
 	private DataOutputStream dos;
 	private String name;
 	private ChatRoom chatRoom;
 
-	public Helper(Socket socket, Server server) {
+	ChatRoom cr = new ChatRoom();
+
+	public Helper(Socket socket) {
 		this.socket = socket; // 서버에서 가져온 소켓
-		this.server = server;
+
 	}
 
 	public String getName() { // 방에 입장시키거나 broadcast할 때
@@ -67,7 +67,7 @@ public class Helper implements Runnable {
 					sendMessage("방 이름을 입력하세요: ");
 					String roomName = dis.readUTF(); // 방 이름 받아오기
 
-					chatRoom = server.createRoom(roomName); // 받아온 이름으로 방 생성
+					chatRoom = cr.createRoom(roomName); // 받아온 이름으로 방 생성
 					if (chatRoom != null) {
 						chatRoom.addPerson(this); // helper객체로 방에 입장
 						sendMessage("방 생성 완료. 현재 입장한 방 이름: " + roomName);
@@ -76,12 +76,12 @@ public class Helper implements Runnable {
 					}
 					break;
 				case 2: // 기존 방
-					sendMessage("개설된 방 목록: " + server.getRoomName());
+					sendMessage("개설된 방 목록: " + cr.getRoomName());
 					sendMessage("입장 희망하는 방 이름을 입력하세요: ");
 
 					String chooseRoom = dis.readUTF(); // 원하는 방 이름 받아오기
 
-					chatRoom = server.enterRoom(chooseRoom); // 입력했던 이름을 가진 방으로 입장
+					chatRoom = cr.enterRoom(chooseRoom); // 입력했던 이름을 가진 방으로 입장
 					if (chatRoom != null) {
 						chatRoom.addPerson(this);
 						sendMessage("방 입장 완료. 현재 입장한 방 이름: " + chooseRoom);
