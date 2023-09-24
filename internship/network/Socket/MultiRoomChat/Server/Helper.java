@@ -91,13 +91,13 @@ public class Helper implements Runnable {
 					break;
 				}
 
-				while (chatRoom != null) {
+				while (chatRoom != null) { // exit 하기까지
 					String roomMessage = dis.readUTF(); // 메세지 받아오기
 
 					if (roomMessage.equalsIgnoreCase("exit")) {
 						chatRoom.removePerson(name);
 						chatRoom = null;
-						sendMessage("방에서 나갑니다.");
+						sendMessage("방에서 나왔습니다.");
 					} else {
 						chatRoom.sendToAll(name + ": " + roomMessage, name); // 보낸 사람: 메세지 , 나 빼고 수신할 수 있게
 
@@ -107,18 +107,26 @@ public class Helper implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				if (dis != null) {
-					dis.close();
-				}
-				if (dos != null) {
+			if (dos != null) {
+				try {
 					dos.close();
+				} catch (IOException e) {
+					System.err.println("outputStream Close 에러");
 				}
-				if (socket != null) {
+			}
+			if (dis != null) {
+				try {
+					dis.close();
+				} catch (IOException e) {
+					System.err.println("inputStream Close 에러");
+				}
+			}
+			if (socket != null && !socket.isClosed()) { // 소켓을 닫을 때는 연결 상태와 닫힌 상태를 동시에 체크
+				try {
 					socket.close();
+				} catch (IOException e) {
+					System.err.println("Socket Close 에러");
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}
