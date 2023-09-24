@@ -13,16 +13,16 @@ public class Server {
 	private static final int PORT = 7777; // 채팅 프로그램을 사용할 포트번호
 	public ConcurrentHashMap<String, ChatRoom> roomManager = new ConcurrentHashMap<>(); // 방 이름과 방
 	private ServerSocket serverSocket;
-	private static Server instance = null; // 싱글톤 인스턴스
+	private static Server serverInstance = null; // 싱글톤 인스턴스
 
 	private Server() { // 외부에서 생성 불가(싱글톤 패턴)
 	}
 
 	public static Server getInstance() { // 싱글톤 인스턴스 얻기(객체 생성 없이 호출하기 위해 static)
-		if (instance == null) {
-			instance = new Server();
+		if (serverInstance == null) {
+			serverInstance = new Server();
 		}
-		return instance;
+		return serverInstance;
 	}
 
 	public void startServer() {
