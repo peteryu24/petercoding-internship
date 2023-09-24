@@ -1,4 +1,4 @@
-package gmx.room;
+package gmx.multiroomchat.server;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class Server {
 	private static final int PORT = 7777;
-	private Map<Integer, Room> rooms = new ConcurrentHashMap<>();
+	private Map<String, Room> rooms = new ConcurrentHashMap<>();
 	private static int nextRoomId = 1;
 
 	public static void main(String[] args) {
@@ -32,30 +32,34 @@ public class Server {
 		}
 	}
 
-	public Room createRoom() {
-		Room room = new Room(nextRoomId++);
-		rooms.put(room.getId(), room);
+	public Room createRoom(String roomName) {
+		if (rooms.containsKey(roomName)) {
+			return null; // 이미 해당 이름의 방이 존재하면 null 반환
+		}
+		Room room = new Room(roomName);
+		rooms.put(roomName, room);
 		return room;
 	}
 
-	public Room getRoom(int id) {
-		return rooms.get(id);
+	public Room getRoom(String name) {
+		return rooms.get(name);
 	}
 
-	public Set<Integer> getAllRoomIds() {
+	public Set<String> getAllRoomNames() {
 		return rooms.keySet();
 	}
 
 	static class Room {
+		private String name;
 		private int id;
 		private ConcurrentMap<String, Client> clients = new ConcurrentHashMap<>();
 
-		public Room(int id) {
-			this.id = id;
+		public Room(String name) {
+			this.name = name;
 		}
 
-		public int getId() {
-			return id;
+		public String getName() {
+			return name;
 		}
 
 		public void addClient(Client client) {
@@ -75,7 +79,7 @@ public class Server {
 		}
 	}
 
-	static class Client implements Runnable {
+class Client implements Runnable {
 		private Socket socket;
 		private Server server;
 		private OutputStream out;
@@ -124,21 +128,29 @@ public class Server {
 
 					switch (choice) {
 					case 1:
-						currentRoom = server.createRoom();
-						currentRoom.addClient(this);
-						sendMessage("방 생성 완료. 현재 입장한 방ID: " + currentRoom.getId());
-						break;
-					case 2:
-						sendMessage("개설된 방 목록: " + server.getAllRoomIds());
-						sendMessage("입장 희망하는 방 ID 입력: ");
-
+						sendMessage("방 이름을 입력하세요: ");
 						bytesRead = in.read(buffer);
-						int roomId = Integer.parseInt(new String(buffer, 0, bytesRead).trim());
+						String roomName = new String(buffer, 0, bytesRead).trim();
 
-						currentRoom = server.getRoom(roomId);
+						currentRoom = server.createRoom(roomName);
 						if (currentRoom != null) {
 							currentRoom.addClient(this);
-							sendMessage("방 입장 완료. 현재 입장한 방ID: " + roomId);
+							sendMessage("방 생성 완료. 현재 입장한 방 이름: " + roomName);
+						} else {
+							sendMessage("해당 이름의 방이 이미 존재합니다.");
+						}
+						break;
+					case 2:
+						sendMessage("개설된 방 목록: " + server.getAllRoomNames());
+						sendMessage("입장 희망하는 방 이름을 입력하세요: ");
+
+						bytesRead = in.read(buffer);
+						String selectedRoomName = new String(buffer, 0, bytesRead).trim();
+
+						currentRoom = server.getRoom(selectedRoomName);
+						if (currentRoom != null) {
+							currentRoom.addClient(this);
+							sendMessage("방 입장 완료. 현재 입장한 방 이름: " + selectedRoomName);
 						} else {
 							sendMessage("방 조회되지 않음.");
 						}
