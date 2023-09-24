@@ -32,13 +32,21 @@ public class Server {
 
 			while (true) {
 				Socket socket = serverSocket.accept(); // 서버소켓으로 연결을 수립하고 클라이언트 기다림
-				Helper client = new Helper(socket);
-				new Thread(client).start(); // Helper를 쓰레드로 시작
+				Helper person = new Helper(socket);
+				new Thread(person).start(); // Helper를 쓰레드로 시작
 			}
 		} catch (BindException e) {
 			System.err.println(PORT + "가 이미 사용 중입니다.");
 		} catch (IOException e) {
 			System.err.println("서버 시작 에러");
+		} finally {
+			try {
+				if (serverSocket != null) {
+					serverSocket.close();
+				}
+			} catch (IOException e) {
+				System.err.println("서버 소켓 닫기 에러");
+			}
 		}
 	}
 }
