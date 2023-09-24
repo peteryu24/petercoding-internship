@@ -11,7 +11,7 @@ public class Helper implements Runnable {
 	private String name;
 	private ChatRoom chatRoom;
 
-	ChatRoom cr = new ChatRoom();
+	ChatRoom cr = new ChatRoom(); // 채팅방 생성
 
 	public Helper(Socket socket) {
 		this.socket = socket; // 서버에서 가져온 소켓
