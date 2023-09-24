@@ -2,54 +2,66 @@ package gmx.multiroomchat.client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 public class Client {
-    private static final String SERVER_ADDRESS = "localhost";
-    private static final int SERVER_PORT = 7777;
-    private volatile boolean running = true;
+	private static final String CHATIP = "localhost";
+	private static final int CHATPORT = 7777;
 
-    public void startClient() {
-        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-             DataInputStream in = new DataInputStream(socket.getInputStream());
-             DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
+	public void startClient() {
+		Socket socket = null;
+		DataInputStream inputStream = null;
+		DataOutputStream outputStream = null;
 
-            Thread readerThread = startReaderThread(in);
+		try {
+			socket = new Socket(CHATIP, CHATPORT);
+			inputStream = new DataInputStream(socket.getInputStream());
+			outputStream = new DataOutputStream(socket.getOutputStream());
 
-            String userInput;
-            while (running && !(userInput = new java.util.Scanner(System.in).nextLine()).isEmpty()) {
-                out.writeUTF(userInput);
-            }
+			Receiver receiver = new Receiver(inputStream);
+			Thread readerThread = new Thread(receiver);
+			readerThread.start();
 
-            running = false;
-            readerThread.join();
+			Scanner scan = new Scanner(System.in);
+			String userInput;
+			while (receiver.isRunning() && !(userInput = scan.nextLine()).isEmpty()) {
+				outputStream.writeUTF(userInput);
+			}
 
-        } catch (UnknownHostException e) {
-            System.err.println("오류: 알 수 없는 호스트: " + SERVER_ADDRESS);
-        } catch (Exception e) {
-            System.err.println("오류: 클라이언트 문제 발생: " + e.getMessage());
-        }
-    }
+			receiver.stop();
+			readerThread.join();
+		} catch (UnknownHostException e) {
+			System.err.println("호스트 에러");
+		} catch (IOException e) {
+			System.err.println("클라이언트 에러");
+		} catch (Exception e) {
+			System.err.println("에러 발생: ");
+		} finally {
+			if (outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					System.err.println("outputStream Close 에러");
+				}
+			}
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					System.err.println("inputStream Close 에러");
+				}
+			}
+			if (socket != null && !socket.isClosed()) {
+				try {
+					socket.close();
+				} catch (IOException e) {
+					System.err.println("Socket Close 에러");
+				}
+			}
+		}
+	}
 
-    private Thread startReaderThread(DataInputStream in) {
-        Thread readerThread = new Thread(() -> {
-            try {
-                while (running) {
-                    String received = in.readUTF();
-                    System.out.println(received);
-                }
-            } catch (Exception e) {
-                if (running) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        readerThread.start();
-        return readerThread;
-    }
-
-    public static void main(String[] args) {
-        new Client().startClient();
-    }
 }
