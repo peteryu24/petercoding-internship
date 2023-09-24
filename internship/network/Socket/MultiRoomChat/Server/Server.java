@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import gmx.multichatroom.room.ChatRoom;
-import gmx.multichatroom.room.Helper;
+import gmx.multiroomchat.room.ChatRoom;
+import gmx.multiroomchat.room.Helper;
 
 public class Server {
 	private static final int PORT = 7777;
@@ -44,11 +44,8 @@ public class Server {
 		return rooms.get(name);
 	}
 
-	public Set<String> getAllRoomNames() { // 생성시기 오름차순으로 변경 희망 ConcurrentHashMap은 순서가 없음.
+	public Set<String> getRoomName() { // 생성시기 오름차순으로 변경 희망 ConcurrentHashMap은 순서가 없음.
 		return rooms.keySet();
 	}
 
-	public static void main(String[] args) {
-		new Server().startServer();
-	}
 }
