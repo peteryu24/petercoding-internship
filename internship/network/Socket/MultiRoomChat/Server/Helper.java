@@ -52,13 +52,13 @@ public class Helper implements Runnable {
 				int choice;
 				try {
 
-					choice = Integer.parseInt(chooseAction);
+					choice = Integer.parseInt(chooseAction); // String으로 입력했을 때를 대비해서 String으로 받고 int로 형변환
 
 					if (choice < 1 || choice > 2) {
 						sendMessage("올바른 번호를 선택하세요 (1 또는 2).");
 						continue;
 					}
-				} catch (NumberFormatException e) {
+				} catch (NumberFormatException e) { // String,float 입력시
 					sendMessage("올바르지 않은 입력입니다. 숫자를 입력해 주세요.");
 					continue;
 				}
