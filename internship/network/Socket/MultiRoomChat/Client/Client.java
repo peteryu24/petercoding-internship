@@ -21,18 +21,19 @@ public class Client {
 			dis = new DataInputStream(socket.getInputStream());
 			dos = new DataOutputStream(socket.getOutputStream());
 
-			Receiver receiver = new Receiver(dis);
-			Thread readerThread = new Thread(receiver);
-			readerThread.start();
+			Receiver receiver = new Receiver(dis); // dis를 넣은 receiver
+			Thread receiverThread = new Thread(receiver); // dis를 넣은 receiver로 쓰레드 선언
+			receiverThread.start(); // 쓰레드 시작
 
 			Scanner scan = new Scanner(System.in);
-			String userInput;
-			while (receiver.isRunning() && !(userInput = scan.nextLine()).isEmpty()) {
-				dos.writeUTF(userInput); // 메세지를 서버로
+			while (receiver.isFlag()) { // flag true일 때만 실행
+				String userInput = scan.nextLine();
+				dos.writeUTF(userInput); // 메세지 전송
 			}
 
-			receiver.stop(); // flag -> false
-			readerThread.join();
+			// 사용자 나감
+			receiver.stop(); // flag -> false receiver 쓰레드 종료 (무한정 수신 대기 방지)
+			receiverThread.join(); // 종료될 때까지 대기
 		} catch (UnknownHostException e) {
 			System.err.println("호스트 에러");
 		} catch (IOException e) {
