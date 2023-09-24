@@ -1,4 +1,4 @@
-package gmx.multiroomchat.room;
+package gmx.multichatroom.room;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -51,6 +51,7 @@ public class Helper implements Runnable {
 
 				int choice;
 				try {
+
 					choice = Integer.parseInt(chooseAction);
 
 					if (choice < 1 || choice > 2) {
@@ -70,7 +71,7 @@ public class Helper implements Runnable {
 					chatRoom = cr.createRoom(roomName); // 받아온 이름으로 방 생성
 					if (chatRoom != null) {
 						chatRoom.addPerson(this); // helper객체로 방에 입장
-						sendMessage("방 생성 완료. 현재 입장한 방 이름: " + roomName);
+						sendMessage("방 생성 완료. 현재 입장한 방 이름: " + roomName + "\n(exit 입력시 퇴장)");
 					} else {
 						sendMessage("해당 이름의 방이 이미 존재합니다.");
 					}
@@ -94,9 +95,9 @@ public class Helper implements Runnable {
 				while (chatRoom != null) { // exit 하기까지
 					String roomMessage = dis.readUTF(); // 메세지 받아오기
 
-					if (roomMessage.equalsIgnoreCase("exit")) {
+					if (roomMessage.equalsIgnoreCase("exit")) { // 대소문자 구별 없는 equals
 						chatRoom.removePerson(name);
-						chatRoom = null;
+						chatRoom = null; // while문 탈출
 						sendMessage("방에서 나왔습니다.");
 					} else {
 						chatRoom.sendToAll(name + ": " + roomMessage, name); // 보낸 사람: 메세지 , 나 빼고 수신할 수 있게
