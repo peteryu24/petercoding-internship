@@ -13,25 +13,25 @@ public class Client {
 
 	public void startClient() {
 		Socket socket = null;
-		DataInputStream inputStream = null;
-		DataOutputStream outputStream = null;
+		DataInputStream dis = null;
+		DataOutputStream dos = null;
 
 		try {
 			socket = new Socket(CHATIP, CHATPORT);
-			inputStream = new DataInputStream(socket.getInputStream());
-			outputStream = new DataOutputStream(socket.getOutputStream());
+			dis = new DataInputStream(socket.getInputStream());
+			dos = new DataOutputStream(socket.getOutputStream());
 
-			Receiver receiver = new Receiver(inputStream);
+			Receiver receiver = new Receiver(dis);
 			Thread readerThread = new Thread(receiver);
 			readerThread.start();
 
 			Scanner scan = new Scanner(System.in);
 			String userInput;
 			while (receiver.isRunning() && !(userInput = scan.nextLine()).isEmpty()) {
-				outputStream.writeUTF(userInput);
+				dos.writeUTF(userInput); // 메세지를 서버로
 			}
 
-			receiver.stop();
+			receiver.stop(); // flag -> false
 			readerThread.join();
 		} catch (UnknownHostException e) {
 			System.err.println("호스트 에러");
@@ -40,16 +40,16 @@ public class Client {
 		} catch (Exception e) {
 			System.err.println("에러 발생: ");
 		} finally {
-			if (outputStream != null) {
+			if (dos != null) {
 				try {
-					outputStream.close();
+					dos.close();
 				} catch (IOException e) {
 					System.err.println("outputStream Close 에러");
 				}
 			}
-			if (inputStream != null) {
+			if (dis != null) {
 				try {
-					inputStream.close();
+					dis.close();
 				} catch (IOException e) {
 					System.err.println("inputStream Close 에러");
 				}
