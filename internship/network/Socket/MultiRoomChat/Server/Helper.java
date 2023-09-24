@@ -9,23 +9,23 @@ import gmx.multiroomchat.server.Server;
 public class Helper implements Runnable {
 	private Socket socket;
 	private Server server;
-	private DataOutputStream out;
+	private DataOutputStream dos;
 	private String name;
-	private ChatRoom currentRoom;
+	private ChatRoom chatRoom;
 
 	public Helper(Socket socket, Server server) {
-		this.socket = socket;
+		this.socket = socket; // 서버에서 가져온 소켓
 		this.server = server;
 	}
 
-	public String getName() {
-		return name;
+	public String getName() { // 방에 입장시키거나 broadcast할 때
+		return name; // clients 해시맵에 Key로 추가될 이름, broadcast할 때 나 빼고 전송 할 때
 	}
 
-	public void sendMessage(String message) {
+	public void sendMessage(String message) { // 클라이언트한테 보냄
 		try {
-			if (out != null) {
-				out.writeUTF(message);
+			if (dos != null) {
+				dos.writeUTF(message); // 전송
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -34,24 +34,24 @@ public class Helper implements Runnable {
 
 	@Override
 	public void run() {
-		DataInputStream in = null;
+		DataInputStream dis = null;
 		try {
-			in = new DataInputStream(socket.getInputStream());
-			out = new DataOutputStream(socket.getOutputStream());
+			dis = new DataInputStream(socket.getInputStream());
+			dos = new DataOutputStream(socket.getOutputStream());
 
 			sendMessage("이름을 입력하세요: ");
-			name = in.readUTF();
+			name = dis.readUTF(); // 이름 받아오기
 
 			while (true) {
 				sendMessage("1. 신규 방 생성");
 				sendMessage("2. 기존 방 입장");
 				sendMessage("입력: ");
 
-				String userInput = in.readUTF();
+				String chooseAction = dis.readUTF(); // 선택 받아오기
 
 				int choice;
 				try {
-					choice = Integer.parseInt(userInput);
+					choice = Integer.parseInt(chooseAction);
 
 					if (choice < 1 || choice > 2) {
 						sendMessage("올바른 번호를 선택하세요 (1 또는 2).");
@@ -63,43 +63,43 @@ public class Helper implements Runnable {
 				}
 
 				switch (choice) {
-				case 1:
+				case 1: // 신규 방
 					sendMessage("방 이름을 입력하세요: ");
-					String roomName = in.readUTF();
+					String roomName = dis.readUTF(); // 방 이름 받아오기
 
-					currentRoom = server.createRoom(roomName);
-					if (currentRoom != null) {
-						currentRoom.addClient(this);
+					chatRoom = server.createRoom(roomName); // 받아온 이름으로 방 생성
+					if (chatRoom != null) {
+						chatRoom.addClient(this); // helper객체로 방에 입장
 						sendMessage("방 생성 완료. 현재 입장한 방 이름: " + roomName);
 					} else {
 						sendMessage("해당 이름의 방이 이미 존재합니다.");
 					}
 					break;
-				case 2:
+				case 2: // 기존 방
 					sendMessage("개설된 방 목록: " + server.getRoomName());
 					sendMessage("입장 희망하는 방 이름을 입력하세요: ");
 
-					String selectedRoomName = in.readUTF();
+					String chooseRoom = dis.readUTF(); // 원하는 방 이름 받아오기
 
-					currentRoom = server.getRoom(selectedRoomName);
-					if (currentRoom != null) {
-						currentRoom.addClient(this);
-						sendMessage("방 입장 완료. 현재 입장한 방 이름: " + selectedRoomName);
+					chatRoom = server.enterRoom(chooseRoom); // 입력했던 이름을 가진 방으로 입장
+					if (chatRoom != null) {
+						chatRoom.addClient(this);
+						sendMessage("방 입장 완료. 현재 입장한 방 이름: " + chooseRoom);
 					} else {
 						sendMessage("방 조회되지 않음.");
 					}
 					break;
 				}
 
-				while (currentRoom != null) {
-					String roomMessage = in.readUTF();
+				while (chatRoom != null) {
+					String roomMessage = dis.readUTF();
 
 					if (roomMessage.equalsIgnoreCase("exit")) {
-						currentRoom.removeClient(name);
-						currentRoom = null;
+						chatRoom.removeClient(name);
+						chatRoom = null;
 						sendMessage("방에서 나갑니다.");
 					} else {
-						currentRoom.broadcast(name + ": " + roomMessage, name);
+						chatRoom.broadcast(name + ": " + roomMessage, name); // 보낸 사람: 메세지 , 나 빼고 수신할 수 있게
 					}
 				}
 			}
@@ -107,13 +107,15 @@ public class Helper implements Runnable {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (in != null) {
-					in.close();
+				if (dis != null) {
+					dis.close();
 				}
-				if (out != null) {
-					out.close();
+				if (dos != null) {
+					dos.close();
 				}
-				socket.close();
+				if (socket != null) {
+					socket.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
