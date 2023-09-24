@@ -4,15 +4,10 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ChatRoom {
-	private String roomName;
+
 	private ConcurrentMap<String, Helper> clients = new ConcurrentHashMap<>();
 
-	public ChatRoom(String roomName) { // 채팅방 이름 설정
-		this.roomName = roomName;
-	}
-
-	public String getName() {
-		return roomName;
+	public ChatRoom() { // 채팅방 이름 설정
 	}
 
 	public void addPerson(Helper helper) {
