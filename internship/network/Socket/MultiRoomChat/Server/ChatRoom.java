@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import gmx.multiroomchat.server.Server;
 
 public class ChatRoom {
-	
-	Server server = Server.getInstance(); // 싱글톤 패턴으로 서버의 인스턴스 가져오기
+
+	Server server = Server.getInstance(); // 싱글톤 패턴으로 Server의 인스턴스 가져오기
 
 	private ConcurrentMap<String, Helper> clients = new ConcurrentHashMap<>(); // 사람 이름과 사람(소켓을 가짐)
 
@@ -40,11 +40,11 @@ public class ChatRoom {
 		return room;
 	}
 
-	public ChatRoom enterRoom(String roomName) { // Helper클래스에서 방 입장을 위해 방 정보 return
+	public ChatRoom enterRoom(String roomName) { // Helper클래스에서 사용자의 방 입장을 위해 방 정보 return
 		return server.roomManager.get(roomName);
 	}
 
-	public ArrayList<String> getRoomName() {
+	public ArrayList<String> getRoomName() { // ArrayList에 방 이름 넣기
 		return new ArrayList<>(server.roomManager.keySet());
 	}
 }
