@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,40 +11,42 @@ import gmx.multiroomchat.room.ChatRoom;
 import gmx.multiroomchat.room.Helper;
 
 public class Server {
-	private static final int PORT = 7777;
-	private Map<String, ChatRoom> rooms = new ConcurrentHashMap<>();
+	private static final int PORT = 7777; // 채팅 프로그램을 사용할 포트번호
+	private ConcurrentHashMap<String, ChatRoom> roomManager = new ConcurrentHashMap<>();
+	ServerSocket serverSocket;
 
 	public void startServer() {
-		try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-			System.out.println("Server started on port " + PORT);
+		try {
+			serverSocket = new ServerSocket(PORT); // 해당 포트로 서버소켓 생성
+			System.out.println(PORT + "로 서버 시작.");
 
 			while (true) {
-				Socket socket = serverSocket.accept();
+				Socket socket = serverSocket.accept(); // 서버소켓으로 연결을 수립하고 클라이언트 기다림
 				Helper client = new Helper(socket, this);
-				new Thread(client).start();
+				new Thread(client).start(); // Helper를 쓰레드로 시작
 			}
 		} catch (BindException e) {
-			System.err.println("오류: 포트 " + PORT + "가 이미 사용 중입니다. 다른 포트를 시도해주세요.");
+			System.err.println(PORT + "가 이미 사용 중입니다.");
 		} catch (IOException e) {
-			System.err.println("오류: 서버 시작 중 문제 발생. 원인: " + e.getMessage());
+			System.err.println("서버 시작 에러");
 		}
 	}
 
-	public ChatRoom createRoom(String roomName) {
-		if (rooms.containsKey(roomName)) {
+	public ChatRoom createRoom(String roomName) { // helper에서 받아온 이름
+		if (roomManager.containsKey(roomName)) { // 이미 존재한다면
 			return null;
 		}
-		ChatRoom room = new ChatRoom(roomName);
-		rooms.put(roomName, room);
+		ChatRoom room = new ChatRoom(roomName); // 새로운 채팅방 생성
+		roomManager.put(roomName, room); // 해시맵에 방 추가
 		return room;
 	}
 
-	public ChatRoom getRoom(String name) {
-		return rooms.get(name);
+	public ChatRoom enterRoom(String roomName) { // Helper클래스에서 방 입장을 위해 방 정보 return
+		return roomManager.get(roomName);
 	}
 
 	public Set<String> getRoomName() { // 생성시기 오름차순으로 변경 희망 ConcurrentHashMap은 순서가 없음.
-		return rooms.keySet();
+		return roomManager.keySet();
 	}
 
 }
