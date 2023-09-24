@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class Receiver implements Runnable {
 	private DataInputStream dis;
-	private boolean running = true;
+	private boolean runningFlag = true; // 스레드 실행 flag
 
 	public Receiver(DataInputStream dis) {
 		this.dis = dis;
@@ -14,8 +14,8 @@ public class Receiver implements Runnable {
 	@Override
 	public void run() {
 		try {
-			while (isRunning()) {
-				String received = dis.readUTF();
+			while (isRunning()) { // 스레드가 실행 중일때
+				String received = dis.readUTF(); // 메세지 받아오기
 				System.out.println(received);
 			}
 		} catch (IOException e) {
@@ -26,10 +26,10 @@ public class Receiver implements Runnable {
 	}
 
 	public synchronized boolean isRunning() {
-		return running;
+		return runningFlag;
 	}
 
 	public synchronized void stop() {
-		running = false;
+		runningFlag = false;
 	}
 }
