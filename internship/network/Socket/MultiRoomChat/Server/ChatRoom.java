@@ -11,7 +11,7 @@ public class ChatRoom {
 
 	private ConcurrentHashMap<String, Helper> clients = new ConcurrentHashMap<>(); // 사람 이름과 사람(소켓을 가짐)
 
-	public ChatRoom() { // 채팅방 생성
+	public ChatRoom() { 
 	}
 
 	public void addPerson(Helper helper) {
