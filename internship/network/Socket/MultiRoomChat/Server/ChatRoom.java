@@ -1,16 +1,14 @@
-package gmx.multiroomchat.room;
+package gmx.multichatroom.room;
 
-import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
 
 import gmx.multiroomchat.server.Server;
-
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ChatRoom {
 	Server server = Server.getInstance();
 
-	private ConcurrentMap<String, Helper> clients = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<String, Helper> clients = new ConcurrentHashMap<>();
 
 	public ChatRoom() { // 채팅방 이름 설정
 	}
