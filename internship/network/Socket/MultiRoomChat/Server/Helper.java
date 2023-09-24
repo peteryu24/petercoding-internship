@@ -72,7 +72,7 @@ public class Helper implements Runnable {
 					if (chatRoom != null) {
 						chatRoom.addPerson(this); // helper객체로 방에 입장
 						sendMessage("방 생성 완료. 현재 입장한 방 이름: " + roomName + "\n(exit 입력시 퇴장)");
-					} else {
+					} else { // createRoom()에서 return null; 일 때
 						sendMessage("해당 이름의 방이 이미 존재합니다.");
 					}
 					break;
