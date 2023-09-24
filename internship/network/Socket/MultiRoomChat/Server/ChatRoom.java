@@ -9,7 +9,7 @@ import gmx.multiroomchat.server.Server;
 public class ChatRoom {
 	Server server = Server.getInstance();
 
-	private ConcurrentMap<String, Helper> clients = new ConcurrentHashMap<>();
+	private ConcurrentMap<String, Helper> clients = new ConcurrentHashMap<>(); // 사람 이름과 사람(소켓을 가짐)
 
 	public ChatRoom() { // 채팅방 이름 설정
 	}
