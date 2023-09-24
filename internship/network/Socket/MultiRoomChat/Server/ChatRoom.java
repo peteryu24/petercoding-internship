@@ -1,4 +1,4 @@
-package gmx.multichatroom.room;
+package gmx.multiroomchat.room;
 
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentHashMap;
