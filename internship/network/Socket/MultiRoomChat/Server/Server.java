@@ -18,7 +18,7 @@ public class Server {
 	public void startServer() {
 		try {
 			serverSocket = new ServerSocket(PORT); // 해당 포트로 서버소켓 생성
-			System.out.println(PORT + "포트번호 로 서버 시작.");
+			System.out.println(PORT + " 포트번호 로 서버 시작.");
 
 			while (true) {
 				Socket socket = serverSocket.accept(); // 서버소켓으로 연결을 수립하고 클라이언트 기다림
