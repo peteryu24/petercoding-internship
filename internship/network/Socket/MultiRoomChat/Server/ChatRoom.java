@@ -1,7 +1,6 @@
 package gmx.multichatroom.room;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.ArrayList;
 
 import gmx.multiroomchat.server.Server;
@@ -10,7 +9,7 @@ public class ChatRoom {
 
 	Server server = Server.getInstance(); // 싱글톤 패턴으로 Server의 인스턴스 가져오기
 
-	private ConcurrentMap<String, Helper> clients = new ConcurrentHashMap<>(); // 사람 이름과 사람(소켓을 가짐)
+	private ConcurrentHashMap<String, Helper> clients = new ConcurrentHashMap<>(); // 사람 이름과 사람(소켓을 가짐)
 
 	public ChatRoom() { // 채팅방 생성
 	}
