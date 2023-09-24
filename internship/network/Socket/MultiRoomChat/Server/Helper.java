@@ -69,7 +69,7 @@ public class Helper implements Runnable {
 
 					chatRoom = server.createRoom(roomName); // 받아온 이름으로 방 생성
 					if (chatRoom != null) {
-						chatRoom.addClient(this); // helper객체로 방에 입장
+						chatRoom.addPerson(this); // helper객체로 방에 입장
 						sendMessage("방 생성 완료. 현재 입장한 방 이름: " + roomName);
 					} else {
 						sendMessage("해당 이름의 방이 이미 존재합니다.");
@@ -83,7 +83,7 @@ public class Helper implements Runnable {
 
 					chatRoom = server.enterRoom(chooseRoom); // 입력했던 이름을 가진 방으로 입장
 					if (chatRoom != null) {
-						chatRoom.addClient(this);
+						chatRoom.addPerson(this);
 						sendMessage("방 입장 완료. 현재 입장한 방 이름: " + chooseRoom);
 					} else {
 						sendMessage("방 조회되지 않음.");
@@ -92,14 +92,15 @@ public class Helper implements Runnable {
 				}
 
 				while (chatRoom != null) {
-					String roomMessage = dis.readUTF();
+					String roomMessage = dis.readUTF(); // 메세지 받아오기
 
 					if (roomMessage.equalsIgnoreCase("exit")) {
-						chatRoom.removeClient(name);
+						chatRoom.removePerson(name);
 						chatRoom = null;
 						sendMessage("방에서 나갑니다.");
 					} else {
-						chatRoom.broadcast(name + ": " + roomMessage, name); // 보낸 사람: 메세지 , 나 빼고 수신할 수 있게
+						chatRoom.sendToAll(name + ": " + roomMessage, name); // 보낸 사람: 메세지 , 나 빼고 수신할 수 있게
+
 					}
 				}
 			}
