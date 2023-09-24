@@ -34,8 +34,10 @@ public class Helper implements Runnable {
 
 	@Override
 	public void run() {
-		try (DataInputStream in = new DataInputStream(socket.getInputStream());
-				DataOutputStream out = this.out = new DataOutputStream(socket.getOutputStream())) {
+		DataInputStream in = null;
+		try {
+			in = new DataInputStream(socket.getInputStream());
+			out = new DataOutputStream(socket.getOutputStream());
 
 			sendMessage("이름을 입력하세요: ");
 			name = in.readUTF();
@@ -105,6 +107,12 @@ public class Helper implements Runnable {
 			e.printStackTrace();
 		} finally {
 			try {
+				if (in != null) {
+					in.close();
+				}
+				if (out != null) {
+					out.close();
+				}
 				socket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
