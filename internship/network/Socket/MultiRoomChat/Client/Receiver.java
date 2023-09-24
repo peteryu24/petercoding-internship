@@ -22,6 +22,14 @@ public class Receiver implements Runnable {
 			if (isRunning()) {
 				System.err.println("서버에서 메시지를 가져오지 못 함");
 			}
+		} finally {
+			try {
+				if (dis != null) {
+					dis.close();
+				}
+			} catch (IOException e) {
+				System.err.println("inputStream Close 에러");
+			}
 		}
 	}
 
