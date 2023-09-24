@@ -6,8 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 
-import gmx.multiroomchat.room.ChatRoom;
-import gmx.multiroomchat.room.Helper;
+import gmx.multichatroom.room.ChatRoom;
+import gmx.multichatroom.room.Helper;
 
 public class Server {
 	private static final int PORT = 7777; // 채팅 프로그램을 사용할 포트번호
@@ -18,7 +18,7 @@ public class Server {
 	private Server() { // 외부에서 생성 불가(싱글톤 패턴)
 	}
 
-	public static Server getInstance() { // 싱글톤 인스턴스 얻기
+	public static Server getInstance() { // 싱글톤 인스턴스 얻기(객체 생성 없이 호출하기 위해 static)
 		if (instance == null) {
 			instance = new Server();
 		}
