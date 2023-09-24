@@ -54,7 +54,7 @@ public class Client {
 					System.err.println("inputStream Close 에러");
 				}
 			}
-			if (socket != null && !socket.isClosed()) {
+			if (socket != null && !socket.isClosed()) { // 소켓을 닫을 때는 연결 상태와 닫힌 상태를 동시에 체크
 				try {
 					socket.close();
 				} catch (IOException e) {
