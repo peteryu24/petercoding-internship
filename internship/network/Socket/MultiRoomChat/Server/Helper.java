@@ -10,6 +10,7 @@ public class Helper implements Runnable {
 	private DataOutputStream dos;
 	private String name;
 	private ChatRoom chatRoom;
+	static String roomDelete; // 모두가 나간 빈 방일 경우 방 삭제
 
 	public Helper(Socket socket) {
 		this.socket = socket; // 서버에서 가져온 소켓
@@ -74,7 +75,8 @@ public class Helper implements Runnable {
 					if (chatRoom != null) {
 						chatRoom.addPerson(this); // helper객체로 방에 입장
 						sendMessage("방 생성 완료. 현재 입장한 방 이름: " + roomName + "\n(exit 입력시 퇴장)");
-					} else { // createRoom()에서 return null; 일 때
+						roomDelete = roomName;
+					} else { // createRoom()에서 return null 일 때
 						sendMessage("해당 이름의 방이 이미 존재합니다.");
 					}
 					break;
@@ -88,6 +90,7 @@ public class Helper implements Runnable {
 					if (chatRoom != null) {
 						chatRoom.addPerson(this);
 						sendMessage("방 입장 완료. 현재 입장한 방 이름: " + chooseRoom);
+						roomDelete = chooseRoom;
 					} else {
 						sendMessage("방 조회되지 않음.");
 					}
