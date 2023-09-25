@@ -11,8 +11,6 @@ public class Helper implements Runnable {
 	private String name;
 	private ChatRoom chatRoom;
 
-	ChatRoom cr = new ChatRoom(); // 채팅방 생성
-
 	public Helper(Socket socket) {
 		this.socket = socket; // 서버에서 가져온 소켓
 
@@ -68,7 +66,7 @@ public class Helper implements Runnable {
 					sendMessage("방 이름을 입력하세요: ");
 					String roomName = dis.readUTF(); // 방 이름 받아오기
 
-					chatRoom = cr.createRoom(roomName); // 받아온 이름으로 방 생성
+					chatRoom = ChatRoom.createRoom(roomName); // 받아온 이름으로 방 생성
 					if (chatRoom != null) {
 						chatRoom.addPerson(this); // helper객체로 방에 입장
 						sendMessage("방 생성 완료. 현재 입장한 방 이름: " + roomName + "\n(exit 입력시 퇴장)");
@@ -77,12 +75,12 @@ public class Helper implements Runnable {
 					}
 					break;
 				case 2: // 기존 방
-					sendMessage("개설된 방 목록: " + cr.getRoomName());
+					sendMessage("개설된 방 목록: " + ChatRoom.getRoomName());
 					sendMessage("입장 희망하는 방 이름을 입력하세요: ");
 
 					String chooseRoom = dis.readUTF(); // 원하는 방 이름 받아오기
 
-					chatRoom = cr.enterRoom(chooseRoom); // 입력했던 이름을 가진 방으로 입장
+					chatRoom = ChatRoom.enterRoom(chooseRoom); // 입력했던 이름을 가진 방으로 입장
 					if (chatRoom != null) {
 						chatRoom.addPerson(this);
 						sendMessage("방 입장 완료. 현재 입장한 방 이름: " + chooseRoom);
