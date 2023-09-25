@@ -28,7 +28,7 @@ public class Client {
 			receiverThread.start(); // 쓰레드 시작
 
 			Scanner scan = new Scanner(System.in);
-			while (true) {
+			while (true) { // 에러 발생 전까지
 				String userInput = scan.nextLine();
 				dos.writeUTF(userInput); // 메세지 전송
 			}
@@ -38,7 +38,7 @@ public class Client {
 			System.err.println("클라이언트 에러");
 		} catch (Exception e) {
 			System.err.println("에러 발생: ");
-		} finally {
+		} finally { // 에러 발생시 쓰레드 종료
 			if (receiver != null) {
 				receiver.isFlag(); // false flag
 			}
