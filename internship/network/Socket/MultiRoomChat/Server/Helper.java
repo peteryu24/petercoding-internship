@@ -24,6 +24,7 @@ public class Helper implements Runnable {
 		try {
 			if (dos != null) {
 				dos.writeUTF(message); // 전송
+				dos.flush();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -46,6 +47,9 @@ public class Helper implements Runnable {
 				sendMessage("입력: ");
 
 				String chooseAction = dis.readUTF(); // 선택 받아오기
+				if (chooseAction.equalsIgnoreCase("quit")) { // 프로그램에서 퇴장
+					break;
+				}
 
 				int choice;
 				try {
@@ -129,4 +133,5 @@ public class Helper implements Runnable {
 			}
 		}
 	}
+
 }
