@@ -11,9 +11,6 @@ public class ChatRoom {
 
 	private final ConcurrentHashMap<String, Helper> clients = new ConcurrentHashMap<>(); // 사람 이름과 사람(소켓을 가짐)
 
-	public ChatRoom() {
-	}
-
 	public void addPerson(Helper helper) {
 		clients.put(helper.getName(), helper); // 사용자의 이름과 helper 자체
 	}
