@@ -1,4 +1,4 @@
-final을 list에 붙이기(final은 불변일까?) https://advenoh.tistory.com/13
+final을 list에 붙이기(final은 불변일까?) https://advenoh.tistory.com/13 https://unluckyjung.github.io/java/2021/02/20/Java-Unmodifiable/
 
 try catch finally   break;로 가는 법
 
