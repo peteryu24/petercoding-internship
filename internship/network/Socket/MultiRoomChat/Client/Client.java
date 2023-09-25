@@ -10,6 +10,8 @@ import java.util.Scanner;
 public class Client {
 	private static final String CHATIP = "localhost";
 	private static final int CHATPORT = 7777;
+	Receiver receiver;
+	Thread receiverThread;
 
 	public void startClient() {
 		Socket socket = null;
@@ -21,19 +23,15 @@ public class Client {
 			dis = new DataInputStream(socket.getInputStream());
 			dos = new DataOutputStream(socket.getOutputStream());
 
-			Receiver receiver = new Receiver(dis); // dis를 넣은 receiver
-			Thread receiverThread = new Thread(receiver); // dis를 넣은 receiver로 쓰레드 선언
+			receiver = new Receiver(dis); // dis를 넣은 receiver
+			receiverThread = new Thread(receiver); // dis를 넣은 receiver로 쓰레드 선언
 			receiverThread.start(); // 쓰레드 시작
 
 			Scanner scan = new Scanner(System.in);
-			while (receiver.isFlag()) { // flag true일 때만 실행
+			while (true) {
 				String userInput = scan.nextLine();
 				dos.writeUTF(userInput); // 메세지 전송
 			}
-
-			// 사용자 나감
-			receiver.stop(); // flag -> false receiver 쓰레드 종료 (무한정 수신 대기 방지)
-			receiverThread.join(); // 종료될 때까지 대기
 		} catch (UnknownHostException e) {
 			System.err.println("호스트 에러");
 		} catch (IOException e) {
@@ -41,6 +39,17 @@ public class Client {
 		} catch (Exception e) {
 			System.err.println("에러 발생: ");
 		} finally {
+			if (receiver != null) {
+				receiver.isFlag(); // false flag
+			}
+
+			if (receiverThread != null) {
+				try {
+					receiverThread.join(); // 종료될 때까지 기다리기
+				} catch (InterruptedException e) {
+					System.err.println("thread Join 에러");
+				}
+			}
 			if (dos != null) {
 				try {
 					dos.close();
