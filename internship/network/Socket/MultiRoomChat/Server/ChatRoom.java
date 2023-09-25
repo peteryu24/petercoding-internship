@@ -11,7 +11,7 @@ public class ChatRoom {
 
 	private ConcurrentHashMap<String, Helper> clients = new ConcurrentHashMap<>(); // 사람 이름과 사람(소켓을 가짐)
 
-	public ChatRoom() { 
+	public ChatRoom() {
 	}
 
 	public void addPerson(Helper helper) {
@@ -30,20 +30,20 @@ public class ChatRoom {
 		}
 	}
 
-	public ChatRoom createRoom(String roomName) { // helper에서 받아온 이름
-		if (server.roomManager.containsKey(roomName)) { // 이미 존재한다면
+	public static ChatRoom createRoom(String roomName) { // helper에서 받아온 이름
+		if (Server.roomManager.containsKey(roomName)) { // 이미 존재한다면
 			return null;
 		}
 		ChatRoom room = new ChatRoom(); // 새로운 채팅방 생성
-		server.roomManager.put(roomName, room); // 해시맵에 방 추가
+		Server.roomManager.put(roomName, room); // 해시맵에 방 추가
 		return room;
 	}
 
-	public ChatRoom enterRoom(String roomName) { // Helper클래스에서 사용자의 방 입장을 위해 방 정보 return
-		return server.roomManager.get(roomName);
+	public static ChatRoom enterRoom(String roomName) { // Helper클래스에서 사용자의 방 입장을 위해 방 정보 return
+		return Server.roomManager.get(roomName);
 	}
 
-	public ArrayList<String> getRoomName() { // ArrayList에 방 이름 넣기
-		return new ArrayList<>(server.roomManager.keySet());
+	public static ArrayList<String> getRoomName() { // ArrayList에 방 이름 넣기
+		return new ArrayList<>(Server.roomManager.keySet());
 	}
 }
