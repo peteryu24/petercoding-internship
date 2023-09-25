@@ -1,183 +1,51 @@
 package gmx.multiroomchat.server;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
-public class Server {
-	private static final int PORT = 7777;
-	private Map<String, Room> rooms = new ConcurrentHashMap<>();
-	private static int nextRoomId = 1;
+import gmx.multichatroom.room.ChatRoom;
+import gmx.multichatroom.room.Helper;
 
-	public static void main(String[] args) {
-		new Server().startServer();
+public class Server { // 하나의 roomManager를 위한 싱글톤 패턴
+	private final int PORT = 7777; // 채팅 프로그램을 사용할 포트번호
+	public static ConcurrentHashMap<String, ChatRoom> roomManager = new ConcurrentHashMap<>(); // 방 이름과 방
+	private ServerSocket serverSocket;
+	private static Server serverInstance = null; // 싱글톤 인스턴스
+
+	private Server() { // 외부에서 생성 불가(싱글톤 패턴)
+	}
+
+	public static Server getInstance() { // 싱글톤 인스턴스 얻기(객체 생성 없이 호출하기 위해 static)
+		if (serverInstance == null) {
+			serverInstance = new Server();
+		}
+		return serverInstance;
 	}
 
 	public void startServer() {
-		try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-			System.out.println("Server started on port " + PORT);
+		try {
+			serverSocket = new ServerSocket(PORT); // 해당 포트로 서버소켓 생성
+			System.out.println(PORT + " 포트번호 로 서버 시작.");
+
 			while (true) {
-				Socket clientSocket = serverSocket.accept();
-				Client client = new Client(clientSocket, this);
-				new Thread(client).start();
+				Socket socket = serverSocket.accept(); // 서버소켓으로 연결을 수립하고 클라이언트 기다림
+				Helper person = new Helper(socket);
+				new Thread(person).start(); // Helper를 쓰레드로 시작
 			}
+		} catch (BindException e) {
+			System.err.println(PORT + "가 이미 사용 중입니다.");
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Room createRoom(String roomName) {
-		if (rooms.containsKey(roomName)) {
-			return null; // 이미 해당 이름의 방이 존재하면 null 반환
-		}
-		Room room = new Room(roomName);
-		rooms.put(roomName, room);
-		return room;
-	}
-
-	public Room getRoom(String name) {
-		return rooms.get(name);
-	}
-
-	public Set<String> getAllRoomNames() {
-		return rooms.keySet();
-	}
-
-	static class Room {
-		private String name;
-		private int id;
-		private ConcurrentMap<String, Client> clients = new ConcurrentHashMap<>();
-
-		public Room(String name) {
-			this.name = name;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void addClient(Client client) {
-			clients.put(client.getName(), client);
-		}
-
-		public void removeClient(String name) {
-			clients.remove(name);
-		}
-
-		public void broadcast(String message, String excludeClient) {
-			for (Client client : clients.values()) {
-				if (!client.getName().equals(excludeClient)) {
-					client.sendMessage(message);
-				}
-			}
-		}
-	}
-
-class Client implements Runnable {
-		private Socket socket;
-		private Server server;
-		private OutputStream out;
-		private String name;
-		private Room currentRoom;
-
-		public Client(Socket socket, Server server) {
-			this.socket = socket;
-			this.server = server;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void sendMessage(String message) {
+			System.err.println("서버 시작 에러");
+		} finally {
 			try {
-				if (out != null) {
-					out.write((message + "\n").getBytes());
-					out.flush();
+				if (serverSocket != null) {
+					serverSocket.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		@Override
-		public void run() {
-			try {
-				InputStream in = socket.getInputStream();
-				out = socket.getOutputStream();
-				byte[] buffer = new byte[1024];
-				int bytesRead;
-
-				sendMessage("이름을 입력하세요: ");
-				bytesRead = in.read(buffer);
-				name = new String(buffer, 0, bytesRead).trim();
-
-				while (true) {
-					sendMessage("1. 신규 방 생성");
-					sendMessage("2. 기존 방 입장");
-					sendMessage("입력: ");
-
-					bytesRead = in.read(buffer);
-					int choice = Integer.parseInt(new String(buffer, 0, bytesRead).trim());
-
-					switch (choice) {
-					case 1:
-						sendMessage("방 이름을 입력하세요: ");
-						bytesRead = in.read(buffer);
-						String roomName = new String(buffer, 0, bytesRead).trim();
-
-						currentRoom = server.createRoom(roomName);
-						if (currentRoom != null) {
-							currentRoom.addClient(this);
-							sendMessage("방 생성 완료. 현재 입장한 방 이름: " + roomName);
-						} else {
-							sendMessage("해당 이름의 방이 이미 존재합니다.");
-						}
-						break;
-					case 2:
-						sendMessage("개설된 방 목록: " + server.getAllRoomNames());
-						sendMessage("입장 희망하는 방 이름을 입력하세요: ");
-
-						bytesRead = in.read(buffer);
-						String selectedRoomName = new String(buffer, 0, bytesRead).trim();
-
-						currentRoom = server.getRoom(selectedRoomName);
-						if (currentRoom != null) {
-							currentRoom.addClient(this);
-							sendMessage("방 입장 완료. 현재 입장한 방 이름: " + selectedRoomName);
-						} else {
-							sendMessage("방 조회되지 않음.");
-						}
-						break;
-					}
-
-					while (currentRoom != null) {
-						bytesRead = in.read(buffer);
-						String message = new String(buffer, 0, bytesRead).trim();
-
-						if (message.equalsIgnoreCase("exit")) {
-							currentRoom.removeClient(name);
-							sendMessage("방을 나갔습니다.");
-							currentRoom = null;
-						} else {
-							currentRoom.broadcast(name + ": " + message, name);
-						}
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					socket.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				System.err.println("서버 소켓 닫기 에러");
 			}
 		}
 	}
