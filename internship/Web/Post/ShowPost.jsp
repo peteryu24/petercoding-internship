@@ -70,12 +70,14 @@ body {
 			<%
 				}
 			%>
-			
-			<button class="register button" type="button"
-				onclick="location='CreatePost.jsp'" style='width: 70pt; height: 70pt;'>Write</button>
 		</tbody>
 	</table>
 
+	<div>
+		<button class="register button" type="button"
+			onclick="location='CreatePost.jsp'"
+			style='width: 70pt; height: 70pt;'>write</button>
+	</div>
 
 </body>
 </html>
