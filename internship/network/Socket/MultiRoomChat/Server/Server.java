@@ -10,7 +10,7 @@ import gmx.multichatroom.room.ChatRoom;
 import gmx.multichatroom.room.Helper;
 
 public class Server {
-	private static final int PORT = 7777; // 채팅 프로그램을 사용할 포트번호
+	private final int PORT = 7777; // 채팅 프로그램을 사용할 포트번호
 	public ConcurrentHashMap<String, ChatRoom> roomManager = new ConcurrentHashMap<>(); // 방 이름과 방
 	private ServerSocket serverSocket;
 	private static Server serverInstance = null; // 싱글톤 인스턴스
