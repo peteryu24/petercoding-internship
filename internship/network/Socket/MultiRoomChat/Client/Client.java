@@ -1,36 +1,75 @@
 package gmx.multiroomchat.client;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Scanner;
 
-public class Receiver implements Runnable {
-	private DataInputStream dis;
-	private boolean isRun = true;
+public class Client {
+	private static final String CHATIP = "localhost";
+	private static final int CHATPORT = 7777;
+	Receiver receiver;
+	Thread receiverThread;
 
-	public Receiver(DataInputStream dis) {
-		this.dis = dis;
-	}
+	public void startClient() {
+		Socket socket = null;
+		DataInputStream dis = null;
+		DataOutputStream dos = null;
 
-	public void isFlag() {
-		isRun = false;
-	}
-
-	@Override
-	public void run() {
 		try {
-			while (isRun) { // 스레드가 실행 중일때
-				String received = dis.readUTF(); // 메세지 받아오기
-				System.out.println(received);
+			socket = new Socket(CHATIP, CHATPORT);
+			dis = new DataInputStream(socket.getInputStream());
+			dos = new DataOutputStream(socket.getOutputStream());
+
+			receiver = new Receiver(dis); // dis를 넣은 receiver
+			receiverThread = new Thread(receiver); // dis를 넣은 receiver로 쓰레드 선언
+			receiverThread.start(); // 쓰레드 시작
+
+			Scanner scan = new Scanner(System.in);
+			while (true) {
+				String userInput = scan.nextLine();
+				dos.writeUTF(userInput); // 메세지 전송
 			}
+		} catch (UnknownHostException e) {
+			System.err.println("호스트 에러");
 		} catch (IOException e) {
-			System.err.println("서버에서 메시지를 가져오지 못 함");
+			System.err.println("클라이언트 에러");
+		} catch (Exception e) {
+			System.err.println("에러 발생: ");
 		} finally {
-			try {
-				if (dis != null) {
-					dis.close();
+			if (receiver != null) {
+				receiver.isFlag(); // false flag
+			}
+
+			if (receiverThread != null) {
+				try {
+					receiverThread.join(); // 종료될 때까지 기다리기
+				} catch (InterruptedException e) {
+					System.err.println("thread Join 에러");
 				}
-			} catch (IOException e) {
-				System.err.println("inputStream Close 에러");
+			}
+			if (dos != null) {
+				try {
+					dos.close();
+				} catch (IOException e) {
+					System.err.println("outputStream Close 에러");
+				}
+			}
+			if (dis != null) {
+				try {
+					dis.close();
+				} catch (IOException e) {
+					System.err.println("inputStream Close 에러");
+				}
+			}
+			if (socket != null && !socket.isClosed()) { // 소켓을 닫을 때는 연결 상태와 닫힌 상태를 동시에 체크
+				try {
+					socket.close();
+				} catch (IOException e) {
+					System.err.println("Socket Close 에러");
+				}
 			}
 		}
 	}
