@@ -17,6 +17,9 @@ public class ChatRoom {
 
 	public void removePerson(String name) {
 		clients.remove(name);
+		if (clients.isEmpty()) { // 아무도 없는 방일 경우
+			Server.roomManager.remove(Helper.roomDelete); // 방 삭제
+		}
 	}
 
 	public void sendToAll(String message, String sender) {
