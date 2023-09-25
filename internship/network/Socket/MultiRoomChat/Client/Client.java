@@ -8,8 +8,8 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class Client {
-	private static final String CHATIP = "localhost";
-	private static final int CHATPORT = 7777;
+	private final String CHATIP = "localhost";
+	private final int CHATPORT = 7777;
 	Receiver receiver;
 	Thread receiverThread;
 
@@ -45,7 +45,7 @@ public class Client {
 
 			if (receiverThread != null) {
 				try {
-					receiverThread.join(); // 종료될 때까지 기다리기
+					receiverThread.join(); // Receiver의 쓰레드 종료될 때까지 기다리기
 				} catch (InterruptedException e) {
 					System.err.println("thread Join 에러");
 				}
