@@ -5,6 +5,12 @@
 <%
 	String email = request.getParameter("email");
 	String password = request.getParameter("password");
+	
+	if ((email == "") || (password == "")) {
+		out.println("<script>alert('모든 정보를 입력하세요.');</script>");
+		out.println("<script>location.href='Login.jsp'</script>");
+	}
+	
 	UserTable ut = new UserTable();
 	Boolean isCheck = ut.loginCheck(email, password);
 
