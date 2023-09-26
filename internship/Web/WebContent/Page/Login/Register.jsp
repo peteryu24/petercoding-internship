@@ -43,13 +43,13 @@ div {
 		</h2>
 	<form action="RegisterUpdate.jsp" method="post">
 		<label for="email">SET e-mail</label><br> <input type="text"
-			id="email" name="email" value=""><br>
+			id="email" name="email" value="" required="required"><br>
 		<!--이메일 상자-->
 		<label for="nickname">SET nickname</label><br> <input type="text"
-			id="nickname" name="nickname" value=""><br>
+			id="nickname" name="nickname" value="" required="required"><br>
 		<!--닉네임 상자-->
 		<label for="password">SET PW</label><br> <input type="text"
-			id="password" name="password" value=""><br>
+			id="password" name="password" value="" required="required"><br>
 		<!--비밀번호 상자-->
 
 		<button class="button" id="go back" type="button"
