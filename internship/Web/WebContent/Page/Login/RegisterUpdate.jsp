@@ -8,13 +8,16 @@
 
 	UserTable ut = new UserTable();
 
-	Boolean isCheck = ut.insertValue(email, nickname, password);
+	int isCheck = ut.insertValue(email, nickname, password);
 
-	if (isCheck) {
+	if (isCheck==0) {
 		out.println("<script>alert('회원가입 성공하셨습니다.');</script>");
 		out.println("<script>location.href='Login.jsp'</script>");
-	} else {
+	} else if(isCheck==-1){
 		out.println("<script>alert('모든 정보를 입력하세요.');</script>");
+		out.println("<script>location.href='Register.jsp'</script>");
+	}else{
+		out.println("<script>alert('아이디가 중복됩니다.');</script>");
 		out.println("<script>location.href='Register.jsp'</script>");
 	}
 %>
