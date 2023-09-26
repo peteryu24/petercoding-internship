@@ -9,7 +9,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 	$(document).ready(function() {
-		$(".login.button").click(function(event) {
+		$(".loginButton").click(function(event) {
 			event.preventDefault();
 
 			$.ajax({
@@ -17,7 +17,7 @@
 				url : "../../LoginServlet",
 				data : {
 					email : $("#email").val(),
-					password : $("#pw").val()
+					password : $("#password").val()
 				},
 				dataType : "json",
 				success : function(response) {
@@ -58,7 +58,7 @@ div {
 		<form>
 			<label for="email"> email</label><br> <input type="text"
 				id="email" name="email" required="required"><br> <label
-				for="password">PW</label><br> <input type="password" id="pw"
+				for="password">PW</label><br> <input type="password" id="password"
 				name="password" required="required"><br>
 			<button class="loginButton" type="button"
 				style='width: 70pt; height: 70pt;'>LOGIN</button>
