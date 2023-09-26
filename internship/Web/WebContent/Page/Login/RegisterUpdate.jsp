@@ -16,7 +16,7 @@
 	} else if(isCheck==-1){
 		out.println("<script>alert('모든 정보를 입력하세요.');</script>");
 		out.println("<script>location.href='Register.jsp'</script>");
-	}else{
+	}else{ // ischeck == 1
 		out.println("<script>alert('아이디가 중복됩니다.');</script>");
 		out.println("<script>location.href='Register.jsp'</script>");
 	}
