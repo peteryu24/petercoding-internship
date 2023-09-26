@@ -107,7 +107,7 @@ public class RegisterServlet extends HttpServlet {
 
 		if (isCheck.equals("proceed")) {
 			json.put("message", "회원가입 성공하셨습니다.");
-		} else if (isCheck.contentEquals("duplicate")) {
+		} else if (isCheck.equals("duplicate")) {
 			json.put("message", "아이디가 중복됩니다.");
 		}
 
