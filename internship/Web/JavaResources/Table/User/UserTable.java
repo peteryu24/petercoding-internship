@@ -79,11 +79,11 @@ public class UserTable {
 		}
 	}
 
-	public boolean insertValue(String nickname, String email, String password) {
-		boolean nullCheck = true;
+	public int insertValue(String nickname, String email, String password) {
+		int checker = 0;
 		if ((nickname == "") || (email == "") || (password == "")) {
-			nullCheck = false;
-			return nullCheck;
+			checker = -1;
+			return -1;
 		}
 		Connection connect = null;
 		PreparedStatement preState = null;
@@ -115,6 +115,7 @@ public class UserTable {
 			try {
 
 				if (connect != null) {
+					checker = 1;
 					connect.rollback();
 				}
 			} catch (SQLException se) {
@@ -147,7 +148,7 @@ public class UserTable {
 				System.out.println("SQLException: connect is null");
 			}
 		}
-		return nullCheck;
+		return checker;
 	}
 
 	public ArrayList<UserVo> input() {
