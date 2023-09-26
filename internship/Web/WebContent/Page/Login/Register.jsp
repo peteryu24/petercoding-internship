@@ -13,19 +13,22 @@
 			event.preventDefault(); // 폼 제출 동작 중지
 
 			$.ajax({ // 서버에 비동기적으로 데이터를 전송하거나 요청
-				type : "POST", // http 요청 메서드
-				url : "./RegisterServlet", // 요청을 보낼 서버 URL
+				type : "POST", // http 요청 메서드 // 서블릿 doPost
+				url : "../../RegisterServlet", // 요청을 보낼 서버 URL
 				data : { // 서버에 전송될 데이터 지정
 					email : $("#email").val(),
 					nickname : $("#nickname").val(),
 					password : $("#password").val()
 				},
-				//dataType : "json",
+				dataType : "json", // 받을 데이터 타입 지정
 				success : function(response) { // 요청이 성공적으로 처리되면 실행될 콜백 함수 response는 서버로 부터 받은 응답 데이터
-					alert(response); // 응답 메시지를 팝업으로 표시
-					if (response.trim() === "회원가입 성공하셨습니다.") {
-						location.href = 'Login.jsp'; // Login.jsp로 리디렉션
+					alert(response.message); // 응답 메시지를 팝업으로 표시
+					if (response.message === "회원가입 성공하셨습니다.") { // javascript는 equals 없음
+						location.href = 'Login.jsp'; // Login.jsp로 리다이렉트
+					} else {
+						location.href = 'Register.jsp';
 					}
+
 				},
 			});
 		});
@@ -62,7 +65,7 @@ div {
 				required="required"><br> <label for="password">SET
 				PW</label><br> <input type="text" id="password" name="password"
 				value="" required="required"><br>
-			<button class="button" id="go back" type="button"
+			<button class="button" id="goBack" type="button"
 				onclick="location='Login.jsp'" style='width: 60pt; height: 60pt;'>Go
 				Back</button>
 			<button class="button" id="register" type="button"
