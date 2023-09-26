@@ -14,15 +14,15 @@
 
 			$.ajax({
 				type : "POST",
-				url : "LoginCheck.jsp",
+				url : "../../LoginServlet",
 				data : {
 					email : $("#email").val(),
 					password : $("#pw").val()
 				},
-				//dataType : "json",
+				dataType : "json",
 				success : function(response) {
-					alert(response.trim());
-					if (response.trim() === "로그인 성공하셨습니다.") {
+					alert(response.message);
+					if (response.message === "로그인 성공하셨습니다.") {
 						location.href = '../Post/ShowPost.jsp';
 					} else {
 						location.href = 'Login.jsp';
@@ -60,9 +60,9 @@ div {
 				id="email" name="email" required="required"><br> <label
 				for="password">PW</label><br> <input type="password" id="pw"
 				name="password" required="required"><br>
-			<button class="login button" type="button"
+			<button class="loginButton" type="button"
 				style='width: 70pt; height: 70pt;'>LOGIN</button>
-			<button class="register button" type="button"
+			<button class="registerButton" type="button"
 				onclick="location='Register.jsp'" style='width: 70pt; height: 70pt;'>REGISTER</button>
 		</form>
 	</div>
