@@ -88,6 +88,11 @@ public class RegisterServlet extends HttpServlet {
 	private void checkInfo(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("application/json; charset=UTF-8"); // JSON 타입 설정
+		/*
+		 * 이렇게 나누어서 타입 지정도 가능
+		 * response.setContentType("application/json");
+		 * response.setCharacterEncoding("UTF-8");
+		 */
 
 		JSONObject json = new JSONObject(); // Hashmap을 상속 받은 클래스
 
