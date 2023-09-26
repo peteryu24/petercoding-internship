@@ -1,4 +1,5 @@
 enum<br>
+https://effortguy.tistory.com/24<br>
 https://kadosholy.tistory.com/114<br>
 https://limkydev.tistory.com/225<br>
 https://limkydev.tistory.com/50<br>
