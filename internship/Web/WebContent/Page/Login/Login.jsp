@@ -42,10 +42,11 @@ div {
 		</h2>
 		<form action="LoginCheck.jsp" method="post">
 			<label for="email"> email</label><br> <input type="text"
-				id="email" name="email" value=""><br>
+				id="email" name="email" value="" required="required"><br>
 			<!--텍스트를 입력할 수 있는 상자-->
 			<label for="password">PW</label><br> <input type="password"
-				id="pw" name="password" value="">
+				id="pw" name="password" value="" required="required">
+
 			<!--입력한 텍스트는 별표로 표시-->
 			<button class="login button" type="submit"
 				style='width: 70pt; height: 70pt;'>LOGIN</button>
