@@ -98,6 +98,11 @@ public class RegisterServlet extends HttpServlet {
 		if ((nickname == null || nickname.trim().isEmpty()) || (email == null || email.trim().isEmpty())
 				|| (password == null || password.trim().isEmpty())) {
 			json.put("message", "모든 정보를 입력하세요.");
+			/*
+			 * response: 웹 서버의 응답을 나타내는 객체
+			 * getWriter(): response 객체의 메소드 PrintWirter 반환
+			 * json.toString(): json 형태의 데이터를 문자열 형태(json 베이스)로 반환
+			 */
 			response.getWriter().print(json.toString());
 			return;
 		}
