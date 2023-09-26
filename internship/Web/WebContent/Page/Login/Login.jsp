@@ -19,6 +19,7 @@
 					email : $("#email").val(),
 					password : $("#pw").val()
 				},
+				//dataType : "json",
 				success : function(response) {
 					alert(response.trim());
 					if (response.trim() === "로그인 성공하셨습니다.") {
