@@ -1,4 +1,4 @@
-
+/*
 package gmx.login;
 
 import java.io.IOException;
@@ -51,7 +51,8 @@ public class RegisterServlet extends HttpServlet {
 		}
 	}
 }
-/*
+*/
+
 package gmx.login;
 
 import java.io.IOException;
@@ -88,7 +89,7 @@ public class RegisterServlet extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("application/json; charset=UTF-8"); // JSON 타입 설정
 
-		JSONObject json = new JSONObject();
+		JSONObject json = new JSONObject(); // Hashmap을 상속 받은 클래스
 
 		String email = request.getParameter("email");
 		String nickname = request.getParameter("nickname");
@@ -113,4 +114,3 @@ public class RegisterServlet extends HttpServlet {
 		response.getWriter().print(json.toString()); // JSON 형태로 응답
 	}
 }
-*/
