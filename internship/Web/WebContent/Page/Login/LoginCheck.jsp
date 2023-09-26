@@ -5,24 +5,19 @@
 <%
 	String email = request.getParameter("email");
 	String password = request.getParameter("password");
-	
-	if ((email == "") || (password == "")) {
-		out.println("<script>alert('모든 정보를 입력하세요.');</script>");
-		out.println("<script>location.href='Login.jsp'</script>");
+
+	if ((email == null || email.trim().isEmpty()) || (password == null || password.trim().isEmpty())) {
+		out.print("모든 정보를 입력하세요.");
+		return;
 	}
-	
+
 	UserTable ut = new UserTable();
 	Boolean isCheck = ut.loginCheck(email, password);
 
 	if (isCheck) {
 		session.setAttribute("userEmail", email);
-		out.println("<script>alert('로그인 성공하셨습니다.');</script>");
-		out.println("<script>location.href='../Post/ShowPost.jsp'</script>");
-
+		out.print("로그인 성공하셨습니다.");
 	} else {
-		out.println("<script>alert('로그인 실패하셨습니다.');</script>");
-		out.println("<script>location.href='Login.jsp'</script>");
-
+		out.print("로그인 실패하셨습니다.");
 	}
 %>
-
