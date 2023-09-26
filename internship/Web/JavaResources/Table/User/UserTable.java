@@ -81,10 +81,6 @@ public class UserTable {
 
 	public String insertValue(String nickname, String email, String password) {
 		String checker = "proceed";
-		if ((nickname == "") || (email == "") || (password == "")) {
-			checker = "null";
-			return checker;
-		}
 		Connection connect = null;
 		PreparedStatement preState = null;
 		// UserVo uv = new UserVo();
@@ -115,7 +111,7 @@ public class UserTable {
 			try {
 
 				if (connect != null) {
-					checker = "duplication";
+					checker = "duplicate";
 					connect.rollback();
 				}
 			} catch (SQLException se) {
@@ -137,7 +133,7 @@ public class UserTable {
 					preState.close();
 				}
 			} catch (SQLException e) {
-				System.out.println("SQLException: preState is null"); 
+				System.out.println("SQLException: preState is null");
 			}
 
 			try {
