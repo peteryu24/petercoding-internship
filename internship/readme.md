@@ -1,4 +1,7 @@
 enum<br>
+
+https://bcp0109.tistory.com/334<br>
+https://inpa.tistory.com/entry/JAVA-%E2%98%95-%EC%97%B4%EA%B1%B0%ED%98%95Enum-%ED%83%80%EC%9E%85-%EB%AC%B8%EB%B2%95-%ED%99%9C%EC%9A%A9-%EC%A0%95%EB%A6%AC<br>
 https://effortguy.tistory.com/24<br>
 https://kadosholy.tistory.com/114<br>
 https://limkydev.tistory.com/225<br>
