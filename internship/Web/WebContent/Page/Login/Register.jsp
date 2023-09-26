@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>로그인 페이지 구현 과제</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- jquery 기본  양식 -->
 <script>
 	$(document).ready(function() { // 웹 페이지가 모두 로드되면 내부의 함수 실행
 		$("#register").click(function(event) { // id가 register에서 클릭 이벤트가 발생하면 지정된 함수 실행
@@ -13,12 +14,13 @@
 
 			$.ajax({ // 서버에 비동기적으로 데이터를 전송하거나 요청
 				type : "POST", // http 요청 메서드
-				url : "RegisterUpdate.jsp", // 요청을 보낼 서버 URL
+				url : "./RegisterServlet", // 요청을 보낼 서버 URL
 				data : { // 서버에 전송될 데이터 지정
 					email : $("#email").val(),
 					nickname : $("#nickname").val(),
 					password : $("#password").val()
 				},
+				//dataType : "json",
 				success : function(response) { // 요청이 성공적으로 처리되면 실행될 콜백 함수 response는 서버로 부터 받은 응답 데이터
 					alert(response); // 응답 메시지를 팝업으로 표시
 					if (response.trim() === "회원가입 성공하셨습니다.") {
