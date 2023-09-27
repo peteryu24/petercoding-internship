@@ -10,7 +10,6 @@
 <script>
 	$(document).ready(function() { // 웹 페이지가 모두 로드되면 내부의 함수 실행
 		$("#register").click(function(event) { // id가 register에서 클릭 이벤트가 발생하면 지정된 함수 실행
-			//event.preventDefault(); // 폼 제출 동작 중지
 
 			$.ajax({ // 서버에 비동기적으로 데이터를 전송하거나 요청
 				type : "POST", // http 요청 메서드 // 서블릿 doPost
@@ -57,21 +56,30 @@
 		<h2>
 			<i>Hello</i>
 		</h2>
-		<!--<form>-->
-		<label for="email">SET e-mail</label><br> <input type="text"
-			id="email" name="email" value="" required="required"><br>
-		<label for="nickname">SET nickname</label><br> <input type="text"
-			id="nickname" name="nickname" value="" required="required"><br>
-		<label for="password">SET PW</label><br> <input type="text"
-			id="password" name="password" value="" required="required"><br>
-		<button class="button" id="goBack" type="button"
-			onclick="location='Login.jsp'" style='width: 60pt; height: 60pt;'>Go
-			Back</button>
-		<button class="button" id="register" type="button"
-			style='width: 60pt; height: 60pt;'>
-			REGISTER <br>NOW
+		<!-- <form> -->
+		<!-- 만약 from 태그 ajax랑 같이 사용시 event.preventDefault(); 클릭 이벤트 아랫줄에 사용-->
+		<label for="email">SET e-mail</label>
+		<br> 
+		<input type="text" id="email" name="email" value="" required="required">
+		<br>
+		<label for="nickname">SET nickname</label>
+		<br> 
+		<input type="text" id="nickname" name="nickname" value="" required="required">
+		<br>
+		<label for="password">SET PW</label>
+		<br> 
+		<input type="text" id="password" name="password" value="" required="required">
+		<br>
+		<button class="button" id="goBack" type="button" onclick="location='Login.jsp'" style='width: 60pt; height: 60pt;'>
+			Go Back
 		</button>
-		<!--</form>-->
+		<button class="button" id="register" type="button" style='width: 60pt; height: 60pt;'>
+			REGISTER 
+			<br>
+			NOW
+		</button>
+
+		<!-- </form> -->
 	</div>
 </body>
 </html>
