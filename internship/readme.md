@@ -1,3 +1,5 @@
+동기 통신 비동기 통신 xhr ajax
+
 마샬링
 
 web.xml server.xml 웰컴파일
