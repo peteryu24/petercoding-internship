@@ -227,27 +227,28 @@ public class UserTable {
 		return addCheck;
 	}
 
-	public void delete() {
+	public String delete(String email) {
 		System.out.println("\n=========================Delete=========================\n");
+
+		String isCheck = "proceed";
 		Connection connect = null;
 		PreparedStatement preState = null;
 		int affectedRows = 0;
-
-		int deleteWhat = 1;
 
 		String sql = "DELETE FROM exam.users WHERE email = ?";
 
 		try {
 			connect = DBInfo.getInstance().getConnection();
 			preState = connect.prepareStatement(sql);
-			preState.setInt(1, deleteWhat);
+			preState.setString(1, email);
 
 			affectedRows = preState.executeUpdate();
 
 			if (affectedRows > 0) {
-				System.out.println("성공적으로 사용자를 삭제했습니다. user_id: " + deleteWhat);
+				System.out.println("성공적으로 사용자를 삭제했습니다. email: " + email);
 			} else {
-				System.out.println("삭제할 레코드가 없습니다.");
+				System.out.println("삭제 실패.");
+				isCheck = "fail";
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -261,6 +262,7 @@ public class UserTable {
 				e.printStackTrace();
 			}
 		}
+		return isCheck;
 	}
 
 	public void print() {
