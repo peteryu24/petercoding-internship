@@ -35,12 +35,12 @@
 	});
 </script>
 <style>
-input {
+#email, #nickname, #password {
 	width: 150px;
 	height: 20px;
 }
 
-div {
+#registerBlock {
 	background-color: #eee6c4;
 	padding: 9px;
 	width: 240px;
@@ -53,26 +53,25 @@ div {
 </head>
 <body
 	style="background-image: url('https://img.freepik.com/free-photo/design-space-paper-textured-background_53876-41739.jpg?w=900&t=st=1695099733~exp=1695100333~hmac=97017b46f44363931f386356ef4a473acfa31d53893c1288020443c23cb617fa')">
-	<div>
+	<div id="registerBlock">
 		<h2>
 			<i>Hello</i>
 		</h2>
-		<form>
-			<label for="email">SET e-mail</label><br> <input type="text"
-				id="email" name="email" value="" required="required"><br>
-			<label for="nickname">SET nickname</label><br> <input
-				type="text" id="nickname" name="nickname" value=""
-				required="required"><br> <label for="password">SET
-				PW</label><br> <input type="text" id="password" name="password"
-				value="" required="required"><br>
-			<button class="button" id="goBack" type="button"
-				onclick="location='Login.jsp'" style='width: 60pt; height: 60pt;'>Go
-				Back</button>
-			<button class="button" id="register" type="button"
-				style='width: 60pt; height: 60pt;'>
-				REGISTER <br>NOW
-			</button>
-		</form>
+		<!--<form>-->
+		<label for="email">SET e-mail</label><br> <input type="text"
+			id="email" name="email" value="" required="required"><br>
+		<label for="nickname">SET nickname</label><br> <input type="text"
+			id="nickname" name="nickname" value="" required="required"><br>
+		<label for="password">SET PW</label><br> <input type="text"
+			id="password" name="password" value="" required="required"><br>
+		<button class="button" id="goBack" type="button"
+			onclick="location='Login.jsp'" style='width: 60pt; height: 60pt;'>Go
+			Back</button>
+		<button class="button" id="register" type="button"
+			style='width: 60pt; height: 60pt;'>
+			REGISTER <br>NOW
+		</button>
+		<!--</form>-->
 	</div>
 </body>
 </html>
