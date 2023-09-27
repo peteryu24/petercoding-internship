@@ -10,7 +10,7 @@
 <script>
 	$(document).ready(function() { // 웹 페이지가 모두 로드되면 내부의 함수 실행
 		$("#register").click(function(event) { // id가 register에서 클릭 이벤트가 발생하면 지정된 함수 실행
-			event.preventDefault(); // 폼 제출 동작 중지
+			//event.preventDefault(); // 폼 제출 동작 중지
 
 			$.ajax({ // 서버에 비동기적으로 데이터를 전송하거나 요청
 				type : "POST", // http 요청 메서드 // 서블릿 doPost
