@@ -9,40 +9,42 @@
 	function submitData() {
 		var xhr = new XMLHttpRequest();
 		xhr.open('POST', '../../PostServlet', true);
-		xhr.setRequestHeader('Content-type',
-				'application/x-www-form-urlencoded');
+		xhr.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
 
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4 && xhr.status == 200) {
-				var response = xhr.responseText;
-				if (response === "success") {
+				var response = JSON.parse(xhr.responseText);
+				if (response.status === "success") {
 					alert('게시글 작성 성공.');
 					location.href = 'ShowPost.jsp';
-				} else if (response === "error") {
+				} else if (response.status === "error") {
 					alert('제목을 입력하세요.');
 					location.href = 'CreatePost.jsp';
 				}
 			}
 		};
 
-		var title = document.getElementById('title').value;
-		var content = document.getElementById('content').value;
-		var params = 'title=' + title + '&content=' + content;
-		xhr.send(params);
+		var data = {
+			title : document.getElementById('title').value,
+			content : document.getElementById('content').value
+		};
+
+		xhr.send(JSON.stringify(data));
 	}
 </script>
 </head>
 <body>
 	<div>
-		<label for="title">Title</label>
+		<label for="title">Title</label> 
 		<br> 
-		<input type="text" id="title" name="title" value="">
-		<br>
-		<label for="content">Content</label>
+		<input type="text" id="title" name="title" value=""> 
+		<br> 
+		<label for="content">Content</label> 
 		<br> 
 		<input type="text" id="content" name="content" value="">
-		
-		<button class="write button" onclick="submitData()" style='width: 70pt; height: 70pt;'>
+
+		<button class="write button" onclick="submitData()"
+			style='width: 70pt; height: 70pt;'>
 			Write
 		</button>
 	</div>
