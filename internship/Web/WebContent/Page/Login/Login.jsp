@@ -33,12 +33,12 @@
 	});
 </script>
 <style>
-input {
+#email, #password {
 	width: 150px;
 	height: 20px;
 }
 
-div {
+#loginBlock {
 	background-color: #f2f2f2;
 	padding: 9px;
 	width: 240px;
@@ -51,11 +51,11 @@ div {
 </head>
 
 <body style="background-color: #eee6c4">
-	<div>
+	<div id="loginBlock">
 		<h2>
 			<i><u>Welcome</u></i>
 		</h2>
-		<form>
+		<!--<form>-->
 			<label for="email"> email</label><br> <input type="text"
 				id="email" name="email" required="required"><br> <label
 				for="password">PW</label><br> <input type="password" id="password"
@@ -64,7 +64,7 @@ div {
 				style='width: 70pt; height: 70pt;'>LOGIN</button>
 			<button class="registerButton" type="button"
 				onclick="location='Register.jsp'" style='width: 70pt; height: 70pt;'>REGISTER</button>
-		</form>
+		<!--</form>-->
 	</div>
 </body>
 
