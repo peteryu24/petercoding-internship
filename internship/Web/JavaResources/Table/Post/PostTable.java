@@ -93,7 +93,7 @@ public class PostTable {
 
 	public boolean insertValue(String title, String content, String email) { // null 예외처리 필요
 		boolean nullCheck = true;
-		if ((title == "")) {
+		if ((title == null || title.trim().isEmpty())) {
 			nullCheck = false;
 			return nullCheck;
 		}
