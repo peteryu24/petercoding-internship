@@ -1,3 +1,5 @@
+마샬링
+
 web.xml server.xml 
 
 was webserver 차이 (네트워크상 분리, 다수의 was를 하나의 webserver에서)
