@@ -189,8 +189,9 @@ public class UserTable {
 		return userList;
 	}
 
-	public void update() {
+	public String update(String password, String email) {
 		System.out.println("\n=========================PreparedState Update=========================\n");
+		String addCheck = "proceed";
 		Connection connect = null;
 		PreparedStatement preState = null;
 		int affectedRows = 0;
@@ -200,15 +201,16 @@ public class UserTable {
 		try {
 			connect = DBInfo.getInstance().getConnection();
 			preState = connect.prepareStatement(sql);
-			preState.setString(1, "1q2w3e4r!");
-			preState.setInt(2, 1);
+			preState.setString(1, password);
+			preState.setString(2, email);
 
 			affectedRows = preState.executeUpdate();
 
 			if (affectedRows > 0) {
 				System.out.println("비밀번호가 성공적으로 업데이트되었습니다.");
 			} else {
-				System.out.println("업데이트할 레코드가 없습니다.");
+				System.out.println("변경 실패.");
+				addCheck = "fail";
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -222,6 +224,7 @@ public class UserTable {
 				e.printStackTrace();
 			}
 		}
+		return addCheck;
 	}
 
 	public void delete() {
