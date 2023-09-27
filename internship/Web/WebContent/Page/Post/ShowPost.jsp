@@ -21,7 +21,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>User Post Comment</title>
+<title>Post</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- jquery 기본  양식 -->
+<script>
+	$(document).ready(function() { // 웹 페이지가 모두 로드되면 내부의 함수 실행
+		$("#unregister").click(function(event) { // id가 register에서 클릭 이벤트가 발생하면 지정된 함수 실행
+
+			$.ajax({ // 서버에 비동기적으로 데이터를 전송하거나 요청
+				type : "POST", // http 요청 메서드 // 서블릿 doPost
+				url : "../../UnregisterServlet", // 요청을 보낼 서버 URL
+				data : { // 서버에 전송될 데이터 지정
+				},
+				dataType : "json", // 받을 데이터 타입 지정
+				success : function(response) { // 요청이 성공적으로 처리되면 실행될 콜백 함수 response는 서버로 부터 받은 응답 데이터
+					alert(response.message); // 응답 메시지를 팝업으로 표시
+					if (response.message === "탈퇴 완료되었습니다.") { // javascript는 equals 없음
+						location.href = '../Login/Login.jsp'; // Login.jsp로 리다이렉트
+					} else {
+						location.href = 'ShowPost.jsp';
+					}
+
+				},
+			});
+		});
+	});
+</script>
 <style>
 h2 {
 	text-align: center;
@@ -54,7 +79,8 @@ body {
 		</thead>
 		<tbody>
 			<%
-				for (int i = 0; i < postList.size(); i++) {
+				int postListLength = postList.size();
+				for (int i = 0; i < postListLength; i++) {
 					PostVo post = postList.get(i);
 			%>
 			<tr>
@@ -72,14 +98,21 @@ body {
 	</table>
 
 	<div>
-		<button class="register button" type="button"
-			onclick="location='CreatePost.jsp'"
-			style='width: 70pt; height: 70pt;'>write</button>
-	</div>
-	<div>
+		<button class="write button" type="button" 
+			onclick="location='CreatePost.jsp'" style='width: 70pt; height: 70pt;'>
+				write
+		</button>
 		<button class="logout" type="button"
-			onclick="location='../Login/Login.jsp'"
-			style='width: 70pt; height: 70pt;'>logout</button>
+			onclick="location='../Login/Login.jsp'"style='width: 70pt; height: 70pt;'>
+				logout
+		</button>
+		<button class="editInfo" type="button"
+			onclick="location='../Login/EditInfo.jsp'"style='width: 70pt; height: 70pt;'>
+				editInfo
+		</button>
+		<button class="unregister" id="unregister" type="button" style='width: 70pt; height: 70pt;'>
+				unregister
+		</button>
 	</div>
 
 </body>
