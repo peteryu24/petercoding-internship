@@ -10,7 +10,6 @@
 <script>
 	$(document).ready(function() {
 		$(".loginButton").click(function(event) {
-			//event.preventDefault();
 
 			$.ajax({
 				type : "POST",
@@ -55,16 +54,20 @@
 		<h2>
 			<i><u>Welcome</u></i>
 		</h2>
-		<!--<form>-->
-			<label for="email"> email</label><br> <input type="text"
-				id="email" name="email" required="required"><br> <label
-				for="password">PW</label><br> <input type="password" id="password"
-				name="password" required="required"><br>
-			<button class="loginButton" type="button"
-				style='width: 70pt; height: 70pt;'>LOGIN</button>
-			<button class="registerButton" type="button"
-				onclick="location='Register.jsp'" style='width: 70pt; height: 70pt;'>REGISTER</button>
-		<!--</form>-->
+		<!-- <form> -->
+		<label for="email"> email</label>
+		<br> 
+		<input type="text" id="email" name="email" required="required">
+		<br> 
+		<label for="password">PW</label><br> <input type="password" id="password" name="password" required="required">
+		<br> 
+		<button class="loginButton" type="button" style='width: 70pt; height: 70pt;'>
+			LOGIN
+		</button>
+		<button class="registerButton" type="button" onclick="location='Register.jsp'" style='width: 70pt; height: 70pt;'>
+			REGISTER
+		</button>
+		<!-- </form> -->
 	</div>
 </body>
 
