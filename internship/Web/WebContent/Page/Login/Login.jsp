@@ -10,7 +10,7 @@
 <script>
 	$(document).ready(function() {
 		$(".loginButton").click(function(event) {
-			event.preventDefault();
+			//event.preventDefault();
 
 			$.ajax({
 				type : "POST",
