@@ -1,3 +1,5 @@
+https://jaehoney.tistory.com/category/Programming/Refactoring?page=2
+
 mime 타입
 
 자바 직렬화
