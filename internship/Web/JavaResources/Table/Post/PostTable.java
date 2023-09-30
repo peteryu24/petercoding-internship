@@ -203,8 +203,10 @@ public class PostTable {
 		return postList;
 	}
 
-	public void update() {
+	public String update(String content, int postId) {
 		System.out.println("\n=========================PreparedState=========================\n");
+		
+		String checker = "proceed";
 		Connection connect = null;
 		PreparedStatement preState = null;
 		String sql = "UPDATE exam.post " + "SET content = ? WHERE postId = ?";
@@ -217,14 +219,15 @@ public class PostTable {
 			 * 
 			 * 리턴된 preState은 쿼리에 데이터를 삽입하고, 실행
 			 */
-			preState.setString(1, "지오멕스소프트 짱"); // 첫 번째 ?의 값
-			preState.setInt(2, 3); // 두 번째 ?의 값
+			preState.setString(1, content); // 첫 번째 ?의 값
+			preState.setInt(2, postId); // 두 번째 ?의 값
 			// 쿼리 update
 			preState.executeUpdate();
 			System.out.println("PreparedState으로 update 완료");
 		} catch (SQLException e) {
 			System.out.println("SQLException");
 			System.out.println(sql);
+			checker = "fail";
 		} finally {
 			try {
 				preState.close();
@@ -237,16 +240,61 @@ public class PostTable {
 				System.out.println("SQLException: connect.close() 불가");
 			}
 		}
+		return checker;
 	}
 
-	public void delete() {
+	public PostVo getPostById(int postId) {
+		Connection connect = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			// 데이터베이스 연결
+			connect = DBInfo.getInstance().getConnection();
+
+			// SQL 쿼리 준비
+			String sql = "SELECT * FROM exam.post WHERE postId = ?";
+			pstmt = connect.prepareStatement(sql);
+			pstmt.setInt(1, postId);
+
+			// SQL 쿼리 실행
+			rs = pstmt.executeQuery();
+
+			// 결과 가져오기
+			if (rs.next()) {
+				PostVo post = new PostVo();
+				post.setPostId(rs.getInt("postId"));
+				post.setEmail(rs.getString("email"));
+				post.setTitle(rs.getString("title"));
+				post.setContent(rs.getString("content"));
+				post.setView(rs.getInt("view"));
+				return post;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// 리소스 해제
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (connect != null)
+					connect.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return null; // 해당 postId에 대한 게시물이 없을 경우 null 반환
+	}
+
+	public String delete(int id) {
+		String isCheck = "proceed";
 		Connection connect = null;
 		PreparedStatement preState = null;
 
 		System.out.println("\n=========================Delete=========================\n");
-
-		// 삭제할 계정 id 설정
-		int deleteWhat = 2;
 
 		// 삭제 SQL 쿼리
 		String sql = "DELETE FROM exam.post WHERE postId = ?";
@@ -254,14 +302,16 @@ public class PostTable {
 		try {
 			connect = DBInfo.getInstance().getConnection();
 			preState = connect.prepareStatement(sql);
-			preState.setInt(1, deleteWhat);
+			preState.setInt(1, id);
 
 			int affectedRows = preState.executeUpdate();
 
 			if (affectedRows > 0) {
-				System.out.println("삭제완료. postId: " + deleteWhat);
+				System.out.println("삭제완료. postId: " + id);
+				return isCheck;
 			} else {
-				System.out.println("해당 postId 찾을 수 없음: " + deleteWhat); // 변경된 행의 갯수가 존재하지 않을 때
+				System.out.println("해당 postId 찾을 수 없음: " + id); // 변경된 행의 갯수가 존재하지 않을 때
+				isCheck = "fail";
 			}
 
 		} catch (SQLException e) {
@@ -282,6 +332,7 @@ public class PostTable {
 				System.out.println("SQLException: connect is null");
 			}
 		}
+		return isCheck;
 	}
 
 	public void print() {
