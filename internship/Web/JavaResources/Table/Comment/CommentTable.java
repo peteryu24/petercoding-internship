@@ -3,7 +3,6 @@ package gmx.upc.comment;
 import java.util.ArrayList;
 
 import gmx.upc.DBInfo;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -97,7 +96,7 @@ public class CommentTable {
 		}
 	}
 
-	public boolean insertValue(String comment) { // null 예외처리 필요
+	public boolean insertValue(String email, int postId, String comment) { // null 예외처리 필요
 		boolean nullCheck = true;
 		if ((comment == "")) {
 			nullCheck = false;
@@ -117,11 +116,13 @@ public class CommentTable {
 
 			connect.setAutoCommit(false);
 
-			String insertQuery = "INSERT INTO exam.comment (comment) VALUES ?";
+			String insertQuery = "INSERT INTO exam.comment (email, postId ,comment) VALUES (?,?,?)";
 			preState = connect.prepareStatement(insertQuery);
 
 			// 첫 번째 쿼리
-			preState.setString(1, comment);
+			preState.setString(1, email);
+			preState.setInt(2, postId);
+			preState.setString(3, comment);
 			preState.executeUpdate();
 
 			connect.commit();
@@ -163,6 +164,99 @@ public class CommentTable {
 		}
 		return nullCheck;
 	}
+
+	public ArrayList<CommentVo> getCommentsByPostId(int postId) {
+		Connection connect = null;
+		PreparedStatement preState = null;
+		ResultSet rs = null;
+		ArrayList<CommentVo> comments = new ArrayList<CommentVo>();
+
+		try {
+			// 데이터베이스 연결
+			connect = DBInfo.getInstance().getConnection();
+
+			// SQL 쿼리 준비
+			String sql = "SELECT * FROM exam.comment WHERE postId = ?";
+			preState = connect.prepareStatement(sql);
+			preState.setInt(1, postId);
+
+			// SQL 쿼리 실행
+			rs = preState.executeQuery();
+
+			// 결과 가져오기
+			while (rs.next()) {
+				CommentVo comment = new CommentVo();
+				comment.setCommentId(rs.getInt("commentId"));
+				comment.setEmail(rs.getString("email"));
+				comment.setPostId(rs.getInt("postId"));
+				comment.setComment(rs.getString("comment"));
+				comment.setCreateTime(rs.getString("createTime"));
+				comments.add(comment);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// 리소스 해제
+			try {
+				if (rs != null)
+					rs.close();
+				if (preState != null)
+					preState.close();
+				if (connect != null)
+					connect.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return comments; // 해당 postId에 대한 댓글 목록 반환
+	}
+	public CommentVo getByCommentId(int commentId) {
+	    Connection connect = null;
+	    PreparedStatement preState = null;
+	    ResultSet rs = null;
+	    CommentVo comment = null;  // Initially set to null
+
+	    try {
+	        // 데이터베이스 연결
+	        connect = DBInfo.getInstance().getConnection();
+
+	        // SQL 쿼리 준비
+	        String sql = "SELECT * FROM exam.comment WHERE commentId = ?";
+	        preState = connect.prepareStatement(sql);
+	        preState.setInt(1, commentId);
+
+	        // SQL 쿼리 실행
+	        rs = preState.executeQuery();
+
+	        // 결과 가져오기
+	        if (rs.next()) {  // Using 'if' because we're expecting a single result
+	            comment = new CommentVo();
+	            comment.setCommentId(rs.getInt("commentId"));
+	            comment.setEmail(rs.getString("email"));
+	            comment.setPostId(rs.getInt("postId"));
+	            comment.setComment(rs.getString("comment"));
+	            comment.setCreateTime(rs.getString("createTime"));
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        // 리소스 해제
+	        try {
+	            if (rs != null)
+	                rs.close();
+	            if (preState != null)
+	                preState.close();
+	            if (connect != null)
+	                connect.close();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return comment;  // If no comment is found, this will return null
+	}
+
 
 	public ArrayList<CommentVo> input() {
 		Connection connect = null;
@@ -206,7 +300,8 @@ public class CommentTable {
 
 	}
 
-	public void update() {
+	public String update(String comment, int commentId) {
+		String checker = "proceed";
 		System.out.println("\n=========================PreparedState=========================\n");
 		Connection connect = null;
 		PreparedStatement preState = null;
@@ -220,8 +315,8 @@ public class CommentTable {
 			 * 
 			 * 리턴된 preState은 쿼리에 데이터를 삽입하고, 실행
 			 */
-			preState.setString(1, "인정합니다"); // 첫 번째 ?의 값
-			preState.setInt(2, 3); // 두 번째 ?의 값
+			preState.setString(1, comment); // 첫 번째 ?의 값
+			preState.setInt(2, commentId); // 두 번째 ?의 값
 			// 쿼리 update
 			preState.executeUpdate();
 			System.out.println("PreparedState으로 update 완료");
@@ -229,6 +324,7 @@ public class CommentTable {
 			System.out.println("SQLException");
 			System.out.println(sql);
 			e.printStackTrace();
+			return checker = "fail";		
 		} finally {
 			try {
 				preState.close();
@@ -241,6 +337,7 @@ public class CommentTable {
 				System.out.println("SQLException: connect.close() 불가");
 			}
 		}
+		return checker;
 	}
 
 	public void delete() {
