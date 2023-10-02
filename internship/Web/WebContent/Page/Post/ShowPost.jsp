@@ -1,21 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.ArrayList"%>
-<%@page import="gmx.upc.user.UserTable"%>
-<%@page import="gmx.upc.user.UserVo"%>
 <%@page import="gmx.upc.post.PostTable"%>
 <%@page import="gmx.upc.post.PostVo"%>
 <%@page import="gmx.upc.comment.CommentTable"%>
 <%@page import="gmx.upc.comment.CommentVo"%>
+<%@page import="gmx.upc.file.FileTable"%>
+<%@page import="gmx.upc.file.FileVo"%>
 
 <%
-	UserTable userTable = new UserTable();
-	PostTable postTable = new PostTable();
-	CommentTable commentTable = new CommentTable();
+    // 로그아웃 후 뒤로가기 방지를 위해 캐싱 금지
+	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+	response.setDateHeader("Expires", 0); // Proxies
 
-	ArrayList<UserVo> userList = userTable.input();
+	PostTable postTable = new PostTable();
 	ArrayList<PostVo> postList = postTable.input();
-	ArrayList<CommentVo> commentList = commentTable.input();
+
+	// url로 접근 금지.
+	if(request.getSession().getAttribute("userEmail") == null) {
+    response.sendRedirect("../Login/Login.jsp?error=unauthorized");
+    return;
+	}
 %>
 
 <!DOCTYPE html>
@@ -39,6 +45,17 @@
 						location.href = 'ShowPost.jsp';
 					}
 				},
+			});
+		});
+		$(".logout").click(function(event) {
+			$.ajax({
+				type : "POST",
+				url : "../../LogoutServlet",
+				dataType : "json",
+				success : function(response) {
+					alert(response.message);
+					location.href = '../Login/Login.jsp';
+				}
 			});
 		});
 	});
@@ -87,29 +104,24 @@ body {
 				<th>Post ID</th>
 				<th>Email</th>
 				<th>Title</th>
-				<th>View</th>
 				<th>Create Time</th>
 			</tr>
 		</thead>
 		<tbody>
-			<%
-				for (PostVo post : postList) {
-			%>
-			<tr>
-				<td><%=post.getPostId()%></td>
-				<td><%=post.getEmail()%></td>
-				<td>
-					<button class="postButton"
-						onclick="viewPost('<%=post.getPostId()%>')">
-						<%=post.getTitle()%>
-					</button>
-				</td>
-				<td><%=post.getView()%></td>
-				<td><%=post.getCreateTime()%></td>
-			</tr>
-			<%
-				}
-			%>
+			<% for (PostVo post : postList) { %>
+    <tr>
+        <td><%=post.getPostId()%></td>
+        <td><%=post.getEmail()%></td>
+        <td>
+            <button class="postButton" onclick="viewPost('<%=post.getPostId()%>')">
+                <%=post.getTitle()%>
+            </button>
+        </td>
+        <td><%=post.getCreateTime()%></td>
+       
+    </tr>
+<% } %>
+
 		</tbody>
 	</table>
 	<div>
@@ -120,7 +132,6 @@ body {
 			onclick="location='../Login/Login.jsp'"
 			style='width: 70pt; height: 70pt;'>logout</button>
 		<button class="editInfo" type="button"
-			onclick="location='../Login/EditInfo.jsp'"
 			style='width: 70pt; height: 70pt;'>editInfo</button>
 		<button class="unregister" id="unregister" type="button"
 			style='width: 70pt; height: 70pt;'>unregister</button>
