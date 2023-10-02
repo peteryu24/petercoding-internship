@@ -3,6 +3,11 @@
 <%
 	String strId = request.getParameter("postId");
 	int postId = Integer.parseInt(strId);
+	
+	if(request.getSession().getAttribute("userEmail") == null) {
+	    response.sendRedirect("../Login/Login.jsp?error=unauthorized");
+	    return;
+		}
 %>
 <!DOCTYPE html>
 <html>
