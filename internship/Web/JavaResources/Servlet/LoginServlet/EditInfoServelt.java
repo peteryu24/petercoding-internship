@@ -1,4 +1,4 @@
-package gmx.login;
+package gmx.login.servlet;
 
 import java.io.IOException;
 
