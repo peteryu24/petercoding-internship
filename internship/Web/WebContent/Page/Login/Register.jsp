@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>로그인 페이지 구현 과제</title>
+<title>Register</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- jquery 기본  양식 -->
 <script>
