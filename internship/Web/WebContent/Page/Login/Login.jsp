@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
 
@@ -46,14 +47,33 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 }
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 10px;  
+}
 </style>
 </head>
 
 <body style="background-color: #eee6c4">
 	<div id="loginBlock">
-		<h2>
-			<i><u>Welcome</u></i>
-		</h2>
+		<% 
+String errorMessage = request.getParameter("error");
+if ("unauthorized".equals(errorMessage)) {
+%>
+    <div class="error-message">
+        비정상적인 접근입니다. <br>로그인 해주세요.
+    </div>
+<% 
+} else {
+%>
+    <h2>
+        <i><u>Welcome</u></i>
+    </h2>
+<% 
+}
+%>
+
 		<!-- <form> -->
 		<label for="email"> email</label>
 		<br> 
