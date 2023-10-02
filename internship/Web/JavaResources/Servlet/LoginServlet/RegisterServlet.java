@@ -53,7 +53,7 @@ public class RegisterServlet extends HttpServlet {
 }
 */
 
-package gmx.login;
+package gmx.login.servlet;
 
 import java.io.IOException;
 
