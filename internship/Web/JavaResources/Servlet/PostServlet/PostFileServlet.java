@@ -36,7 +36,7 @@ public class PostFileServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/json; charset=UTF-8");
 
-        // Changed from JSON parsing to getParameter
+        
         String title = request.getParameter("title");
         String content = request.getParameter("content");
         String email = (String) request.getSession().getAttribute("userEmail");
@@ -44,7 +44,7 @@ public class PostFileServlet extends HttpServlet {
         if (title == null || content == null) {
             JSONObject errorJson = new JSONObject();
             errorJson.put("status", "error");
-            errorJson.put("message", "Title or Content missing.");
+            errorJson.put("message", "모든 정보를 입력하세요.");
             response.getWriter().write(errorJson.toString());
             return;
         }
@@ -61,7 +61,7 @@ public class PostFileServlet extends HttpServlet {
             if (fileName != null && !fileName.isEmpty()) {
                 // 파일 업로드 처리
                 String userHome = System.getProperty("user.home");
-                String filePath = userHome + "/Desktop/" + fileName; // 파일 저장장
+                String filePath = userHome + "/Desktop/" + fileName; // 파일 저장 장소
 
                 try {
                     filePart.write(filePath);
@@ -69,7 +69,7 @@ public class PostFileServlet extends HttpServlet {
                     e.printStackTrace();
                     JSONObject errorJson = new JSONObject();
                     errorJson.put("status", "error");
-                    errorJson.put("message", "Failed to save file.");
+                    errorJson.put("message", "파일 저장 실패.");
                     response.getWriter().write(errorJson.toString());
                     return;
                 }
