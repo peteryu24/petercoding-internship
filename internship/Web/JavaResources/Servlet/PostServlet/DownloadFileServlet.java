@@ -48,7 +48,7 @@ public class DownloadFileServlet extends HttpServlet {
         }
 
         response.setContentType("application/octet-stream"); // 파일의 확장자에 관계없이 이진 데이터로 처리
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileVo.getFileName() + "\""); 첨부 파일로 처리(attachment)
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileVo.getFileName() + "\""); // 첨부 파일로 처리(attachment)
 
         try (FileInputStream fis = new FileInputStream(file);
              OutputStream os = response.getOutputStream()) {
