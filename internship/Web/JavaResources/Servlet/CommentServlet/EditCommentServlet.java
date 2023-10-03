@@ -21,15 +21,15 @@ public class EditCommentServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		processRequest(request, response);
+		editComment(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		processRequest(request, response);
+		editComment(request, response);
 	}
 
-	private void processRequest(HttpServletRequest request, HttpServletResponse response)
+	private void editComment(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("application/json; charset=UTF-8"); // JSON 타입 설정
 
