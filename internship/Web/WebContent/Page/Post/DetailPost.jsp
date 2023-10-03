@@ -56,7 +56,7 @@
                     $.ajax({
                         type: "POST",
                         url: "../../DeletePostServlet",
-                        data: {postId: <%= postId %>},
+                        data: {postId: <%= postId %>}, // 서버에서 계산된 값을 보냄
                         dataType: "json",
                         success: function(response) {
                             alert(response.message);
@@ -76,7 +76,7 @@
             $.ajax({
                 type: "POST",
                 url: "../../DeleteFileServlet",
-                data: { fileId: fileId, postId: postId },
+                data: { fileId: fileId, postId: postId }, // 이미 클라이언트가 가지고 있는 변수
                 dataType: "json",
                 success: function (response) {
                     alert(response.message);
@@ -133,7 +133,7 @@
     </div>
 
     <div class="detailInfo">
-        <span class="detailLabel">[첨부된 파일] </span>
+        <span class="detailLabel">[File] </span>
         <ul>
             <%
             if (files != null && !files.isEmpty()) {
