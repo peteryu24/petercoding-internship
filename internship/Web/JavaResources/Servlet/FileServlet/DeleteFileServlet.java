@@ -19,15 +19,15 @@ public class DeleteFileServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        deleteFile(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        deleteFile(request, response);
     }
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response)
+    private void deleteFile(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json; charset=UTF-8");
 
