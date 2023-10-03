@@ -67,9 +67,9 @@ import org.json.simple.JSONObject;
 
 import gmx.upc.user.UserTable;
 
-@WebServlet("/RegisterServlet")
+@WebServlet("/RegisterServlet") // 어노테이션으로 URL지정 web.xml매핑 불필요
 public class RegisterServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L; // 직렬화에 사용되는 고유 ID
 
 	public RegisterServlet() {
 		super();
