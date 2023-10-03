@@ -1,40 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Welcome</title>
-<style>
-    body {
-        text-align: center;
-        font-size: 24px;
-    }
-
-    .backButton {
-        width: 70pt;
-        height: 30pt;
-    }
-</style>
-</head>
-<body>
-    <div class="container">
-        <h1>Web Project</h1>
+       <h1>Web Project</h1>
         <br>
         <h3>추가한 라이브러리</h3> 
         <br>
         <h5>DBCP Connection Pool</h5>
-        <p>
+
         	tomcat-juli.jar / Apache Commons DBCP / commons-pool2
         	<br> <br>
-        </p>
+
         <h5>File Upload</h5>
-        <p>
+
         	Apache Commons Io / Apache Commons Fileupload 	
         	<br><br>
-        </p>
+
         <h5>Login & Register</h5>
-        <p>
+
         	[회원가입]
         	<br>
         	이메일, 닉네임, 비밀번호 텍스트 상자 존재
@@ -87,10 +66,10 @@
         	<br>
         	<span style="color: red;">뒤로가기로 이전 페이지 접근 불가(세션종료, 캐시없앰)</span>
         	 	
-        </p>
+
         
         <h5>Post</h5>
-        <p>
+
         	[게시글 작성]
         	<br>
         	게시글 작성시 제목, 내용 텍스트 상자와 파일 업로드 파트 존재
@@ -116,10 +95,10 @@
         	삭제와 수정이 가능함(회원정보 수정, 탈퇴와 유사한 로직)
         	<br>
         	업로드 된 파일이 있다면, 마찬가지로 <span style="color: red;">작성자에 한해서</span> 수정과 삭제 기능   	
-        </p>
+
         
         <h5>Comment</h5>
-        <p>
+
         	[댓글 작성]
         	<br>
         	해당 게시물의 아이디를 외래키로 받아
@@ -127,20 +106,12 @@
         	게시물에 연결된 댓글을 작성
         	<br>
         	작성자에 한해서 수정 삭제 권한 부여
-        </p>
+
         <br>
         
         <h5>전체 구조</h5>
-        <p>
+
         	아이디와 게시물 댓글은 모두 왜래키로 연관성을 가짐
         	<br>
         	따라서 탈퇴시 해당 회원이 작성한 게시물과 댓글은 모두 삭제
-        </p>
-        
-        
-        <button class="backButton" type="button" onclick="location.href='./page/Login/Login.jsp'">
-            Start
-        </button>
-    </div>
-</body>
-</html>
+
