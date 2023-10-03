@@ -141,8 +141,9 @@
             %>
                 <li>
                     
-                    <a href="#" onclick="deleteFile(<%=file.getFileId()%>, <%=postId%>)">Delete</a>
                     <%=file.getFileName()%>
+                      <a href="../File/EditFile.jsp?fileId=<%=file.getFileId()%>&postId=<%=postId%>">Edit</a>
+                    <a href="#" onclick="deleteFile(<%=file.getFileId()%>, <%=postId%>)">Delete</a>
                 </li>
             <%
                 }
