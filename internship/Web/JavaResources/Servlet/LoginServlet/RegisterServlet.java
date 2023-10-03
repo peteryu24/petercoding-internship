@@ -69,7 +69,21 @@ import gmx.upc.user.UserTable;
 
 @WebServlet("/RegisterServlet") // 어노테이션으로 URL지정 web.xml매핑 불필요
 public class RegisterServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L; // 직렬화에 사용되는 고유 ID
+	/*
+	 * 직렬화에 사용되는 고유 ID
+	 * 
+	 * 객체 직렬화란 java객체를 바이트 스트림으로 변환하는 과정
+	 * 메모리 상에서만 존재하며 메모리에서만 유지
+	 * 파일에 저장하거나 네트워크를 통해 다른 시스템에 전송하기 위해 직렬화 사용
+	 * 
+	 * java.io.Serializable를 import 해야 사용 가능
+	 * 
+	 * 객체를 파일에 저장하고 나중에 불러올 때
+	 * 객체를 네트워크를 통해 다른 시스템으로 전송할 때
+	 * 분산 시스템에서 객체를 공유할 때
+	 * 캐싱된 데이터를 저장하고 다시 사용할 때
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public RegisterServlet() {
 		super();
