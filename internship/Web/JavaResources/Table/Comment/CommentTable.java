@@ -215,7 +215,7 @@ public class CommentTable {
 	    Connection connect = null;
 	    PreparedStatement preState = null;
 	    ResultSet rs = null;
-	    CommentVo comment = null;  // Initially set to null
+	    CommentVo comment = null;  
 
 	    try {
 	        // 데이터베이스 연결
@@ -230,7 +230,7 @@ public class CommentTable {
 	        rs = preState.executeQuery();
 
 	        // 결과 가져오기
-	        if (rs.next()) {  // Using 'if' because we're expecting a single result
+	        if (rs.next()) {  
 	            comment = new CommentVo();
 	            comment.setCommentId(rs.getInt("commentId"));
 	            comment.setEmail(rs.getString("email"));
@@ -254,7 +254,7 @@ public class CommentTable {
 	        }
 	    }
 
-	    return comment;  // If no comment is found, this will return null
+	    return comment;  
 	}
 
 
