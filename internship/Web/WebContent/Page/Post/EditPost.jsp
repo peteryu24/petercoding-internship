@@ -6,7 +6,7 @@
 <%@ page import="gmx.upc.comment.CommentVo" %>
 <%@ page import="gmx.upc.file.FileTable" %>
 <%@ page import="gmx.upc.file.FileVo" %>
-<%@page import="gmx.session.SessionFilter"%>
+<%@ page import="gmx.session.SessionFilter"%>
 <%
 if (!SessionFilter.isUserLoggedIn(request)) {
     response.sendRedirect("../Login/Login.jsp?error=unauthorized");
@@ -26,7 +26,6 @@ if (!SessionFilter.isUserLoggedIn(request)) {
 
     FileTable ft = new FileTable();
     ArrayList<FileVo> files = ft.getFilesByPostId(postId);
-
 %>
 <!DOCTYPE html>
 <html>
@@ -69,7 +68,7 @@ if (!SessionFilter.isUserLoggedIn(request)) {
         </h2>
         <label for="content">EDIT Content</label>
         <br> 
-        <input type="text" id="content" name="content" value="<%=pv.getContent()%>" required="required">
+        <textarea id="content" name="content" rows="4" cols="50"><%=pv.getContent()%></textarea>
         <br>
         <button class="button" id="goBack" type="button" onclick="location='ShowPost.jsp'" style='width: 60pt; height: 60pt;'>
             Go Back
