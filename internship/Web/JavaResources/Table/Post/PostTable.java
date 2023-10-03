@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class PostTable {
 	// DB 연결 정보
@@ -91,75 +92,70 @@ public class PostTable {
 		}
 	}
 
-	public boolean insertValue(String title, String content, String email) { // null 예외처리 필요
-		boolean nullCheck = true;
-		if ((title == null || title.trim().isEmpty())) {
-			nullCheck = false;
-			return nullCheck;
-		}
-		Connection connect = null;
-		PreparedStatement preState = null;
-		// PostVo pv = new PostVo();
+	public int insertValue(String title, String content, String email) { // postId 반환
+	    if ((title == null || title.trim().isEmpty())) {
+	        return -1; // 에러를 나타내기 위한 값 (-1)
+	    }
 
-		System.out.println("\n=========================Insert Values=========================\n");
+	    Connection connect = null;
+	    PreparedStatement preState = null;
+	    ResultSet generatedKeys = null;
+	    int generatedPostId = -1;
 
-		try {
-			connect = DBInfo.getInstance().getConnection();
-			if (connect == null) {
-				throw new SQLException("DB 연결 실패");
-			}
+	    System.out.println("\n=========================Insert Values=========================\n");
 
-			connect.setAutoCommit(false);
-			String insertQuery = "INSERT INTO exam.post (title,  content, email) VALUES (?,?,?)";
-			preState = connect.prepareStatement(insertQuery);
+	    try {
+	        connect = DBInfo.getInstance().getConnection();
+	        if (connect == null) {
+	            throw new SQLException("DB 연결 실패");
+	        }
 
-			// 첫 번째 쿼리
-			preState.setString(1, title);
-			preState.setString(2, content);
-			preState.setString(3, email);
-			preState.executeUpdate();
+	        connect.setAutoCommit(false);
+	        String insertQuery = "INSERT INTO exam.post (title, content, email) VALUES (?,?,?)";
+	        preState = connect.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
 
-			connect.commit();
+	        preState.setString(1, title);
+	        preState.setString(2, content);
+	        preState.setString(3, email);
+	        preState.executeUpdate();
 
-			System.out.println("데이터가 성공적으로 삽입되었습니다.");
+	        generatedKeys = preState.getGeneratedKeys();
+	        if (generatedKeys.next()) {
+	            generatedPostId = generatedKeys.getInt(1);
+	        }
 
-		} catch (SQLException e) {
-			try {
-				// 롤백
-				if (connect != null) {
-					connect.rollback();
-				}
-			} catch (SQLException se) {
-				se.printStackTrace();
-			}
-			e.printStackTrace();
-		} finally {
-			try {
-				if (connect != null) {
-					connect.setAutoCommit(true);
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+	        connect.commit();
+	        System.out.println("데이터가 성공적으로 삽입되었습니다.");
 
-			try {
-				if (preState != null) {
-					preState.close();
-				}
-			} catch (SQLException e) {
-				System.out.println("SQLException: pstmt is null");
-			}
-
-			try {
-				if (connect != null) {
-					connect.close();
-				}
-			} catch (SQLException e) {
-				System.out.println("SQLException: connect is null");
-			}
-		}
-		return nullCheck;
+	    } catch (SQLException e) {
+	        try {
+	            // 롤백
+	            if (connect != null) {
+	                connect.rollback();
+	            }
+	        } catch (SQLException se) {
+	            se.printStackTrace();
+	        }
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (generatedKeys != null) {
+	                generatedKeys.close();
+	            }
+	            if (preState != null) {
+	                preState.close();
+	            }
+	            if (connect != null) {
+	                connect.setAutoCommit(true);
+	                connect.close();
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    return generatedPostId;
 	}
+
 
 	public ArrayList<PostVo> input() {
 		Connection connect = null;
