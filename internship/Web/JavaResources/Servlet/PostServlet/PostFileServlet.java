@@ -94,7 +94,7 @@ public class PostFileServlet extends HttpServlet {
             json.put("postId", postId);
         } else {
             json.put("status", "error");
-            json.put("message", "Failed to save post or file.");
+            json.put("message", "게시글 작성 및 파일 업로드 실패.");
         }
         response.getWriter().write(json.toString());
     }
