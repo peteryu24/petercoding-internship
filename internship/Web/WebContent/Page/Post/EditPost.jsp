@@ -6,6 +6,13 @@
 <%@ page import="gmx.upc.comment.CommentVo" %>
 <%@ page import="gmx.upc.file.FileTable" %>
 <%@ page import="gmx.upc.file.FileVo" %>
+<%@page import="gmx.session.SessionFilter"%>
+<%
+if (!SessionFilter.isUserLoggedIn(request)) {
+    response.sendRedirect("../Login/Login.jsp?error=unauthorized");
+    return;
+}
+%>
 
 <%
     String strId = request.getParameter("postId");
@@ -20,10 +27,6 @@
     FileTable ft = new FileTable();
     ArrayList<FileVo> files = ft.getFilesByPostId(postId);
 
-    if (request.getSession().getAttribute("userEmail") == null) {
-        response.sendRedirect("../Login/Login.jsp?error=unauthorized");
-        return;
-    }
 %>
 <!DOCTYPE html>
 <html>
@@ -76,7 +79,7 @@
         </button>
         <!-- 파일 목록을 여기에 표시 -->
         <div class="detailInfo">
-            <span class="detailLabel">[Attached Files] </span>
+            <span class="detailLabel">[File] </span>
             <ul>
                 <%
                 if (files != null && !files.isEmpty()) {
