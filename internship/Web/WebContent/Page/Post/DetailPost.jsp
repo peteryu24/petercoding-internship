@@ -133,7 +133,7 @@
     </div>
 
     <div class="detailInfo">
-        <span class="detailLabel">[Attached Files] </span>
+        <span class="detailLabel">[첨부된 파일] </span>
         <ul>
             <%
             if (files != null && !files.isEmpty()) {
