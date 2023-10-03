@@ -53,7 +53,7 @@ public class DownloadFileServlet extends HttpServlet {
         try (FileInputStream fis = new FileInputStream(file);
              OutputStream os = response.getOutputStream()) {
 
-            byte[] buffer = new byte[4096]; // 버퍼를 사용해 파일을 조금씩 읽어서 메모리 소모 최소화
+            byte[] buffer = new byte[5000]; // 버퍼를 사용해 파일을 조금씩 읽어서 메모리 소모 최소화
             int bytesRead;
 
             while ((bytesRead = fis.read(buffer)) != -1) { // 파일을 끝까지 읽을 때까지
