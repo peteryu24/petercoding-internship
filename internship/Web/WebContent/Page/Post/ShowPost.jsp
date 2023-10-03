@@ -7,9 +7,9 @@
 <%@page import="gmx.upc.file.FileTable"%>
 
 <%
-    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-    response.setHeader("Pragma", "no-cache");
-    response.setDateHeader("Expires", 0);
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // 응답을 캐시, 저장하지 말 것
+    response.setHeader("Pragma", "no-cache"); // 캐싱 비활성화
+    response.setDateHeader("Expires", 0); // 0으로 설정하여 캐시가 즉시 만료되도록록
 
     PostTable postTable = new PostTable();
     ArrayList<PostVo> postList = postTable.input();
@@ -121,7 +121,8 @@
                         </button>
                     </td>
                     <td><%=post.getCreateTime()%></td>
-                    <td><%= hasFile ? "Yes" : "No" %></td>
+                    <td><%= hasFile ? "O" : "X" %></td>
+                    <td><%= 파일 존재 여부 ? "O" : "X" %></td>
                 </tr>
             <% } %>
         </tbody>
