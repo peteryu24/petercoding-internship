@@ -78,25 +78,26 @@ if (!SessionFilter.isUserLoggedIn(request)) {
         </button>
         <!-- 파일 목록을 여기에 표시 -->
         <div class="detailInfo">
-            <span class="detailLabel">[File] </span>
-            <ul>
-                <%
-                if (files != null && !files.isEmpty()) {
-                    for (FileVo file : files) {
-                %>
-                        <li>
-                            <a href="../../DownloadFileServlet?fileId=<%=file.getFileId()%>&postId=<%=postId%>"><%=file.getFileName()%></a>
-                        </li>
-                <%
-                    }
-                } else {
-                %>
-                    <li>No attached files</li>
-                <%
-                }
-                %>
-            </ul>
-        </div>
+    <span class="detailLabel">[File] </span>
+    <ul>
+        <%
+        if (files != null && !files.isEmpty()) {
+            for (FileVo file : files) {
+        %>
+                <li>
+                    <%=file.getFileName()%>
+                </li>
+        <%
+            }
+        } else {
+        %>
+            <li>No attached files</li>
+        <%
+        }
+        %>
+    </ul>
+</div>
+
     </div>
 </body>
 </html>
