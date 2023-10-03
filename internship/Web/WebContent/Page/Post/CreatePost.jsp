@@ -48,11 +48,12 @@
 	
 	--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="gmx.session.SessionFilter"%>
 <%
-	if (request.getSession().getAttribute("userEmail") == null) {
-		response.sendRedirect("../Login/Login.jsp?error=unauthorized");
-		return;
-	}
+if (!SessionFilter.isUserLoggedIn(request)) {
+    response.sendRedirect("../Login/Login.jsp?error=unauthorized");
+    return;
+}
 %>
 <!DOCTYPE html>
 <html>
@@ -64,7 +65,7 @@
 
 function submitData() {
     
-    var title = $("#title").val();
+    var title = $("#title").val(); // 게시글에 입력된 값 가져오기
     var content = $("#content").val();
 
 
@@ -73,8 +74,8 @@ function submitData() {
     $.ajax({
         url: '../../PostFileServlet',  
         type: 'POST',
-        data: formData,
-        processData: false,
+        data: formData, // formData로 통신
+        processData: false, // jQuery가 자동으로 수행하지 않도록
         contentType: false,
         success: function(response) {
             if (response.status === "success") {
@@ -85,7 +86,7 @@ function submitData() {
                 location.href = 'CreatePost.jsp';
             }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function(jqXHR, textStatus, errorThrown) { // ("Http 상태 코드 오류","오류 유형 문자열로","문자열로 세부 오류")
             alert('AJAX error: ' + textStatus + ', ' + errorThrown);
         }
     });
