@@ -1,7 +1,9 @@
+package gmx.session;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-public class SessionChecker {
+public class SessionFilter {
 
     public static boolean isUserLoggedIn(HttpServletRequest request) {
         HttpSession session = request.getSession(false); // 세션이 없으면 새로 생성하지 않음
@@ -14,9 +16,3 @@ public class SessionChecker {
         }
     }
 }
-
-
- if (!SessionChecker.isUserLoggedIn(request)) {
-        response.sendRedirect("../Login/Login.jsp?error=unauthorized");
-        return;
-    }
