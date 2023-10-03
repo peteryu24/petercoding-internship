@@ -5,21 +5,24 @@
 <%@page import="gmx.upc.comment.CommentTable"%>
 <%@page import="gmx.upc.comment.CommentVo"%>
 <%@page import="gmx.upc.file.FileTable"%>
+<%@page import="gmx.session.SessionFilter"%>
+<%
+if (!SessionFilter.isUserLoggedIn(request)) {
+    response.sendRedirect("../Login/Login.jsp?error=unauthorized");
+    return;
+}
+%>
 
 <%
-    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // 응답을 캐시, 저장하지 말 것
-    response.setHeader("Pragma", "no-cache"); // 캐싱 비활성화
-    response.setDateHeader("Expires", 0); // 0으로 설정하여 캐시가 즉시 만료되도록록
+	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // 응답을 캐시, 저장하지 말 것
+	response.setHeader("Pragma", "no-cache"); // 캐싱 비활성화
+	response.setDateHeader("Expires", 0); // 0으로 설정하여 캐시가 즉시 만료되도록록
 
     PostTable postTable = new PostTable();
     ArrayList<PostVo> postList = postTable.input();
 
     FileTable fileTable = new FileTable();
 
-    if(request.getSession().getAttribute("userEmail") == null) {
-        response.sendRedirect("../Login/Login.jsp?error=unauthorized");
-        return;
-    }
 %>
 
 <!DOCTYPE html>
@@ -104,13 +107,13 @@
                 <th>Email</th>
                 <th>Title</th>
                 <th>Create Time</th>
-                <th>Has File?</th>
+                <th>File</th>
             </tr>
         </thead>
         <tbody>
             <% 
             for (PostVo post : postList) { 
-                boolean hasFile = fileTable.hasFileForPost(post.getPostId());
+                boolean hasFile = fileTable.hasFileForPost(post.getPostId()); // 파일 존재 여부 파악
             %>
                 <tr>
                     <td><%=post.getPostId()%></td>
@@ -122,7 +125,6 @@
                     </td>
                     <td><%=post.getCreateTime()%></td>
                     <td><%= hasFile ? "O" : "X" %></td>
-                    <td><%= 파일 존재 여부 ? "O" : "X" %></td>
                 </tr>
             <% } %>
         </tbody>
