@@ -33,9 +33,9 @@ public class LogoutServlet extends HttpServlet {
 		response.setContentType("application/json; charset=UTF-8");
 		JSONObject json = new JSONObject();
 
-		HttpSession session = request.getSession(false); // 기존 세션을 가져옵니다. 없으면 null을 반환합니다.
+		HttpSession session = request.getSession(false); // 기존 세션 가져오기. 없으면 null을 반환
 		if (session != null) {
-			session.invalidate(); // 세션을 종료합니다.
+			session.invalidate(); // 세션 종료
 			json.put("message", "로그아웃 되었습니다.");
 		} else {
 			json.put("message", "이미 로그아웃 상태입니다.");
