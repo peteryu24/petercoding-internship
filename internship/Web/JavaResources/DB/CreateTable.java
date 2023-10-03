@@ -2,6 +2,7 @@ package gmx.upc;
 
 
 import gmx.upc.comment.CommentTable;
+import gmx.upc.file.FileTable;
 import gmx.upc.post.PostTable;
 import gmx.upc.user.UserTable;
 
@@ -11,6 +12,7 @@ public class CreateTable {
 		UserTable ut = new UserTable();
 		PostTable pt = new PostTable();
 		CommentTable ct = new CommentTable();
+		FileTable ft = new FileTable();
 
 		ut.createTable();
 		
@@ -20,6 +22,8 @@ public class CreateTable {
 		
 
 		ct.createTable();
+		
+		ft.createTable();
 		
 	}
 }
