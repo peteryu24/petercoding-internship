@@ -52,16 +52,16 @@ public class PostFileServlet extends HttpServlet {
         PostTable pt = new PostTable();
         int postId = pt.insertValue(title, content, email);
 
-        // Handle file upload
+        // 파일 업로드를 위해 업로드된 파일 파트를 가져옴
         Collection<Part> fileParts = request.getParts();
 
-        for (Part filePart : fileParts) {
+        for (Part filePart : fileParts) { // 업로드 된 각 파일에 대해
             String fileName = filePart.getSubmittedFileName();
 
             if (fileName != null && !fileName.isEmpty()) {
                 // 파일 업로드 처리
                 String userHome = System.getProperty("user.home");
-                String filePath = userHome + "/Desktop/" + fileName;
+                String filePath = userHome + "/Desktop/" + fileName; // 파일 저장장
 
                 try {
                     filePart.write(filePath);
@@ -74,7 +74,7 @@ public class PostFileServlet extends HttpServlet {
                     return;
                 }
 
-                // 파일 정보를 데이터베이스에 저장
+                // 파일 정보를 DB에 저장
                 FileTable fileTable = new FileTable();
                 boolean isFileSaved = fileTable.insertFile(postId, fileName, filePath);
 
