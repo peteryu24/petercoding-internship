@@ -35,11 +35,19 @@ public class SessionTempFilter implements Filter {
 
 		// 사용자가 로그인창이나 회원가입창 접근시 접근할 수 있도록
 		String login = httpRequest.getContextPath() + "/page/Login/Login.jsp"; // 페이지의 전체 경로를 생성
-		String register = httpRequest.getContextPath() + "/page/Login/Login.jsp";
+		String register = httpRequest.getContextPath() + "/page/Login/Register.jsp";
+		String loginServlet = httpRequest.getContextPath() + "/LoginServlet";
+		String registerServlet = httpRequest.getContextPath() + "/RegisterServlet";
+		
 		boolean loginRequest = httpRequest.getRequestURI().equals(login); // 현재 요청이 로그인 서비스의 경로와 일치하는지 확인
 		boolean registerRequest = httpRequest.getRequestURI().equals(register);
+		boolean loginServletRequest = httpRequest.getRequestURI().equals(loginServlet);
+		boolean registerServletRequest = httpRequest.getRequestURI().equals(registerServlet);
+		
+		System.out.println(loginServlet);
+		System.out.println(httpRequest.getRequestURI());
 
-		if (isLoggedIn || loginRequest || registerRequest) { // 로그인 상태
+		if (isLoggedIn || loginRequest || registerRequest || loginServletRequest || registerServletRequest) { // 로그인 상태
 			System.out.println("session filter");
 			fchain.doFilter(request, response);
 
@@ -51,3 +59,4 @@ public class SessionTempFilter implements Filter {
 	}
 
 }
+
