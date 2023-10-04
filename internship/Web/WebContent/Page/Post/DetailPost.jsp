@@ -132,30 +132,33 @@
         <button class="backButton" type="button" onclick="location.href='ShowPost.jsp'" style='width: 70pt; height: 30pt;'>Go<br>Back</button>
     </div>
 
-    <div class="detailInfo">
-        <span class="detailLabel">[File] </span>
-        <ul>
-            <%
-            if (files != null && !files.isEmpty()) {
-                for (FileVo file : files) {
-            %>
-                <li>
-                    
-                    <%=file.getFileName()%>
-                      <a href="../File/EditFile.jsp?fileId=<%=file.getFileId()%>&postId=<%=postId%>">Edit</a>
-                      <a href="#" onclick="deleteFile(<%=file.getFileId()%>, <%=postId%>); return false;">Delete</a>
 
-                </li>
-            <%
-                }
-            } else {
-            %>
-                <li>No attached files</li>
-            <%
-            }
-            %>
-        </ul>
-    </div>
+
+	<div class="detailInfo">
+	    <span class="detailLabel">[File] </span>
+	    <ul>
+	        <%
+	       if (files != null && !files.isEmpty()) {
+	           for (FileVo file : files) {
+	       %>
+	           <li>
+	               <a href="../../DownloadFileServlet?fileId=<%=file.getFileId()%>"><%=file.getFileName()%></a>
+	               <a href="../File/EditFile.jsp?fileId=<%=file.getFileId()%>&postId=<%=postId%>">Edit</a>
+	               <a href="#" onclick="deleteFile(<%=file.getFileId()%>, <%=postId%>); return false;">Delete</a>
+	           </li>
+	       <%
+	           }
+	       } else {
+	       %>
+	           <li>No attached files</li>
+	       <%
+	       }
+	       %>
+	    </ul>
+	</div>
+
+
+
 </div>
 <h2>Comments</h2>
 <div id="writeComment">
