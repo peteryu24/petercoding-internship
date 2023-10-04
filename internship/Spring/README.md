@@ -40,9 +40,29 @@
 2. DB 추상화: 개발자가 SQL 쿼리를 직접 작성할 필요 X<br>
 3. CRUD 작업: 기본적인 CRUD를 메소드를 통해 수행 가능<br>
 <br><br>
-<h2>Spring 동작 구조</h2>
+<h2>Spring</h2>
+<h3>Spring 동작 구조</h3>
 web.xml - Dispatcher-Servlet<br>
 servlet-context.xml - Handler-Mapping<br>
 root-context.xml - view와 관련되지 않은 객체 정의 Service Layor, Repository(DAO), DB등 비즈니스 로직(Model)관련된 설정<br>
 web.xml -> servlet-context.xml -> HomeController.java -> servlet-context.xml -> home.jsp<br>
+<br><br>
+<h3>Spring 기본 폴더 구조</h3>
+src/main/java - java 파일<br>
+src/main/resources - 서버가 실행될 때 필요한 파일들<br>
+src/test/java - 테스트 파일<br>
+src/test/resources - 테스트할 때 사용되는 파일들<br>
+WEB-INF/spring - 스프링 설정 파일<br>
+WEB-INF/views - jsp 파일<br>
+web.xml - 웹설정 파일<br>
+pom.xml - maven 설정 파일<br>
+<br><br>
+<h3>Bean</h3>
+스프링 빈은 스프링 컨테이너의 생명주기와 연결되어 있음. 컨테이너 시작시 빈이 생성되고, 컨테이너가 종료될 때 빈이 파괴됌.
+<h5>Bean 설정법</h5>
+1. xml 기반의 설정: &lt;bean&gt; 태그를 사용하여 xml파일 내에서 빈을 정의하고 수성
+2. 어노테이션 기반의 설정: @Component, @Service, @Repository, @Controller을 사용하여 자바 클래스를 빈으로 표시하고, @Autowired를 사용하여 의존성 주입
+3. Java 기반의 설정: @Configuration과 @Bean을 사용하여 자바 코드 내에서 빈을 정의하고 구성
+
+
 
