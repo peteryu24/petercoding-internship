@@ -119,9 +119,10 @@ if (!SessionFilter.isUserLoggedIn(request)) {
                     <td><%=post.getPostId()%></td>
                     <td><%=post.getEmail()%></td>
                     <td>
-                        <button class="postButton" onclick="viewPost('<%=post.getPostId()%>')">
-                            <%=post.getTitle()%>
-                        </button>
+                       <button class="postButton" onclick="viewPost('<%=post.getPostId()%>')">
+    						<%=post.getTitle()%>
+					   </button>
+
                     </td>
                     <td><%=post.getCreateTime()%></td>
                     <td><%= hasFile ? "O" : "X" %></td>
