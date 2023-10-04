@@ -1,18 +1,23 @@
 package gmx.post.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import gmx.upc.post.PostTable;
+import gmx.upc.post.PostVo;
 
+/*
 @WebServlet("/PostServlet")
 public class PostServlet extends HttpServlet {
  private static final long serialVersionUID = 1L;
@@ -44,12 +49,12 @@ public class PostServlet extends HttpServlet {
          response.setStatus(HttpServletResponse.SC_BAD_REQUEST);  // 잘못된 요청에 대한 HTTP 상태 코드 설정.
          return;
      }
+     
 
      // 필요한 정보 추출.
      String title = (String) jsonRequest.get("title");
      String content = (String) jsonRequest.get("content");
      String email = (String) request.getSession().getAttribute("userEmail");
-
      PostTable pt = new PostTable();
      Boolean isCheck = pt.insertValue(title, content, email);
 
@@ -65,3 +70,32 @@ public class PostServlet extends HttpServlet {
      response.getWriter().write(json.toString());
  }
 }
+
+*/
+@WebServlet("/PostServlet")
+public class PostServlet extends HttpServlet {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PostTable postTable = new PostTable();
+        ArrayList<PostVo> postList = postTable.input();
+        
+        // Convert postList to JSON Array
+        JSONArray jsonArray = new JSONArray();
+        for (PostVo post : postList) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("postId", post.getPostId());
+            jsonObject.put("email", post.getEmail());
+            jsonObject.put("title", post.getTitle());
+            jsonObject.put("createTime", post.getCreateTime().toString());
+            jsonArray.add(jsonObject);
+        }
+        
+        response.setContentType("application/json");
+        response.getWriter().write(jsonArray.toString());
+    }
+}
+
