@@ -14,13 +14,13 @@ public class FileTable {
 		Connection connect = null;
 		PreparedStatement preState = null;
 		System.out.println("=========================Create Table=========================\n");
-		String fileTable = "CREATE TABLE exam.file (" + "fileId SERIAL PRIMARY KEY NOT NULL, " + "postId INT NOT NULL, "
-				+ "fileName VARCHAR(255) NOT NULL, " + "filePath TEXT NOT NULL, "
+		String fileTable = "CREATE TABLE exam.file (" + "file_id SERIAL PRIMARY KEY NOT NULL, " + "postId INT NOT NULL, "
+				+ "file_name VARCHAR(255) NOT NULL, " + "file_path TEXT NOT NULL, "
 				+ "FOREIGN KEY (postId) REFERENCES exam.post(postId) ON UPDATE CASCADE ON DELETE CASCADE" + "); "
-				+ "COMMENT ON TABLE exam.file IS '파일 업로드 테이블'; " + "COMMENT ON COLUMN exam.file.fileId IS '파일 식별 id'; "
-				+ "COMMENT ON COLUMN exam.file.postId IS '관련 게시물 id'; "
-				+ "COMMENT ON COLUMN exam.file.fileName IS '서버에 저장된 파일 이름'; "
-				+ "COMMENT ON COLUMN exam.file.filePath IS '파일 저장 경로'; ";
+				+ "COMMENT ON TABLE exam.file IS '파일 업로드 테이블'; " + "COMMENT ON COLUMN exam.file.file_id IS '파일 식별 id'; "
+				+ "COMMENT ON COLUMN exam.file.post_id IS '관련 게시물 id'; "
+				+ "COMMENT ON COLUMN exam.file.file_name IS '서버에 저장된 파일 이름'; "
+				+ "COMMENT ON COLUMN exam.file.file_path IS '파일 저장 경로'; ";
 
 		try {
 			connect = DBInfo.getInstance().getConnection();
@@ -58,7 +58,7 @@ public class FileTable {
 	public boolean insertFile(int postId, String fileName, String filePath) {
 	    Connection connect = null;
 	    PreparedStatement preState = null;
-	    String insertQuery = "INSERT INTO exam.file(postId, fileName, filePath) VALUES(?, ?, ?)";
+	    String insertQuery = "INSERT INTO exam.file(post_id, file_name, file_path) VALUES(?, ?, ?)";
 
 	    try {
 	        connect = DBInfo.getInstance().getConnection();
@@ -103,7 +103,7 @@ public class FileTable {
 	    Connection connect = null;
 	    PreparedStatement preState = null;
 	    ResultSet resultSet = null;
-	    String checkQuery = "SELECT COUNT(*) FROM exam.file WHERE postId = ?";
+	    String checkQuery = "SELECT COUNT(*) FROM exam.file WHERE post_id = ?";
 
 	    try {
 	        connect = DBInfo.getInstance().getConnection();
@@ -147,7 +147,7 @@ public class FileTable {
 	    Connection connect = null;
 	    PreparedStatement preState = null;
 	    ResultSet resultSet = null;
-	    String selectQuery = "SELECT * FROM exam.file WHERE postId = ?";
+	    String selectQuery = "SELECT * FROM exam.file WHERE post_id = ?";
 	    ArrayList<FileVo> files = new ArrayList<>();
 
 	    try {
@@ -166,10 +166,10 @@ public class FileTable {
 	        resultSet = preState.executeQuery();
 	        while (resultSet.next()) {
 	            FileVo fileVo = new FileVo();
-	            fileVo.setFileId(resultSet.getInt("fileId"));
-	            fileVo.setPostId(resultSet.getInt("postId"));
-	            fileVo.setFileName(resultSet.getString("fileName"));
-	            fileVo.setFilePath(resultSet.getString("filePath"));
+	            fileVo.setFileId(resultSet.getInt("file_id"));
+	            fileVo.setPostId(resultSet.getInt("post_id"));
+	            fileVo.setFileName(resultSet.getString("file_name"));
+	            fileVo.setFilePath(resultSet.getString("file_path"));
 	            files.add(fileVo);
 	        }
 	    } catch (SQLException e) {
@@ -193,12 +193,12 @@ public class FileTable {
 	    }
 	    return files; // 해당 게시물의 모든 파일 목록을 반환
 	}
-	// FileTable.java
+	
 	public FileVo getFileById(int fileId) {
 	    Connection connect = null;
 	    PreparedStatement preState = null;
 	    ResultSet resultSet = null;
-	    String selectQuery = "SELECT * FROM exam.file WHERE fileId = ?";
+	    String selectQuery = "SELECT * FROM exam.file WHERE file_id = ?";
 
 	    try {
 	        connect = DBInfo.getInstance().getConnection();
@@ -216,10 +216,10 @@ public class FileTable {
 	        resultSet = preState.executeQuery();
 	        if (resultSet.next()) {
 	            FileVo fileVo = new FileVo();
-	            fileVo.setFileId(resultSet.getInt("fileId"));
-	            fileVo.setPostId(resultSet.getInt("postId"));
-	            fileVo.setFileName(resultSet.getString("fileName"));
-	            fileVo.setFilePath(resultSet.getString("filePath"));
+	            fileVo.setFileId(resultSet.getInt("file_id"));
+	            fileVo.setPostId(resultSet.getInt("post_id"));
+	            fileVo.setFileName(resultSet.getString("file_name"));
+	            fileVo.setFilePath(resultSet.getString("file_path"));
 	            return fileVo;
 	        }
 	    } catch (SQLException e) {
@@ -246,7 +246,7 @@ public class FileTable {
 	public boolean updateFile(int fileId, String newFileName, String newFilePath) {
         Connection connect = null;
         PreparedStatement preState = null;
-        String updateQuery = "UPDATE exam.file SET fileName = ?, filePath = ? WHERE fileId = ?";
+        String updateQuery = "UPDATE exam.file SET file_name = ?, file_path = ? WHERE file_id = ?";
 
         try {
             connect = DBInfo.getInstance().getConnection();
@@ -292,7 +292,7 @@ public class FileTable {
     public boolean deleteFile(int fileId) {
         Connection connect = null;
         PreparedStatement preState = null;
-        String deleteQuery = "DELETE FROM exam.file WHERE fileId = ?";
+        String deleteQuery = "DELETE FROM exam.file WHERE file_id = ?";
 
         try {
             connect = DBInfo.getInstance().getConnection();
