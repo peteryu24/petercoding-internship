@@ -38,11 +38,11 @@ public class UserTable {
 
 		String userTable = "CREATE TABLE exam.users (" + "email VARCHAR(50) PRIMARY KEY NOT NULL UNIQUE, "
 				+ "nickname VARCHAR(10) NOT NULL, " + "password VARCHAR(15) NOT NULL, "
-				+ "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP); " + "COMMENT ON TABLE exam.users IS '유저 정보 테이블'; "
+				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP); " + "COMMENT ON TABLE exam.users IS '유저 정보 테이블'; "
 				+ "COMMENT ON COLUMN exam.users.nickname IS '사용자 닉네임'; "
 				+ "COMMENT ON COLUMN exam.users.email IS '사용자 이메일'; "
 				+ "COMMENT ON COLUMN exam.users.password IS '사용자 비밀번호'; "
-				+ "COMMENT ON COLUMN exam.users.createTime IS '사용자 계정 생성 시간';";
+				+ "COMMENT ON COLUMN exam.users.create_time IS '사용자 계정 생성 시간';";
 
 		try {
 			connect = DBInfo.getInstance().getConnection();
@@ -153,7 +153,7 @@ public class UserTable {
 		ResultSet rs = null;
 		ArrayList<UserVo> userList = new ArrayList<>();
 
-		String sql = "SELECT  nickname, email, password, createTime FROM exam.users ORDER BY email ASC";
+		String sql = "SELECT  nickname, email, password, create_time FROM exam.users ORDER BY email ASC";
 
 		try {
 			connect = DBInfo.getInstance().getConnection();
@@ -166,7 +166,7 @@ public class UserTable {
 				user.setNickname(rs.getString("nickname"));
 				user.setEmail(rs.getString("email"));
 				user.setPassword(rs.getString("password"));
-				user.setCreateTime(rs.getString("createTime"));
+				user.setCreateTime(rs.getString("create_time"));
 
 				userList.add(user);
 			}
