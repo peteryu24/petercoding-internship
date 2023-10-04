@@ -20,7 +20,7 @@ if (!SessionFilter.isUserLoggedIn(request)) {
 
 			$.ajax({ // 서버에 비동기적으로 데이터를 전송하거나 요청
 				type : "POST", // http 요청 메서드 // 서블릿 doPost
-				url : "../../EditInfoServelt", // 요청을 보낼 서버 URL
+				url : "../../EditInfoServlet", // 요청을 보낼 서버 URL
 				data : { // 서버에 전송될 데이터 지정
 					password : $("#password").val()
 				},
