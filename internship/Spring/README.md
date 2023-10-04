@@ -22,8 +22,8 @@
 <h5>요청 단계</h5>
 1. 클라이언트 요청: 웹 브라우저에서 서버에 HTTP 요청을 보냄(URL, HTTP메소드(GET,POST등), 헤더 정보, 본문 데이터(POST 데이터))<br>
 2. 서버 도착: 웹 서버(Apache)에 도착하고, 웹 서버는 요청을 해당 애플리케이션 서버(Tomcat)에 전달<br>
-3. Dispatcher-Servlet 접근: Dispatcher-Servlet이 요청을 받아 처리<br>
-4. 핸들러 매핑: Dispatcher-Servlet은 핸들러 매핑을 사용하여 해당 요청을 처리할 Controller 탐색<br>
+3. Dispatcher-Servlet 접근(web.xml에 설정): Dispatcher-Servlet이 요청을 받아 처리<br>
+4. 핸들러 매핑(servlet-context.xml에 설정): Dispatcher-Servlet은 핸들러 매핑을 사용하여 해당 요청을 처리할 Controller 탐색<br>
 5. 컨트롤러 실행: 찾아진 컨트롤러의 메소드 실행(비즈니스 로직을 처리하거나 필요한 경우 DB에 접근하여 필요한 데이터를 조작/조회)<br>
 6. 뷰 이름 반환: 컨트롤러는 처리 결과와 함께 뷰 이름 반환<br>
 <h5>응답 단계</h5>
@@ -39,3 +39,10 @@
 1. 객체-테이블 매핑: 매핑을 가능하게 함. 하나의 객체 인스턴스는 DB테이블의 한 로우와 연결될 수 있음<br>
 2. DB 추상화: 개발자가 SQL 쿼리를 직접 작성할 필요 X<br>
 3. CRUD 작업: 기본적인 CRUD를 메소드를 통해 수행 가능<br>
+<br><br>
+<h2>Spring 동작 구조</h2>
+web.xml - Dispatcher-Servlet<br>
+servlet-context.xml - Handler-Mapping<br>
+root-context.xml - view와 관련되지 않은 객체 정의 Service Layor, Repository(DAO), DB등 비즈니스 로직(Model)관련된 설정<br>
+web.xml -> servlet-context.xml -> HomeController.java -> servlet-context.xml -> home.jsp<br>
+
