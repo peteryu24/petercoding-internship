@@ -44,23 +44,23 @@ public class CommentTable {
 		System.out.println("=========================Create Table=========================\n");
 
 		// 쿼리 문자열을 정의
-		String commentTable = "CREATE TABLE exam.comment (" + "commentId SERIAL PRIMARY KEY NOT NULL, " // 댓글 식별
+		String commentTable = "CREATE TABLE exam.comment (" + "comment_id SERIAL PRIMARY KEY NOT NULL, " // 댓글 식별
 				+ "email VARCHAR(50), " // user table의 PK를 FK로 받음
-				+ "postId INTEGER, " // post table의 PK를 FK로 받음
+				+ "post_id INTEGER, " // post table의 PK를 FK로 받음
 				+ "comment TEXT NOT NULL, " // 댓글 내용
-				+ "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " // 댓글 작성 날짜
+				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " // 댓글 작성 날짜
 				+ "FOREIGN KEY (email) REFERENCES exam.users(email) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE, " // 외래키
 																														// 설정
 
-				+ "FOREIGN KEY (postId) REFERENCES exam.post(postId) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE); " // 외래키
+				+ "FOREIGN KEY (post_id) REFERENCES exam.post(post_id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE); " // 외래키
 																														// 설정
 
 				+ "COMMENT ON TABLE exam.comment IS '댓글 테이블'; "
-				+ "COMMENT ON COLUMN exam.comment.commentId IS '댓글 식별 id'; "
+				+ "COMMENT ON COLUMN exam.comment.comment_id IS '댓글 식별 id'; "
 				+ "COMMENT ON COLUMN exam.comment.email IS '댓글 작성자 식별 id(외래키)'; "
-				+ "COMMENT ON COLUMN exam.comment.postId IS '댓글이 달린 게시글 식별 id(외래키)'; "
+				+ "COMMENT ON COLUMN exam.comment.post_id IS '댓글이 달린 게시글 식별 id(외래키)'; "
 				+ "COMMENT ON COLUMN exam.comment.comment IS '댓글 내용'; "
-				+ "COMMENT ON COLUMN exam.comment.createTime IS '댓글 작성 시간';";
+				+ "COMMENT ON COLUMN exam.comment.create_time IS '댓글 작성 시간';";
 
 		try {
 			connect = DBInfo.getInstance().getConnection();
@@ -116,7 +116,7 @@ public class CommentTable {
 
 			connect.setAutoCommit(false);
 
-			String insertQuery = "INSERT INTO exam.comment (email, postId ,comment) VALUES (?,?,?)";
+			String insertQuery = "INSERT INTO exam.comment (email, post_id ,comment) VALUES (?,?,?)";
 			preState = connect.prepareStatement(insertQuery);
 
 			// 첫 번째 쿼리
@@ -176,7 +176,7 @@ public class CommentTable {
 			connect = DBInfo.getInstance().getConnection();
 
 			// SQL 쿼리 준비
-			String sql = "SELECT * FROM exam.comment WHERE postId = ?";
+			String sql = "SELECT * FROM exam.comment WHERE post_id = ?";
 			preState = connect.prepareStatement(sql);
 			preState.setInt(1, postId);
 
@@ -186,11 +186,11 @@ public class CommentTable {
 			// 결과 가져오기
 			while (rs.next()) {
 				CommentVo comment = new CommentVo();
-				comment.setCommentId(rs.getInt("commentId"));
+				comment.setCommentId(rs.getInt("comment_id"));
 				comment.setEmail(rs.getString("email"));
-				comment.setPostId(rs.getInt("postId"));
+				comment.setPostId(rs.getInt("post_id"));
 				comment.setComment(rs.getString("comment"));
-				comment.setCreateTime(rs.getString("createTime"));
+				comment.setCreateTime(rs.getString("create_time"));
 				comments.add(comment);
 			}
 		} catch (Exception e) {
@@ -222,7 +222,7 @@ public class CommentTable {
 	        connect = DBInfo.getInstance().getConnection();
 
 	        // SQL 쿼리 준비
-	        String sql = "SELECT * FROM exam.comment WHERE commentId = ?";
+	        String sql = "SELECT * FROM exam.comment WHERE comment_id = ?";
 	        preState = connect.prepareStatement(sql);
 	        preState.setInt(1, commentId);
 
@@ -232,11 +232,11 @@ public class CommentTable {
 	        // 결과 가져오기
 	        if (rs.next()) {  
 	            comment = new CommentVo();
-	            comment.setCommentId(rs.getInt("commentId"));
+	            comment.setCommentId(rs.getInt("comment_id"));
 	            comment.setEmail(rs.getString("email"));
-	            comment.setPostId(rs.getInt("postId"));
+	            comment.setPostId(rs.getInt("post_id"));
 	            comment.setComment(rs.getString("comment"));
-	            comment.setCreateTime(rs.getString("createTime"));
+	            comment.setCreateTime(rs.getString("create_time"));
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -264,7 +264,7 @@ public class CommentTable {
 		ResultSet rs = null;
 		ArrayList<CommentVo> commentList = new ArrayList<>();
 
-		String sql = "SELECT commentId, email, postId, comment, createTime FROM exam.comment ORDER BY commentId ASC";
+		String sql = "SELECT comment_id, email, post_id, comment, create_time FROM exam.comment ORDER BY comment_id ASC";
 
 		try {
 			connect = DBInfo.getInstance().getConnection();
@@ -273,11 +273,11 @@ public class CommentTable {
 
 			while (rs.next()) {
 				CommentVo comment = new CommentVo();
-				comment.setCommentId(rs.getInt("commentId"));
+				comment.setCommentId(rs.getInt("comment_id"));
 				comment.setEmail(rs.getString("email"));
-				comment.setPostId(rs.getInt("postId"));
+				comment.setPostId(rs.getInt("post_id"));
 				comment.setComment(rs.getString("comment"));
-				comment.setCreateTime(rs.getString("createTime"));
+				comment.setCreateTime(rs.getString("create_time"));
 
 				commentList.add(comment);
 			}
@@ -305,7 +305,7 @@ public class CommentTable {
 		System.out.println("\n=========================PreparedState=========================\n");
 		Connection connect = null;
 		PreparedStatement preState = null;
-		String sql = "UPDATE exam.comment " + "SET comment = ? WHERE commentId = ?";
+		String sql = "UPDATE exam.comment " + "SET comment = ? WHERE comment_id = ?";
 		try {
 			connect = DBInfo.getInstance().getConnection();
 			// 객체 생성
@@ -350,7 +350,7 @@ public class CommentTable {
 		int deleteWhat = 3;
 
 		// 삭제 SQL 쿼리
-		String sql = "DELETE FROM exam.comment WHERE commentId = ?";
+		String sql = "DELETE FROM exam.comment WHERE comment_id = ?";
 
 		try {
 			connect = DBInfo.getInstance().getConnection();
@@ -360,9 +360,9 @@ public class CommentTable {
 			int rowsAffected = preState.executeUpdate();
 
 			if (rowsAffected > 0) {
-				System.out.println("삭제완료. commentId: " + deleteWhat);
+				System.out.println("삭제완료. comment_id: " + deleteWhat);
 			} else {
-				System.out.println("해당 commentId 찾을 수 없음: " + deleteWhat); // 변경된 행의 갯수가 존재하지 않을 때
+				System.out.println("해당 comment_id 찾을 수 없음: " + deleteWhat); // 변경된 행의 갯수가 존재하지 않을 때
 			}
 
 		} catch (SQLException e) {
