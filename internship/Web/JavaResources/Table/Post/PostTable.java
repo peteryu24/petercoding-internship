@@ -44,18 +44,18 @@ public class PostTable {
 		System.out.println("=========================Create Table=========================\n");
 
 		// 쿼리 문자열을 정의
-		String postTable = "CREATE TABLE exam.post (" + "postId SERIAL PRIMARY KEY NOT NULL, " // 게시글 식별
+		String postTable = "CREATE TABLE exam.post (" + "post_id SERIAL PRIMARY KEY NOT NULL, " // 게시글 식별
 				+ "email VARCHAR(50), " // user table의 PK를 FK로 받음
 				+ "title VARCHAR(50) NOT NULL, " // 제목
 				+ "content TEXT, " // 내용
 				+ "view INT DEFAULT 0, " // 조회수
-				+ "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " // 게시글 작성 날짜
+				+ "create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " // 게시글 작성 날짜
 				+ "FOREIGN KEY (email) REFERENCES exam.users(email) ON UPDATE CASCADE ON DELETE CASCADE" + "); "
-				+ "COMMENT ON TABLE exam.post IS '게시글 테이블'; " + "COMMENT ON COLUMN exam.post.postId IS '게시글 식별 id'; "
+				+ "COMMENT ON TABLE exam.post IS '게시글 테이블'; " + "COMMENT ON COLUMN exam.post.post_id IS '게시글 식별 id'; "
 				+ "COMMENT ON COLUMN exam.post.email IS '게시글을 작성한 사용자 식별 id(외래키)'; "
 				+ "COMMENT ON COLUMN exam.post.title IS '게시글 제목'; "
 				+ "COMMENT ON COLUMN exam.post.content IS '게시글 내용'; " + "COMMENT ON COLUMN exam.post.view IS '조회수'; "
-				+ "COMMENT ON COLUMN exam.post.createTime IS '게시글 작성 시간';";
+				+ "COMMENT ON COLUMN exam.post.create_time IS '게시글 작성 시간';";
 
 		try {
 			connect = DBInfo.getInstance().getConnection();
@@ -163,7 +163,7 @@ public class PostTable {
 		ResultSet rs = null;
 		ArrayList<PostVo> postList = new ArrayList<>();
 
-		String sql = "SELECT postId, email, title, content, view, createTime FROM exam.post ORDER BY postId ASC";
+		String sql = "SELECT post_id, email, title, content, view, create_time FROM exam.post ORDER BY post_id ASC";
 		try {
 			connect = DBInfo.getInstance().getConnection();
 			preState = connect.prepareStatement(sql);
@@ -171,12 +171,12 @@ public class PostTable {
 
 			while (rs.next()) {
 				PostVo post = new PostVo();
-				post.setPostId(rs.getInt("postId"));
+				post.setPostId(rs.getInt("post_id"));
 				post.setEmail(rs.getString("email"));
 				post.setTitle(rs.getString("title"));
 				post.setContent(rs.getString("content"));
 				post.setView(rs.getInt("view"));
-				post.setCreateTime(rs.getString("createTime"));
+				post.setCreateTime(rs.getString("create_time"));
 
 				postList.add(post);
 			}
@@ -205,7 +205,7 @@ public class PostTable {
 		String checker = "proceed";
 		Connection connect = null;
 		PreparedStatement preState = null;
-		String sql = "UPDATE exam.post " + "SET content = ? WHERE postId = ?";
+		String sql = "UPDATE exam.post " + "SET content = ? WHERE post_id = ?";
 		try {
 			connect = DBInfo.getInstance().getConnection();
 			// 객체 생성
@@ -249,7 +249,7 @@ public class PostTable {
 			connect = DBInfo.getInstance().getConnection();
 
 			// SQL 쿼리 준비
-			String sql = "SELECT * FROM exam.post WHERE postId = ?";
+			String sql = "SELECT * FROM exam.post WHERE post_id = ?";
 			pstmt = connect.prepareStatement(sql);
 			pstmt.setInt(1, postId);
 
@@ -259,7 +259,7 @@ public class PostTable {
 			// 결과 가져오기
 			if (rs.next()) {
 				PostVo post = new PostVo();
-				post.setPostId(rs.getInt("postId"));
+				post.setPostId(rs.getInt("post_id"));
 				post.setEmail(rs.getString("email"));
 				post.setTitle(rs.getString("title"));
 				post.setContent(rs.getString("content"));
@@ -293,7 +293,7 @@ public class PostTable {
 		System.out.println("\n=========================Delete=========================\n");
 
 		// 삭제 SQL 쿼리
-		String sql = "DELETE FROM exam.post WHERE postId = ?";
+		String sql = "DELETE FROM exam.post WHERE post_id = ?";
 
 		try {
 			connect = DBInfo.getInstance().getConnection();
@@ -303,10 +303,10 @@ public class PostTable {
 			int affectedRows = preState.executeUpdate();
 
 			if (affectedRows > 0) {
-				System.out.println("삭제완료. postId: " + id);
+				System.out.println("삭제완료. post_id: " + id);
 				return isCheck;
 			} else {
-				System.out.println("해당 postId 찾을 수 없음: " + id); // 변경된 행의 갯수가 존재하지 않을 때
+				System.out.println("해당 post_id 찾을 수 없음: " + id); // 변경된 행의 갯수가 존재하지 않을 때
 				isCheck = "fail";
 			}
 
