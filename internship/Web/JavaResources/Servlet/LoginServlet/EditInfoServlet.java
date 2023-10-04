@@ -13,11 +13,11 @@ import org.json.simple.JSONObject;
 
 import gmx.upc.user.UserTable;
 
-@WebServlet("/EditInfoServelt")
-public class EditInfoServelt extends HttpServlet {
+@WebServlet("/EditInfoServlet")
+public class EditInfoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public EditInfoServelt() {
+	public EditInfoServlet() {
 		super();
 	}
 
