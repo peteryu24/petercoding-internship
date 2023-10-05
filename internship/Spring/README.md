@@ -55,7 +55,8 @@ src/test/resources - 테스트할 때 사용되는 파일들<br>
 WEB-INF/spring - 스프링 설정 파일<br>
 WEB-INF/views - jsp 파일<br>
 web.xml - 웹설정 파일<br>
-pom.xml - maven 설정 파일<br>
+target - 
+pom.xml - maven(자바용 프로젝트 관리 도구 미리 작성된 xml 파일을 이용해 라이브러리를 자동으로 다운하거나 빌드)설정 파일<br>
 <br><br>
 <h3>Bean</h3>
 Spring에 의하여 생성되고 관리되는 자바 객체를 Bean<br>
