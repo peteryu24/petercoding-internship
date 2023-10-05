@@ -40,6 +40,8 @@ bean id="imageRenderer" class="gmx.cmmn.bindrender.EgovImgPaginationRenderer"/<b
 <h5>context-aspect.xml</h5>
 
 <h5>context-transaction.xml</h5>
+<h4>src/main/resources/egovframework/sqlmap/"sample" -> pgsql</h4>
+<h5>context-mapper.xml</h5>
 
 
 
