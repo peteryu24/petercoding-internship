@@ -27,4 +27,15 @@ context-common.xml과 dispatcher-servlet.xml에 적용
 
 <h3>src/main/resources/egovframework/"sqlmap" -> pgsqlmap</h3>
 
+<h3>기본 자바 파일 삭제</h3>
+<h4>주석처리</h4>
+<h5>context-aspect.xml</h5>
+bean id="egovHandler" class="gmx.cmmn.handler.EgovSampleExcepHndlr"<br>
+bean id="otherHandler" class="gmx.cmmn.handler.EgovSampleOthersExcepHndlr"<br>
+
+<h5>dispatcher-servlet.xml</h5>
+bean class="gmx.cmmn.bindrender.EgovBindingInitializer"/<br>
+bean id="imageRenderer" class="gmx.cmmn.bindrender.EgovImgPaginationRenderer"/<br>
+
+
 
