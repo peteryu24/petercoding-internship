@@ -26,7 +26,7 @@ context-common.xml과 dispatcher-servlet.xml에 적용
 <h3>src/main/resources/"egovframework" -> gmx</h3>
 
 <h3>src/main/resources/egovframework/sqlmap/"example" -> pgsqlmap</h3>
-context-mapper.xml context-sqlMap.xml -> sql-map-connfig.xml
+context-mapper.xml context-sqlMap.xml sql-map-connfig.xml
 
 <h3>기본 자바 파일 삭제</h3>
 <h4>주석처리</h4>
