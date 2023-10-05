@@ -11,7 +11,7 @@ EgovBindingInitializer.java EgovImgPaginationRenderer.java<br>
 EgovSampleService.java SampleDefaultVO.java SampleVO.java<br>
 기본적 검색 조건이나 검색 기능을 구현하기에 search로 작명
 
-<h3>egovframework.example.sample.service.impl -> gmx.fwd.crud</h3>
+<h3>egovframework.example.sample.service.impl -> gmx.fwd.crud.impl</h3>
 EgovSampleServiceImpl.java SampleDAO.java SampleMapper.java<br>
 crud작업을 수행하기에 crud로 작명
 
