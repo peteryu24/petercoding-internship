@@ -55,7 +55,8 @@ src/test/resources - 테스트할 때 사용되는 파일들<br>
 WEB-INF/spring - 스프링 설정 파일<br>
 WEB-INF/views - jsp 파일<br>
 web.xml - 웹설정 파일<br>
-target file - maven으로 빌드하면 생기는 jar 파일을 저장하는 용도 
+target file - build 프로세스의 마지막 output을 포함
+            - maven으로 빌드하면 생기는 jar 파일을 저장하는 용도 
             - target은 커밋 대상이 아니며, 지워도 maven build를 하면 다시 생성됌. 실서버에 반영할 때는 target 밑에 있는 jar이나 war를 배포하게 됌.
 pom.xml - maven 설정 파일<br>
 maven 이란? 자바용 프로젝트 관리 도구; 미리 작성된 xml 파일을 이용해 라이브러리를 자동으로 다운하거나 빌드
