@@ -59,6 +59,7 @@ pom.xml - maven 설정 파일<br>
 <br><br>
 <h3>Bean</h3>
 스프링 빈은 스프링 컨테이너의 생명주기와 연결되어 있음. 컨테이너 시작시 빈이 생성되고, 컨테이너가 종료될 때 빈이 파괴됌.
+스프링 빈 과 서블릿은 싱글톤 패턴 스프링 빈 생성
 <h5>Bean 설정법</h5>
 1. xml 기반의 설정: &lt;bean&gt; 태그를 사용하여 xml파일 내에서 빈을 정의하고 수성
 2. 어노테이션 기반의 설정: @Component, @Service, @Repository, @Controller을 사용하여 자바 클래스를 빈으로 표시하고, @Autowired를 사용하여 의존성 주입
