@@ -37,5 +37,9 @@ bean id="otherHandler" class="gmx.cmmn.handler.EgovSampleOthersExcepHndlr"<br>
 bean class="gmx.cmmn.bindrender.EgovBindingInitializer"/<br>
 bean id="imageRenderer" class="gmx.cmmn.bindrender.EgovImgPaginationRenderer"/<br>
 
+<h5>context-aspect.xml</h5>
+
+<h5>context-transaction.xml</h5>
+
 
 
