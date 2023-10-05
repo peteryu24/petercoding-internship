@@ -24,6 +24,7 @@ EgovSampleController.java<br>
 context-common.xml과 dispatcher-servlet.xml에 적용
 
 <h3>src/main/resources/"egovframework" -> gmx</h3>
+
 <h3>src/main/resources/egovframework/"sqlmap" -> pgsqlmap</h3>
 
 
