@@ -19,3 +19,8 @@ crud작업을 수행하기에 crud로 작명
 EgovSampleController.java<br>
 @RequsetMapping(vlaue = "/null.do")의 메소드들 구현<br>
 .do로 온 것들을 매핑하여 컨트롤 한다는 의미로 controller로 작명
+
+<h3>context:component-scan base-package="egovframework" -> "gmx, egovframework"</h3>
+context-common.xml과 dispatcher-servlet.xml에 적용
+
+
