@@ -63,6 +63,7 @@ maven 이란? 자바용 프로젝트 관리 도구; 미리 작성된 xml 파일�
 <br><br>
 <h3>Bean</h3>
 Spring에 의하여 생성되고 관리되는 자바 객체<br>
+서블릿과 동일하게 싱글톤 패턴의 성질로 id 중복 불가<br>
 @Configuration을 이용하면 Spring Project 에서의 Configuration 역할을 하는 Class를 지정할 수 있습니다. <br>
 해당 File 하위에 Bean 으로 등록하고자 하는 Class에 @Bean Annotation을 사용해주면 간단하게 Bean을 등록할 수 있습니다. <br>
 스프링 빈은 스프링 컨테이너의 생명주기와 연결되어 있음. 컨테이너 시작시 빈이 생성되고, 컨테이너가 종료될 때 빈이 파괴됌.
