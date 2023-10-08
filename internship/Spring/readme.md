@@ -26,7 +26,7 @@ context-common.xml과 dispatcher-servlet.xml에 적용
 <h3>src/main/resources/"egovframework" -> gmx</h3>
 
 <h3>WEB-INF/jsp/geomex.jsp로 디렉토리 변경</h3>
-dispatcher-servlet.xml ->  p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
+dispatcher-servlet.xml ->  p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/> urlbasedviewResolver
 GeomexController.java -> return "geomex";
 
 <h3>기본 자바 파일 삭제</h3>
