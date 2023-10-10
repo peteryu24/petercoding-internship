@@ -16,6 +16,15 @@ web.xml server.xml 웰컴파일
 
 was webserver 차이 (네트워크상 분리, 다수의 was를 하나의 webserver에서)
 https://gmlwjd9405.github.io/2018/10/27/webserver-vs-was.html
+클라이언트의 요청이 web server(apache)로 들어옴
+web server는 그것을 was(tomcat)로 보내줌
+그러면 해당 servlet을 찾아서 쓰레드를 생성
+httpservletresponse requset객체를 생성
+thread는 service()로 접근하여 doPost doGet메소드를 실행
+적절한 로직을 수행하고
+response객체에 담아서 was로 리턴
+httpresonse형태로 web server로 리턴
+
 
 
 
