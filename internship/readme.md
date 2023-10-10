@@ -15,6 +15,7 @@ mime 타입
 web.xml server.xml 웰컴파일
 
 was webserver 차이 (네트워크상 분리, 다수의 was를 하나의 webserver에서)
+https://gmlwjd9405.github.io/2018/10/27/webserver-vs-was.html
 
 
 
