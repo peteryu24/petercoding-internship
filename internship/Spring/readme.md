@@ -49,7 +49,14 @@ bean id="imageRenderer" class="gmx.cmmn.bindrender.EgovImgPaginationRenderer"/<b
 <h2>경로 변경</h2>
 <h3>WEB-INF/connfig/egovframework/springmvc/dispatcher-servlet.xml -> WEB-INF/config/dispatcher-servlet.xml</h3>
 다른 폴더 및 파일들은 삭제 후 src/main/resources/spring/context-validaor.xml에서 validaor.xml 참조 부분 주석처리
+<br><br><br>
 
+
+@Vaild BindingResult<br>
+@Modelattribute<br>
+@RequestParam(required = true)<br>
+@PostMapping<br>
+@RequestParam Hashmap
 
 
 
