@@ -1,9 +1,9 @@
 /*
-  CREATE TABLE exam.users (
+    CREATE TABLE exam.users (
     email VARCHAR(50) PRIMARY KEY NOT NULL UNIQUE, -- 사용자 메일 주소
     nickname VARCHAR(10) NOT NULL, -- 사용자 닉네임
     password VARCHAR(15) NOT NULL, -- 사용자 비밀번호
-    createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- 계정 생성 날짜
+    createTime TIMESTAMP DEFAULT NOW() -- 계정 생성 날짜
 );
 COMMENT ON TABLE exam.users IS '유저 정보 테이블';
 COMMENT ON COLUMN exam.users.email IS '사용자 이메일';
@@ -11,38 +11,38 @@ COMMENT ON COLUMN exam.users.nickname IS '사용자 닉네임';
 COMMENT ON COLUMN exam.users.password IS '사용자 비밀번호';
 COMMENT ON COLUMN exam.users.createTime IS '사용자 계정 생성 시간';
 
-CREATE TABLE exam.post (
+CREATE TABLE exam.posts (
     post_id SERIAL PRIMARY KEY NOT NULL, -- 게시글 식별
     email VARCHAR(50), -- user table의 PK를 FK로 받음
     title VARCHAR(50) NOT NULL, -- 제목
     content TEXT, -- 내용
     view INT DEFAULT 0, -- 조회수
-    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 게시글 작성 날짜
+    create_time TIMESTAMP DEFAULT NOW(), -- 게시글 작성 날짜
     FOREIGN KEY (email) REFERENCES exam.users(email) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
-COMMENT ON TABLE exam.post IS '게시글 테이블';
-COMMENT ON COLUMN exam.post.post_id IS '게시글 식별 id';
-COMMENT ON COLUMN exam.post.email IS '게시글을 작성한 사용자 식별 id(외래키)';
-COMMENT ON COLUMN exam.post.title IS '게시글 제목';
-COMMENT ON COLUMN exam.post.content IS '게시글 내용';
-COMMENT ON COLUMN exam.post.view IS '조회수';
-COMMENT ON COLUMN exam.post.create_time IS '게시글 작성 시간';
+COMMENT ON TABLE exam.posts IS '게시글 테이블';
+COMMENT ON COLUMN exam.posts.post_id IS '게시글 식별 id';
+COMMENT ON COLUMN exam.posts.email IS '게시글을 작성한 사용자 식별 id(외래키)';
+COMMENT ON COLUMN exam.posts.title IS '게시글 제목';
+COMMENT ON COLUMN exam.posts.content IS '게시글 내용';
+COMMENT ON COLUMN exam.posts.view IS '조회수';
+COMMENT ON COLUMN exam.posts.create_time IS '게시글 작성 시간';
 
-CREATE TABLE exam.comment (
+CREATE TABLE exam.comments (
     comment_id SERIAL PRIMARY KEY NOT NULL, -- 댓글 식별
     email VARCHAR(50), -- user table의 PK를 FK로 받음
     post_id INT, -- post table의 PK를 FK로 받음
     comment TEXT NOT NULL, -- 댓글 내용
-    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 댓글 작성 날짜
+    create_time TIMESTAMP DEFAULT NOW(), -- 댓글 작성 날짜
     FOREIGN KEY (email) REFERENCES exam.users(email) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (postId) REFERENCES exam.post(post_id)  MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (post_id) REFERENCES exam.posts(post_id)  MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
-COMMENT ON TABLE exam.comment IS '댓글 테이블';
-COMMENT ON COLUMN exam.comment.comment_id IS '댓글 식별 id';
-COMMENT ON COLUMN exam.comment.email IS '댓글 작성자 식별 id(외래키)';
-COMMENT ON COLUMN exam.comment.post_id IS '댓글이 달린 게시글 식별 id(외래키)';
-COMMENT ON COLUMN exam.comment.comment IS '댓글 내용';
-COMMENT ON COLUMN exam.comment.create_time IS '댓글 작성 시간';
+COMMENT ON TABLE exam.comments IS '댓글 테이블';
+COMMENT ON COLUMN exam.comments.comment_id IS '댓글 식별 id';
+COMMENT ON COLUMN exam.comments.email IS '댓글 작성자 식별 id(외래키)';
+COMMENT ON COLUMN exam.comments.post_id IS '댓글이 달린 게시글 식별 id(외래키)';
+COMMENT ON COLUMN exam.comments.comment IS '댓글 내용';
+COMMENT ON COLUMN exam.comments.create_time IS '댓글 작성 시간';
 */
 //
 //package gmx.upc;
