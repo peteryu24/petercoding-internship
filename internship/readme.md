@@ -1,4 +1,4 @@
-스프링 responseentity
+스프링 response entity
 
 자바 리플렉션
 
