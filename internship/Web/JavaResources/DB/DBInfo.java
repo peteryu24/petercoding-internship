@@ -49,7 +49,7 @@ CREATE TABLE exam.files (
     post_id INT NOT NULL,
     file_name VARCHAR(255) NOT NULL,
     file_path TEXT NOT NULL,
-    FOREIGN KEY (post_id) REFERENCES exam.post(post_id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (post_id) REFERENCES exam.posts(post_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 COMMENT ON TABLE exam.files IS '파일 업로드 테이블';
