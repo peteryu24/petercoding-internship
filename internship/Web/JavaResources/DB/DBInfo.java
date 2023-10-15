@@ -43,6 +43,21 @@ COMMENT ON COLUMN exam.comments.email IS '댓글 작성자 식별 id(외래키)'
 COMMENT ON COLUMN exam.comments.post_id IS '댓글이 달린 게시글 식별 id(외래키)';
 COMMENT ON COLUMN exam.comments.comment IS '댓글 내용';
 COMMENT ON COLUMN exam.comments.create_time IS '댓글 작성 시간';
+
+CREATE TABLE exam.files (
+    file_id SERIAL PRIMARY KEY NOT NULL,
+    post_id INT NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file_path TEXT NOT NULL,
+    FOREIGN KEY (post_id) REFERENCES exam.post(post_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+COMMENT ON TABLE exam.files IS '파일 업로드 테이블';
+COMMENT ON COLUMN exam.files.file_id IS '파일 식별 id';
+COMMENT ON COLUMN exam.files.post_id IS '관련 게시물 id';
+COMMENT ON COLUMN exam.files.file_name IS '서버에 저장된 파일 이름';
+COMMENT ON COLUMN exam.files.file_path IS '파일 저장 경로';
+
 */
 //
 //package gmx.upc;
