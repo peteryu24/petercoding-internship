@@ -10,7 +10,8 @@
 <script type="text/javascript" src="../js/ol-v6.4.3/ol.js"></script>
 
 <script>
-
+// EPSG: 전세계 좌표계 정의에 대한 고유한 명칭
+// EPSG.io 라는 사이트를 통해 각 EPSG 코드에 대한 proj4와 wkt 문자열을 파악 가능
 proj4.defs('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs');
 proj4.defs('EPSG:4326', '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs');
 proj4.defs('EPSG:900913', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs');
@@ -134,27 +135,37 @@ $(document).ready(function () {
             	 *  동시 다운로드 증가, 로딩 속도 향상
             	 */
                 var subdomain = ((level + col) % 4) + 1;
+                // 최종 타일 url 반환
                 return "http://map" + subdomain + ".daumcdn.net/map_2d/1909dms/L" + level + "/" + row + "/" + col + ".png";
             },
+            // 타일 그리드 설정
             tileGrid: new ol.tilegrid.TileGrid({
+            	// 타일 원점 설정
                 origin: _daumOrigin,
+                // 확대 레벨별 해상도 설정
                 resolutions: _daumResolutions
             })
         }),
     });
 
     map.addLayer(_daumMapLayer);
-
+	
+    // Vector 데이터를 표현하기 위해 Vector(point, line, polygon)
     var emdSource = new ol.source.Vector({
+    	// bbox로 데이터 로딩      현재 보이는 면적에 해당하는 데이터만 서버에서 가져오기(성능향상)
         strategy: ol.loadingstrategy.bbox,
+        // 특정 영역, 해상도, 투영에 대한 데이터를 로드하기 위해
         loader: function (extent, resolution, projection) {
+        	// GeoJSON으로 파싱
             var _format = new ol.format.GeoJSON();
             $.ajax({
                 url: "http://127.0.0.1:8000/xeus/wfs",
                 data: {
                     service: 'WFS',
                     version: '1.1.0',
+                    // 방식     (GetCapabilities, DescribeFeatureType, LockFeature, GetFeatureWithLock, Transaction)
                     request: 'GetFeature',
+                    // 조회할 레이어 이름
                     typename: 'gmx:kais_emd_as',
                     outputFormat: 'json',
                     srsname: 'EPSG:5186',
@@ -162,7 +173,9 @@ $(document).ready(function () {
                 },
                 dataType: 'json',
                 success: function (data) {
+                	// 응답 데이터를 파싱하여 OpenLayers의 feature 객체 배열로 반환
                     var features = _format.readFeatures(data);
+                	// Vector 소스에 추가
                     emdSource.addFeatures(features);
                 },
             });
@@ -184,29 +197,40 @@ $(document).ready(function () {
     var emdWFSLayer = new ol.layer.Vector({
         name: '읍면동WFS',
         visible: true,
+        // 애니메이션중에는 레이어 업데이트 비활성화
         updateWhileAnimating: false,
+        // 사용자와 상호작용 중에는 레이어 업데이트 비활성화
         updateWhileInteracting: false,
         type: "MULTIPOLYGON",
+        // 레이어의 z-index
         zIndex: 0,
+        // 레이어 전체 이름 설정
         fullName: "",
+        // 레이어가 표시되는 최소 해상도
         minResolution: 0,
+        // 최대 해상도
         maxResolution: Infinity,
+        // 레이어 그룹 이름
         group: "지적 기반",
         source: emdSource,
+        // 각 feature마다 style 지정
         style: function (feature, resolution) {
             var txt = feature.get('emd_kor_nm');
             return new ol.style.Style({
                 stroke: new ol.style.Stroke({
-                    color: 'rgba(38, 195, 70, 1)',
+                	// green
+                    color: 'rgba(38, 195, 70, 1)', 
                     width: 2
                 }),
                 fill: new ol.style.Fill({
+                	//white
                     color: 'rgba(0, 0, 0, 0)'
                 }),
                 text: new ol.style.Text({
                     font: '15px Calibri,sans-serif',
                     text: txt,
                     fill: new ol.style.Fill({
+                    	// white
                         color: '#fff'
                     }),
                     stroke: new ol.style.Stroke({
