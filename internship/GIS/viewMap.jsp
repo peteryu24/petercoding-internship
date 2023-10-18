@@ -112,13 +112,20 @@ $(document).ready(function () {
     var _daumOrigin = [-30000, -60000];
 	// 확대 레벨별 해상도
     var _daumResolutions = [2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25, 0.125];
+	// 다음 지도 타일 레이어 생성
     var _daumMapLayer = new ol.layer.Tile({
+    	// 레이어 이름 설정
         name: "다음맵",
+        // 활성화: 초기에 레이어가 표시됨
         visible: true,
+        // 레이어 소스 설정
         source: new ol.source.XYZ({
+        	// 타일의 프로젝션을 5181로 설정
             projection: _daumProjection,
             tileUrlFunction: function (coordinate) {
+            	// 14에서 현재 확대 레벨을 뺀 값
                 var level = 14 - coordinate[0];
+            	// Y행 좌표는 OpenLayers의 좌표 체계와 반대
                 var row = (coordinate[2] * -1) - 1;
                 var col = coordinate[1];
                 var subdomain = ((level + col) % 4) + 1;
