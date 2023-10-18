@@ -101,7 +101,7 @@ $(document).ready(function () {
             // 초기 확대 레벨
             zoom: 13,
             // 최소 축소 레벨
-            minZoom: 8,
+            minZoom: 7,
             // 최대 확대 레벨
             maxZoom: 19
         })
@@ -274,7 +274,7 @@ $(document).ready(function () {
 
     map.addLayer(sggWMSLayer);
 
-    var korSoruce = new ol.source.Vector({
+    var korSource = new ol.source.Vector({
         // bbox strategy
         strategy: ol.loadingstrategy.bbox,
         loader: function (extent, resolution, projection) {
@@ -294,14 +294,14 @@ $(document).ready(function () {
                 dataType: 'json',
                 success: function (data) {
                     var features = _format.readFeatures(data);
-                    emdSource2.addFeatures(features);
+                    korSource.addFeatures(features);
                 },
             });
         }
     });
 
     var koreaWFSLayer = new ol.layer.Vector({
-        name: '도로중심선',
+        name: '대한민국',
         visible: true,
         updateWhileAnimating: false,
         updateWhileInteracting: false,
@@ -311,7 +311,7 @@ $(document).ready(function () {
         minResolution: 0,
         maxResolution: Infinity,
         group: "지적 기반",
-        source: korSoruce,
+        source: korSource,
         style: function (feature, resolution) {
             var txt = feature.get('kais_korea_as');
             return new ol.style.Style({
@@ -339,34 +339,88 @@ $(document).ready(function () {
 
     map.addLayer(koreaWFSLayer);
     
+    var cctvSource = new ol.source.Vector({
+        // bbox strategy
+        strategy: ol.loadingstrategy.bbox,
+        loader: function (extent, resolution, projection) {
+            var _format = new ol.format.GeoJSON();
+            $.ajax({
+                url: "http://127.0.0.1:8000/xeus/wfs",
+                data: {
+                    service: 'WFS',
+                    version: '1.1.0',
+                    request: 'GetFeature',
+                    typename: 'gmx:asset_cctv',
+                    outputFormat: 'json',
+                    srsname: 'EPSG:5186',
+                    // 필요한 feature 만 불러오기(성능 저하 방지)
+                    bbox: extent.join(',') + ',' + 'EPSG:5186'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    var features = _format.readFeatures(data);
+                    cctvSource.addFeatures(features);
+                },
+            });
+        }
+    });
+
+    var cctvWFSLayer = new ol.layer.Vector({
+        name: 'CCTV',
+        visible: true,
+        updateWhileAnimating: false,
+        updateWhileInteracting: false,
+        type: "POINT",
+        zIndex: 2,
+        fullName: "",
+        minResolution: 0,
+        maxResolution: Infinity,
+        group: "지적 기반",
+        source: korSource,
+        style: function (feature, resolution) {
+            var txt = feature.get('asset_cctv');
+            return new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                    color: 'rgba(38, 195, 70, 1)',
+                    width: 2
+                }),
+                fill: new ol.style.Fill({
+                    color: 'rgba(0, 0, 0, 0)'
+                }),
+                text: new ol.style.Text({
+                    font: '15px Calibri,sans-serif',
+                    text: txt,
+                    fill: new ol.style.Fill({
+                        color: '#fff'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: 'rgba(38, 195, 70, 1)',
+                        width: 3
+                    })
+                })
+            });
+        }
+    });
+
+    map.addLayer(cctvWFSLayer);
+    
     function toggleKoreaBoundary() {
 		var visibility = koreaWFSLayer.getVisible();
-		koreaWFSLayer.setVisible(!visibility);
+		console.log("asdasdasdasdasdasdasdasdas")
+		koreaWFSLayer.setVisible(!visibility);	
 	}
-	function toggleSigArea() {
-		var visibility = sigWMSLayer.getVisible();
-		sigWMSLayer.setVisible(!visibility);
+	function toggleSggArea() {
+		var visibility = sggWMSLayer.getVisible();
+		sggWMSLayer.setVisible(!visibility);
 	}
-	function toggleEmdBoundary() {
-		var visibility = emdWFSLayer.getVisible();
-		emdWFSLayer.setVisible(!visibility);
-	}
-	function toggleCCPoint() {
-		var visibility = cctvWFSLayer.getVisible();
-		cctvWFSLayer.setVisible(!visibility);
-	}
+	
 	$("#koreaLayer").on("click", function() {
 		toggleKoreaBoundary();
 	});
-	$("#sigLayer").on("click", function() {
-		toggleSigArea();
+	$("#sggLayer").on("click", function() {
+		toggleSggArea();
 	});
-	$("#emdLayer").on("click", function() {
-		toggleEmdBoundary();
-	});
-	$("#cctvLayer").on("click", function() {
-		toggleCCPoint();
-	});
+
 
 });
 
@@ -379,7 +433,26 @@ $(document).ready(function () {
            margin:0;
            padding:0;
            background-color: #cfc2c3; /* 흰색 */
-       }
+   }
+   
+   #toggle {
+	    opacity: 0.5; /* 1은 완전 불투명, 0은 완전 투명 */
+	    width: 100px; /* 또는 원하는 크기로 */
+	}
+
+	#toggle ul {
+	    list-style-type: none; /* 리스트 표시기 제거 */
+	    padding: 0; /* 패딩 제거 */
+	    margin: 0; /* 마진 제거 */
+	}
+	
+	#toggle li {
+	    font-size: 12px; /* 작은 글씨 크기 */
+	    margin-bottom: 5px; /* 항목 간의 간격 */
+	    padding: 5px; /* 내부 패딩 */
+	}
+
+      
 </style>
 
 
@@ -389,12 +462,9 @@ $(document).ready(function () {
 </head>
 <body>
 	<div id="map">
-		<div id="layer-list">
-		<ul>
-		    <li id="koreaLayer">한반도 경계</li>
-		    <li id="sigLayer">춘천시 면적</li>
-		    <li id="cctvLayer">cctv 포인트</li>
-		</ul>
+		<div id="toggle">
+			    <button type="button" id="koreaLayer">한반도</button>
+			    <button type="button" id="sggLayer">춘천시</button>
 		</div>
 	</div>
 </body>
