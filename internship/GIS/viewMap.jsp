@@ -127,7 +127,12 @@ $(document).ready(function () {
                 var level = 14 - coordinate[0];
             	// Y행 좌표는 OpenLayers의 좌표 체계와 반대
                 var row = (coordinate[2] * -1) - 1;
+            	// X 좌표
                 var col = coordinate[1];
+                /*
+            	 *  서브 도메인 값을 계산하여 여러 서버에서 타일을 로드할 수 있도록 분산
+            	 *  동시 다운로드 증가, 로딩 속도 향상
+            	 */
                 var subdomain = ((level + col) % 4) + 1;
                 return "http://map" + subdomain + ".daumcdn.net/map_2d/1909dms/L" + level + "/" + row + "/" + col + ".png";
             },
