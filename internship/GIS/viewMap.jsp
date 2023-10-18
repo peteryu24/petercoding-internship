@@ -2,16 +2,16 @@
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head>
+<head> 
+<!-- 해당 jsp파일을 불러주는 @Controller 기준으로 경로 설정하기 -->
 <script type="text/javascript" src="../js/jquery-3.2.0.min.js"></script>
 <script type="text/javascript" src="../js/proj4js-2.3.15/proj4.js"></script>
 <!-- 오픈레이어스 6 -->
 <link rel="stylesheet" type="text/css" href="../js/ol-v6.4.3/ol.css">
 <script type="text/javascript" src="../js/ol-v6.4.3/ol.js"></script>
-
 <script>
 // EPSG: 전세계 좌표계 정의에 대한 고유한 명칭
-// EPSG.io 라는 사이트를 통해 각 EPSG 코드에 대한 proj4와 wkt 문자열을 파악 가능
+// EPSG.io(webSite)를 통해 각 EPSG 코드에 대한 proj4와 wkt 문자열을 파악 가능
 proj4.defs('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs');
 proj4.defs('EPSG:4326', '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs');
 proj4.defs('EPSG:900913', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs');
@@ -338,6 +338,35 @@ $(document).ready(function () {
     });
 
     map.addLayer(koreaWFSLayer);
+    
+    function toggleKoreaBoundary() {
+		var visibility = koreaWFSLayer.getVisible();
+		koreaWFSLayer.setVisible(!visibility);
+	}
+	function toggleSigArea() {
+		var visibility = sigWMSLayer.getVisible();
+		sigWMSLayer.setVisible(!visibility);
+	}
+	function toggleEmdBoundary() {
+		var visibility = emdWFSLayer.getVisible();
+		emdWFSLayer.setVisible(!visibility);
+	}
+	function toggleCCPoint() {
+		var visibility = cctvWFSLayer.getVisible();
+		cctvWFSLayer.setVisible(!visibility);
+	}
+	$("#koreaLayer").on("click", function() {
+		toggleKoreaBoundary();
+	});
+	$("#sigLayer").on("click", function() {
+		toggleSigArea();
+	});
+	$("#emdLayer").on("click", function() {
+		toggleEmdBoundary();
+	});
+	$("#cctvLayer").on("click", function() {
+		toggleCCPoint();
+	});
 
 });
 
@@ -359,6 +388,14 @@ $(document).ready(function () {
 <title>Map</title>
 </head>
 <body>
-	<div id="map"></div>
+	<div id="map">
+		<div id="layer-list">
+		<ul>
+		    <li id="koreaLayer">한반도 경계</li>
+		    <li id="sigLayer">춘천시 면적</li>
+		    <li id="cctvLayer">cctv 포인트</li>
+		</ul>
+		</div>
+	</div>
 </body>
 </html>
