@@ -49,41 +49,68 @@ var console = window.console || {
  * BUT!
  * MultiPolygon의 경우, 빈 공간이 center가 될 수도 있음.
  */
-var center = [263846.4536899561, 586688.9485874075]; // 춘천
+ 
+//춘천
+var center = [263846.4536899561, 586688.9485874075]; 
+
+// 좌표계 5186   proj4.defs('EPSG:5186', '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs');
 var targetCRS = 5186;
 
 //맵 설정
 var map = null;
 $(document).ready(function () {
-	console.log(ol)
+	// OpenLayer 맵 객체 할당
     var map = new ol.Map({
+    	// ol의 기본 컨트롤러 사용
         controls: ol.control.defaults().extend([]),
+    	/*
+    	 * WebGL (Web Graphics Library)을 사용하여 맵을 렌더링
+    	 * canvas, dom 같은 renderer도 존재하지만
+    	 * WebGL이 가장 효율적인 방법
+    	 */
         renderer: "webgl",
+        // OpenLayers 워터마크 비활성화
         logo: false,
+        // 'map'이라는 ID의 맵을 사용
         target: "map",
+        // 맵에 추가될 layer 배열
         layers: [],
+        // 맵의 상호작용
         interactions: ol.interaction.defaults({
+        	// 드래그 기능 비활성화
             dragPan: false,
+            // 휠 확대/축소 비활성화
             mouseWheelZoom: false
         }).extend([
-                new ol.interaction.DragPan({
+                new ol.interaction.DragPan({ // 드래그로 맵 이동 활성화
+                	// 기네시 효과 비활성화
                     kinetic: false
                 }),
-                new ol.interaction.MouseWheelZoom({
-                    duration: 0
+                new ol.interaction.MouseWheelZoom({ // 휠 확대/축소 활성화
+                	// 숫자가 커질수록 부드러운 움직임(다소 느릴수도 있음)  ex) Google Earth
+                    duration: 95
                 })
             ]),
+        // 뷰 설정
         view: new ol.View({
+        	// 맵의 투명 설정
             projection: ol.proj.get("EPSG:5186"),
+            // 맵의 초기 중심 좌표
             center: [263846.4536899561, 586688.9485874075],
-            zoom: 11,
+            // 초기 확대 레벨
+            zoom: 13,
+            // 최소 축소 레벨
             minZoom: 8,
-            maxZoom: 23
+            // 최대 확대 레벨
+            maxZoom: 19
         })
     });
-
+	
+	// 5181 좌표게를 사용하는 프로젝션 객체 가져옴
     var _daumProjection = new ol.proj.get('EPSG:5181');
+	// 다음 지도 서비스의 타일 원점
     var _daumOrigin = [-30000, -60000];
+	// 확대 레벨별 해상도
     var _daumResolutions = [2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25, 0.125];
     var _daumMapLayer = new ol.layer.Tile({
         name: "다음맵",
@@ -129,7 +156,19 @@ $(document).ready(function () {
             });
         }
     });
-
+	
+	/*
+	 * WFS
+	 * Web Feature Service
+	 * 
+	 * OGC에서 개발된 공간 데이터를 다루는 웹 기반 GIS 서비스
+	 * 
+	 * 지도 상에 개별 feature에 대한 정보를 제공하는 서비스
+	 * client가 요청한 지리 정보를 서버에서 조회하고, feature의 상세 정보를 반환
+	 * 
+	 * WFS는 동적인 기능을 제공하며 지리 정보 CRUD 가능
+	 * feature 속성 정보 뿐만 아니라 Geometry 정보(point, line, Polygon) 제공
+	 */
     var emdWFSLayer = new ol.layer.Vector({
         name: '읍면동WFS',
         visible: true,
@@ -168,8 +207,17 @@ $(document).ready(function () {
     });
 
     map.addLayer(emdWFSLayer);
-
-    var sigWMSLayer = new ol.layer.Tile({
+    
+	/*
+	 * WMS
+	 * Web Map Service
+	 * 
+	 * OGC에서 개발된 지도 이미지를 제공하는 웹기반 GIS 서비스
+	 * 지도 이미지를 제공하는 서비스
+	 * 
+	 * WFS에서 제공하는 feature 정보와 유사하게 간단한 요약 정보는 제공 가능
+	 */
+    var sggWMSLayer = new ol.layer.Tile({
         name: '시군구WMS',
         visible: true,
         zIndex: 1,
@@ -188,9 +236,9 @@ $(document).ready(function () {
         })
     });
 
-    map.addLayer(sigWMSLayer);
+    map.addLayer(sggWMSLayer);
 
-    var emdSource2 = new ol.source.Vector({
+    var korSoruce = new ol.source.Vector({
         // bbox strategy
         strategy: ol.loadingstrategy.bbox,
         loader: function (extent, resolution, projection) {
@@ -227,7 +275,7 @@ $(document).ready(function () {
         minResolution: 0,
         maxResolution: Infinity,
         group: "지적 기반",
-        source: emdSource2,
+        source: korSoruce,
         style: function (feature, resolution) {
             var txt = feature.get('kais_korea_as');
             return new ol.style.Style({
