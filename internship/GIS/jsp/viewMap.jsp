@@ -2,6 +2,153 @@
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
+<head>
+<!-- 해당 jsp파일을 불러주는 @Controller 기준으로 경로 설정하기 -->
+<script type="text/javascript" src="../js/lib/jquery-3.2.0.min.js"></script>
+<script type="text/javascript" src="../js/lib/proj4js-2.3.15/proj4.js"></script>
+<!-- 오픈레이어스 6 -->
+<link rel="stylesheet" type="text/css" href="../js/lib/ol-v6.4.3/ol.css">
+<script type="text/javascript" src="../js/lib/ol-v6.4.3/ol.js"></script>
+
+<script type="text/javascript" src="../js/lib/proj4/proj4.js"></script>
+
+<script src="../js/map/action/AddLayerStyle.js"></script>
+
+<script src="../js/map/layer/DaumMap.js"></script>
+<script src="../js/map/layer/wms/SggLayer.js"></script>
+<script src="../js/map/layer/wfs/EmdLayer.js"></script>
+<script src="../js/map/layer/wfs/KoreaLayer.js"></script>
+<script src="../js/map/layer/wfs/CctvLayer.js"></script>
+<script src="../js/map/layer/wfs/RiverLayer.js"></script>
+
+
+
+<!-- <script src="../js/map/action/onOffLayer.js"></script> -->
+
+<script>
+	ol.proj.proj4.register(proj4);
+
+	var console = window.console || {
+		log : function() {
+		}
+	};
+	/*
+	 * centroid 함수로 center 구하기
+	 *
+	 * BUT!
+	 * MultiPolygon의 경우, 빈 공간이 center가 될 수도 있음.
+	 */
+	//춘천
+	var center = [ 263846.4536899561, 586688.9485874075 ];
+	/* 좌표계 5186   proj4.defs('EPSG:5186', '+proj=tmerc +lat_0=38 +lon_0=127 
+	 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs'); */
+	var targetCRS = 5186;
+	var map = null;
+	
+	$(document).ready(
+			function() {
+
+				
+				createDaumMap();
+				createEmdLayer();
+				createSggLayer();
+				createKoreaLayer();
+				createCctvLayer();
+				createRiverLayer(); 
+				
+				
+
+			
+
+				/* const layerButtonMap = { // id랑 실제 맵 객체 레이어 연관성
+					"koreaLayer" : koreaWFSLayer,
+					"chuncheonLayer" : emdWFSLayer,
+					"cctvLayer" : cctvWFSLayer,
+					"riverLayer" : riverLayer
+				}; */
+
+				/* function onOffLayer(layerName) {
+					const layerObject = layerButtonMap[layerName]; // id를 바탕으로 실제 맵 객체 가져옴
+					if (layerObject) {
+						const visibility = layerObject.getVisible();
+						layerObject.setVisible(!visibility);
+						alert(layerName + " setVisible 실행");
+					} else {
+						console.error("해당 ID에 대한 레이어가 없ㅇ,ㅁ");
+					}
+				}
+				*/
+				
+ 
+				$("#koreaLayer, #chuncheonLayer, #cctvLayer, #riverLayer").on(
+						"click", function() {
+							const layerName = $(this).attr("id"); // 클릭한 버튼의 id 가져오기
+							//onOffLayer(layerName);
+						});
+
+			});
+</script>
+
+<style>
+#map {
+    width: 100%;
+    height: 100vh;  
+    position: relative; 
+    margin: 0;
+    padding: 0;
+}
+
+#toggle {
+    opacity: 0.5;  /* 투명도 */
+    width: 100px;
+    position: absolute;
+    top: 10px;  
+    left: 10px;  
+    background-color: rgba(255,255,255,0);  /* 투명 */
+    border-radius: 5px; 
+    z-index: 1000; 
+}
+
+#toggle ul {
+	padding: 0;
+	margin: 0;
+}
+
+#toggle li {
+	font-size: 12px;
+	margin-bottom: 5px;
+	padding: 5px; 
+}
+</style>
+
+
+<meta charset="UTF-8">
+<base href="http://localhost:8080/egov40/">
+<title>Map</title>
+</head>
+<body>
+	<div id="map">
+		<div id="toggle">
+			<button type="button" id="koreaLayer">한반도</button>
+			<button type="button" id="chuncheonLayer">춘천시</button>
+			<button type="button" id="cctvLayer">CCTV</button>
+			<button type="button" id="riverLayer">River</button>
+		</div>
+	</div>
+</body>
+</html>
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+/*
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
 <head> 
 <!-- 해당 jsp파일을 불러주는 @Controller 기준으로 경로 설정하기 -->
 <script type="text/javascript" src="../js/jquery-3.2.0.min.js"></script>
@@ -469,3 +616,5 @@ $(document).ready(function () {
 	</div>
 </body>
 </html>
+
+*/
