@@ -67,5 +67,6 @@ function createEmdLayer(){
         // 각 feature마다 style 지정
         style: getStyleForLayer('emd_kor_nm') // // getStyleForLayer("emdLayer")
     });
+	
     map.addLayer(emdWFSLayer);
 }
