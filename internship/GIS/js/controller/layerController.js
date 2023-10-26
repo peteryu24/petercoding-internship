@@ -20,72 +20,70 @@
  */
 var layerController = {
 
-	onOffLayer : function(layerName) {
-		const layer = mapLayerCreator[layerName];
-		
-		// whiteList
-		if (!layer) {
-			console.error("레이어가 없습니다!");
-		}
-		const onOff = layer.getVisible();
-		layer.setVisible(!onOff);
+    onOffLayer: function(layerName) {
+        const layer = mapLayerCreator[layerName];
+        
+        // whiteList
+        if (!layer) {
+            console.error("레이어가 없습니다!");
+            return;
+        }
+        const onOff = layer.getVisible();
+        layer.setVisible(!onOff);
+    },
 
-	},
+    getStyleFromDB: function(attributeName, callback) {
+        $.ajax({
+            url: 'map/getLayerStyle.do',
+            method: 'GET',
+            data: {
+                attributeName: attributeName
+            },
+            dataType: 'json',
+            success: function(response) {
+                callback(null, response);
+            },
+            error: function(error) {
+                callback(error);
+            }
+        });
+    },
 
-	getStyleFromDB : function(attributeName) {
-		return new Promise((resolve, reject) => {
-			$.ajax({
-				url : 'map/getLayerStyle.do',
-				method : 'GET',
-				data : {
-					attributeName : attributeName
-				},
-				 dataType : 'json'
-	        })
-	        .done(function(response) {
-	            resolve(response);
-	        })
-	        .fail(function(error) {
-	            reject(error);
-	        });
-	    });
-	},
+    addStyle: function(attributeName) {
+        layerController.getStyleFromDB(attributeName, function(error, response) {
+            if (error) {
+                console.error("Error:", error);
+                return;
+            }
 
-	addStyle : function(attributeName) {
-		layerController.getStyleFromDB(attributeName)
-		// promise 가 succes일 때
-		.then(response => {      
-			let styleData = response;
-			
-			console.log("styleData" , styleData)
-			console.log("strokeColor ", styleData.strokeColor)
-			
-			return function(feature, resolution) {
-				let txt = feature.get(attributeName);
-				return new ol.style.Style({
-					stroke : new ol.style.Stroke({
-						color : styleData.strokeColor,
-						width : styleData.strokeWidth
-					}),
-					fill : new ol.style.Fill({
-						color : styleData.fillColor
-					}),
-					text : new ol.style.Text({
-						font : styleData.font,
-						text : txt,
-						fill : new ol.style.Fill({
-							color : styleData.textcolor
-						}),
-						stroke : new ol.style.Stroke({
-							color : styleData.textStrokeColor,
-							width : styleData.textStrokeWidth,
-						})
-					})
-				});
-			};
-	    })
-	    .catch(error => {
-	    	console.error("Error:", error);
-	    });
-	}
+            let styleData = response;
+            
+            console.log("styleData", styleData);
+            console.log("strokeColor", styleData.strokeColor);
+
+            return function(feature, resolution) {
+                let txt = feature.get(attributeName);
+                return new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: styleData.strokeColor,
+                        width: styleData.strokeWidth
+                    }),
+                    fill: new ol.style.Fill({
+                        color: styleData.fillColor
+                    }),
+                    text: new ol.style.Text({
+                        font: styleData.font,
+                        text: txt,
+                        fill: new ol.style.Fill({
+                            color: styleData.textcolor
+                        }),
+                        stroke: new ol.style.Stroke({
+                            color: styleData.textStrokeColor,
+                            width: styleData.textStrokeWidth,
+                        })
+                    })
+                });
+            };
+        });
+    }
 }
