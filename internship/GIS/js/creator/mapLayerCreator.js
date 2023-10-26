@@ -216,6 +216,7 @@ var mapLayerCreator = {
 				// _annox, _annoy는 실제 좌표가 아님
 
 				// 선택된 feature의 지오메트리 객체의 좌표
+				// ol.Feature 안에서만
 				let clickedCoordinates = selectedFeature.getGeometry()
 						.getCoordinates();
 				$.ajax({
@@ -236,11 +237,10 @@ var mapLayerCreator = {
 					}
 				});
 
-			} /*else {
-				// 다른 거 클릭시 숨김
-				// null, undefined, 경도 위도의 좌표 배열[x, y]
-				// popUpLayOut.setPosition(null);
-			}*/
+			} /*
+				 * else { // 다른 거 클릭시 숨김 // null, undefined, 경도 위도의 좌표 배열[x, y] //
+				 * popUpLayOut.setPosition(null); }
+				 */
 		});
 
 		this.daumMap.addLayer(this.cctvLayer);
