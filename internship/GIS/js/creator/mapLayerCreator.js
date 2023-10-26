@@ -35,7 +35,7 @@ var mapLayerCreator = {
 				// 휠 확대/축소 비활성화
 				mouseWheelZoom : false
 			}).extend([ new ol.interaction.DragPan({ // 드래그로 맵 이동 활성화
-				// 기네시 효과 비활성화
+				// 기네시 효과 비활성화 (드래그 후 관성)
 				kinetic : false
 			}), new ol.interaction.MouseWheelZoom({ // 휠 확대/축소 활성화
 				// 숫자가 커질수록 부드러운 움직임(다소 느릴수도 있음) ex) Google Earth
@@ -103,7 +103,7 @@ var mapLayerCreator = {
 	},
 
 	createSggLayer : function() {
-		this.sggLayer = new ol.layer.Tile({
+		this.sggLayer = new ol.layer.Tile({ // wms
 			name : '시군구WMS',
 			visible : true,
 			zIndex : 0,
@@ -126,7 +126,7 @@ var mapLayerCreator = {
 	},
 
 	createEmdLayer : function() {
-		this.emdLayer = new ol.layer.Vector({
+		this.emdLayer = new ol.layer.Vector({ // wfs
 			name : '읍면동WFS',
 			visible : true,
 			// 애니메이션중에는 레이어 업데이트 비활성화
@@ -197,13 +197,14 @@ var mapLayerCreator = {
 		});
 
 		let popUp = document.createElement('div');
-		popUp.className = 'tooltip';
+		// popUp.className = 'tooltip'; 추후 css 적용하기 위해
 		let popUpLayOut = new ol.Overlay({
 			element : popUp,
 			positioning : 'bottom-center',
 			// cctv point 바로 위
 			offset : [ 0, -10 ],
-			stopEvent : false
+			// 맵에는 영향을 주지 않도록
+			stopEvent : true
 		});
 
 		clickedCctv.on('select', function(event) {
@@ -212,22 +213,21 @@ var mapLayerCreator = {
 				let selectedFeature = event.selected[0];
 				// 배열로 담김
 				// map.forEachFeatureAtPixel 로 변경하기
-				// annox, annoy는 실제 좌표가 아님
-				let coordinates = selectedFeature.getGeometry()
+				// _annox, _annoy는 실제 좌표가 아님
+				let clickedCoordinates = selectedFeature.getGeometry() // 선택된 feature의 지오메트리 객체의 좌표
 						.getCoordinates();
 				$.ajax({
 					url : "map/getCctvNameByCoordinates.do",
 					type : "GET",
 					data : {
-						x : coordinates[0],
-						y : coordinates[1]
+						x : clickedCoordinates[0],
+						y : clickedCoordinates[1]
 					},
 					success : function(response) {
 						// 팝업 문구
 						popUp.innerHTML = response;
-						// 팝업 위치를 cctv 위치로
-						popUpLayOut.setPosition(selectedFeature.getGeometry()
-								.getCoordinates());
+						// 팝업 위치를 아까 클릭했던 위치로
+						popUpLayOut.setPosition(clickedCoordinates);
 					},
 					error : function(error) {
 						console.error("Error:", error);
