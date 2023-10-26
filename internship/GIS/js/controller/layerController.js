@@ -41,6 +41,7 @@ var layerController = {
             },
             dataType: 'json',
             success: function(response) {
+            	// 콜백 함수 호출
                 callback(null, response);
             },
             error: function(error) {
@@ -51,6 +52,7 @@ var layerController = {
 
     addStyle: function(attributeName) {
         layerController.getStyleFromDB(attributeName, function(error, response) {
+        	
             if (error) {
                 console.error("Error:", error);
                 return;
@@ -60,7 +62,7 @@ var layerController = {
             
             console.log("styleData", styleData);
             console.log("strokeColor", styleData.strokeColor);
-
+            
             return function(feature, resolution) {
                 let txt = feature.get(attributeName);
                 return new ol.style.Style({
