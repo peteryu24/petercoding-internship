@@ -146,8 +146,8 @@ var mapLayerCreator = {
 			group : "지적 기반",
 			source : mapSourceCreator.emdSource,
 			// 각 feature마다 style 지정
-			style : layerController.getStyleForLayer('emd_kor_nm')
-		// getStyleForLayer("emdLayer")
+			style : layerController.addStyle('emd_kor_nm')
+		// addStyle("emdLayer")
 		});
 
 		this.daumMap.addLayer(this.emdLayer);
@@ -166,8 +166,8 @@ var mapLayerCreator = {
 			maxResolution : Infinity,
 			group : "지적 기반",
 			source : mapSourceCreator.koreaSource,
-			style : layerController.getStyleForLayer('kais_korea_as')
-		// getStyleForLayer("koreaLayer")
+			style : layerController.addStyle('kais_korea_as')
+		// addStyle("koreaLayer")
 		});
 		this.daumMap.addLayer(this.koreaLayer);
 
@@ -186,11 +186,61 @@ var mapLayerCreator = {
 			maxResolution : Infinity,
 			group : "지적 기반",
 			source : mapSourceCreator.cctvSource
-		// style : getStyleForLayer('asset_cctv')
+		// style : addStyle('asset_cctv')
+		});
+
+		let clickedCctv = new ol.interaction.Select({
+			// 이벤트를 감지할 레이어 배열로 전달
+			layers : [ this.cctvLayer ],
+			// 조건: 클릭시
+			condition : ol.events.condition.click
+		});
+
+		let popUp = document.createElement('div');
+		popUp.className = 'tooltip';
+		let popUpLayOut = new ol.Overlay({
+			element : popUp,
+			positioning : 'bottom-center',
+			// cctv point 바로 위
+			offset : [ 0, -10 ],
+			stopEvent : false
+		});
+
+		clickedCctv.on('select', function(event) {
+			// 클릭된 피처가 있는 경우
+			if (event.selected.length > 0) {
+				let selectedFeature = event.selected[0];
+
+				let coordinates = selectedFeature.getGeometry()
+						.getCoordinates();
+				$.ajax({
+					url : "map/getCctvNameByCoordinates.do",
+					type : "GET",
+					data : {
+						x : coordinates[0],
+						y : coordinates[1]
+					},
+					success : function(response) {
+						// 팝업 문구
+						popUp.innerHTML = response;
+						// 팝업 위치를 cctv 위치로
+						popUpLayOut.setPosition(selectedFeature.getGeometry()
+								.getCoordinates());
+					},
+					error : function(error) {
+						console.error("Error:", error);
+					}
+				});
+
+			} else {
+				// 툴팁 숨김
+				popUpLayOut.setPosition(undefined);
+			}
 		});
 
 		this.daumMap.addLayer(this.cctvLayer);
+
+		this.daumMap.addOverlay(popUpLayOut);
+		this.daumMap.addInteraction(clickedCctv);
 	}
 }
-
-
