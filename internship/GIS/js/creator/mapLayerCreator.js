@@ -210,7 +210,9 @@ var mapLayerCreator = {
 			// 클릭된 피처가 있는 경우
 			if (event.selected.length > 0) {
 				let selectedFeature = event.selected[0];
-
+				// 배열로 담김
+				// map.forEachFeatureAtPixel 로 변경하기
+				// annox, annoy는 실제 좌표가 아님
 				let coordinates = selectedFeature.getGeometry()
 						.getCoordinates();
 				$.ajax({
