@@ -238,10 +238,15 @@ var mapLayerCreator = {
 					}
 				});
 
-			} /*
-				 * else { // 다른 거 클릭시 숨김 // null, undefined, 경도 위도의 좌표 배열[x, y] //
-				 * popUpLayOut.setPosition(null); }
-				 */
+			}
+
+			// else => event.deselected
+			// 다른 거 클릭시 숨김 null, undefined, 경도 위도의 좌표 배열[x, y]
+
+			/*
+			 * else { popUpLayOut.setPosition(null); }
+			 */
+
 		});
 
 		this.daumMap.addLayer(this.cctvLayer);
