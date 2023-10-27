@@ -226,17 +226,20 @@ var mapLayerCreator = {
 			// 조건: 클릭시
 			condition : ol.events.condition.click
 		});
+				
+		this.daumMap.addInteraction(clickedCctv);
 
-		let cctvPopup = document.createElement('div');
 		// popUp.className = 'tooltip'; 추후 css 적용하기 위해
-		let popUpLayOut = new ol.Overlay({
-			element : cctvPopup,
+		let cctvPopup = new ol.Overlay({
+			element : document.createElement('div'),
 			positioning : 'bottom-center',
 			// cctv point 바로 위
 			offset : [ 0, -10 ],
 			// 맵에는 영향을 주지 않도록
 			stopEvent : true
 		});
+		
+		this.daumMap.addOverlay(cctvPopup);
 
 		clickedCctv.on('select', function(event) {
 			// 클릭된 피처가 있는 경우
@@ -262,22 +265,20 @@ var mapLayerCreator = {
 				let cctvName = selectedFeature.get("cctv_nm");
 				let clickedCoordinates = event.mapBrowserEvent.coordinate;
 
-				cctvPopup.innerHTML = cctvName;
-				popUpLayOut.setPosition(clickedCoordinates);
+				cctvPopup.getElement().innerHTML = cctvName;
+				cctvPopup.setPosition(clickedCoordinates);
 			}
 
 			// else => event.deselected
 			// 다른 거 클릭시 숨김 null, undefined, 경도 위도의 좌표 배열[x, y]
 
 			else {
-				popUpLayOut.setPosition(null);
+				cctvPopup.setPosition(null);
 			}
 
 		});
 
 		this.daumMap.addLayer(this.cctvLayer);
 
-		this.daumMap.addOverlay(popUpLayOut);
-		this.daumMap.addInteraction(clickedCctv);
 	}
 }
