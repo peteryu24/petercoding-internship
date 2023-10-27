@@ -160,14 +160,14 @@ var mapLayerCreator = {
 
 		this.daumMap.addInteraction(clickedEmd);
 
-		let emdPopup = new ol.Overlay({
+		let emdPopUp = new ol.Overlay({
 			element : document.createElement('div'),
 			positioning : 'bottom-center',
 			offset : [ 0, 0 ],
 			stopEvent : true
 		});
 
-		this.daumMap.addOverlay(emdPopup);
+		this.daumMap.addOverlay(emdPopUp);
 
 		clickedEmd.on('select', function(event) {
 			if (event.selected.length > 0) {
@@ -178,10 +178,10 @@ var mapLayerCreator = {
 				let emdCentroid = ol.extent.getCenter(selectedFeature.getGeometry().getExtent());
 				//let clickedCoordinates = event.mapBrowserEvent.coordinate;
 
-				emdPopup.getElement().innerHTML = emdName;
-				emdPopup.setPosition(emdCentroid);
+				emdPopUp.getElement().innerHTML = emdName;
+				emdPopUp.setPosition(emdCentroid);
 			} else {
-				emdPopup.setPosition(undefined);
+				emdPopUp.setPosition(undefined);
 			}
 		});
 	},
@@ -232,7 +232,7 @@ var mapLayerCreator = {
 		this.daumMap.addInteraction(clickedCctv);
 
 		// popUp.className = 'tooltip'; 추후 css 적용하기 위해
-		let cctvPopup = new ol.Overlay({
+		let cctvPopUp = new ol.Overlay({
 			element : document.createElement('div'),
 			positioning : 'bottom-center',
 			// cctv point 바로 위
@@ -241,7 +241,7 @@ var mapLayerCreator = {
 			stopEvent : true
 		});
 		
-		this.daumMap.addOverlay(cctvPopup);
+		this.daumMap.addOverlay(cctvPopUp);
 
 		clickedCctv.on('select', function(event) {
 			// 클릭된 피처가 있는 경우
@@ -258,7 +258,7 @@ var mapLayerCreator = {
 				 * .getCoordinates(); $.ajax({ url :
 				 * "map/getCctvNameByCoordinates.do", type : "GET", data : { x :
 				 * clickedCoordinates[0], y : clickedCoordinates[1] }, success :
-				 * function(response) { // 팝업 문구 cctvPopup.innerHTML = response; //
+				 * function(response) { // 팝업 문구 cctvPopUp.innerHTML = response; //
 				 * 팝업 위치를 아까 클릭했던 위치로
 				 * popUpLayOut.setPosition(clickedCoordinates); }, error :
 				 * function(error) { console.error("Error:", error); } }); }
@@ -267,15 +267,15 @@ var mapLayerCreator = {
 				let cctvName = selectedFeature.get("cctv_nm");
 				let clickedCoordinates = event.mapBrowserEvent.coordinate;
 
-				cctvPopup.getElement().innerHTML = cctvName;
-				cctvPopup.setPosition(clickedCoordinates);
+				cctvPopUp.getElement().innerHTML = cctvName;
+				cctvPopUp.setPosition(clickedCoordinates);
 			}
 
 			// else => event.deselected
 			// 다른 거 클릭시 숨김 null, undefined, 경도 위도의 좌표 배열[x, y]
 
 			else {
-				cctvPopup.setPosition(null);
+				cctvPopUp.setPosition(null);
 			}
 
 		});
