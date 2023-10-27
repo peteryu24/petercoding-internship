@@ -174,10 +174,12 @@ var mapLayerCreator = {
 				let selectedFeature = event.selected[0];
 
 				let emdName = selectedFeature.get('emd_kor_nm');
-				let clickedCoordinates = event.mapBrowserEvent.coordinate;
+				// centroid 함수
+				let emdCentroid = ol.extent.getCenter(selectedFeature.getGeometry().getExtent());
+				//let clickedCoordinates = event.mapBrowserEvent.coordinate;
 
 				emdPopup.getElement().innerHTML = emdName;
-				emdPopup.setPosition(clickedCoordinates);
+				emdPopup.setPosition(emdCentroid);
 			} else {
 				emdPopup.setPosition(undefined);
 			}
