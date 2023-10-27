@@ -152,6 +152,36 @@ var mapLayerCreator = {
 		});
 
 		this.daumMap.addLayer(this.emdLayer);
+
+		let clickedEmd = new ol.interaction.Select({
+			layers : [ this.emdLayer ],
+			condition : ol.events.condition.click
+		});
+
+		this.daumMap.addInteraction(clickedEmd);
+
+		let emdPopup = new ol.Overlay({
+			element : document.createElement('div'),
+			positioning : 'bottom-center',
+			offset : [ 0, 0 ],
+			stopEvent : true
+		});
+
+		this.daumMap.addOverlay(emdPopup);
+
+		clickedEmd.on('select', function(event) {
+			if (event.selected.length > 0) {
+				let selectedFeature = event.selected[0];
+
+				let emdName = selectedFeature.get('emd_kor_nm');
+				let clickedCoordinates = event.mapBrowserEvent.coordinate;
+
+				emdPopup.getElement().innerHTML = emdName;
+				emdPopup.setPosition(clickedCoordinates);
+			} else {
+				emdPopup.setPosition(undefined);
+			}
+		});
 	},
 
 	createKoreaLayer : function() {
@@ -197,10 +227,10 @@ var mapLayerCreator = {
 			condition : ol.events.condition.click
 		});
 
-		let popUp = document.createElement('div');
+		let cctvPopup = document.createElement('div');
 		// popUp.className = 'tooltip'; 추후 css 적용하기 위해
 		let popUpLayOut = new ol.Overlay({
-			element : popUp,
+			element : cctvPopup,
 			positioning : 'bottom-center',
 			// cctv point 바로 위
 			offset : [ 0, -10 ],
@@ -218,34 +248,30 @@ var mapLayerCreator = {
 
 				// 선택된 feature의 지오메트리 객체의 좌표
 				// ol.Feature 안에서만
-				let clickedCoordinates = selectedFeature.getGeometry()
-						.getCoordinates();
-				$.ajax({
-					url : "map/getCctvNameByCoordinates.do",
-					type : "GET",
-					data : {
-						x : clickedCoordinates[0],
-						y : clickedCoordinates[1]
-					},
-					success : function(response) {
-						// 팝업 문구
-						popUp.innerHTML = response;
-						// 팝업 위치를 아까 클릭했던 위치로
-						popUpLayOut.setPosition(clickedCoordinates);
-					},
-					error : function(error) {
-						console.error("Error:", error);
-					}
-				});
+				/*
+				 * let clickedCoordinates = selectedFeature.getGeometry()
+				 * .getCoordinates(); $.ajax({ url :
+				 * "map/getCctvNameByCoordinates.do", type : "GET", data : { x :
+				 * clickedCoordinates[0], y : clickedCoordinates[1] }, success :
+				 * function(response) { // 팝업 문구 cctvPopup.innerHTML = response; //
+				 * 팝업 위치를 아까 클릭했던 위치로
+				 * popUpLayOut.setPosition(clickedCoordinates); }, error :
+				 * function(error) { console.error("Error:", error); } }); }
+				 */
 
+				let cctvName = selectedFeature.get("cctv_nm");
+				let clickedCoordinates = event.mapBrowserEvent.coordinate;
+
+				cctvPopup.innerHTML = cctvName;
+				popUpLayOut.setPosition(clickedCoordinates);
 			}
 
 			// else => event.deselected
 			// 다른 거 클릭시 숨김 null, undefined, 경도 위도의 좌표 배열[x, y]
 
-			/*
-			 * else { popUpLayOut.setPosition(null); }
-			 */
+			else {
+				popUpLayOut.setPosition(null);
+			}
 
 		});
 
