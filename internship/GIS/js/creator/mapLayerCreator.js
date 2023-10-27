@@ -1,7 +1,7 @@
 var mapLayerCreator = {
-		
-	daumMap: null,
 	
+	baseMap: {daumMap: null},
+
 	layers: {
         sggLayer: null,
         emdLayer: null,
@@ -29,7 +29,7 @@ var mapLayerCreator = {
 
 	createDaumMap : function() {
 		// OpenLayer 맵 객체 할당
-		this.daumMap = new ol.Map({
+		this.baseMap.daumMap = new ol.Map({
 			// ol의 기본 컨트롤러 사용
 			controls : ol.control.defaults().extend([]),
 			/*
@@ -114,7 +114,7 @@ var mapLayerCreator = {
 			}),
 		});
 
-		this.daumMap.addLayer(daumMapLayer);
+		this.baseMap.daumMap.addLayer(daumMapLayer);
 	},
 
 	createSggLayer : function() {
@@ -137,7 +137,7 @@ var mapLayerCreator = {
 			})
 		});
 
-		this.daumMap.addLayer(this.layers.sggLayer);
+		this.baseMap.daumMap.addLayer(this.layers.sggLayer);
 	},
 
 	createEmdLayer : function() {
@@ -165,14 +165,14 @@ var mapLayerCreator = {
 		// addStyle("emdLayer")
 		});
 
-		this.daumMap.addLayer(this.layers.emdLayer);
+		this.baseMap.daumMap.addLayer(this.layers.emdLayer);
 
 		let clickedEmd = new ol.interaction.Select({
 			layers : [ this.layers.emdLayer ],
 			condition : ol.events.condition.click
 		});
 
-		this.daumMap.addInteraction(clickedEmd);
+		this.baseMap.daumMap.addInteraction(clickedEmd);
 
 		this.popUps.emdPopUp = new ol.Overlay({
 			element : document.createElement('div'),
@@ -181,7 +181,7 @@ var mapLayerCreator = {
 			stopEvent : true
 		});
 
-		this.daumMap.addOverlay(this.popUps.emdPopUp);
+		this.baseMap.daumMap.addOverlay(this.popUps.emdPopUp);
 
 		clickedEmd.on('select', (event) => {
 			if (event.selected.length > 0) {
@@ -217,7 +217,7 @@ var mapLayerCreator = {
 			style : layerController.addStyle('kais_korea_as')
 		// addStyle("koreaLayer")
 		});
-		this.daumMap.addLayer(this.layers.koreaLayer);
+		this.baseMap.daumMap.addLayer(this.layers.koreaLayer);
 
 	},
 
@@ -237,7 +237,7 @@ var mapLayerCreator = {
 		// style : addStyle('asset_cctv')
 		});
 		
-		this.daumMap.addLayer(this.layers.cctvLayer);
+		this.baseMap.daumMap.addLayer(this.layers.cctvLayer);
 		
 		let clickedCctv = new ol.interaction.Select({
 			// 이벤트를 감지할 레이어 배열로 전달
@@ -246,7 +246,7 @@ var mapLayerCreator = {
 			condition : ol.events.condition.click
 		});
 
-		this.daumMap.addInteraction(clickedCctv);
+		this.baseMap.daumMap.addInteraction(clickedCctv);
 
 		// popUp.className = 'tooltip'; 추후 css 적용하기 위해
 		this.popUps.cctvPopUp = new ol.Overlay({
@@ -258,7 +258,7 @@ var mapLayerCreator = {
 			stopEvent : true
 		});
 
-		this.daumMap.addOverlay(this.popUps.cctvPopUp);
+		this.baseMap.daumMap.addOverlay(this.popUps.cctvPopUp);
 
 		clickedCctv.on('select', (event) => {
 			// 클릭된 피처가 있는 경우
