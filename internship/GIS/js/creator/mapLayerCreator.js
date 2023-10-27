@@ -1,9 +1,18 @@
 var mapLayerCreator = {
-	sggLayer : null,
-	emdLayer : null,
-	koreaLayer : null,
-	cctvLayer : null,
-	daumMap : null,
+		
+	daumMap: null,
+	
+	layers: {
+        sggLayer: null,
+        emdLayer: null,
+        koreaLayer: null,
+        cctvLayer: null,
+    },
+   
+    popUps: {
+        emdPopUp: null,
+        cctvPopUp: null,
+    },
 
 	createLayer : function() {
 		// 여기서 this는 mapLayerCreator
@@ -11,6 +20,11 @@ var mapLayerCreator = {
 		this.createEmdLayer();
 		this.createKoreaLayer();
 		this.createCctvLayer();
+
+		/*
+		 * 그냥 this.createSggLayer() .createEmdLayer() .createKoreaLayer()
+		 * .createCctvLayer(); 이렇게 해도 됌
+		 */
 	},
 
 	createDaumMap : function() {
@@ -104,7 +118,7 @@ var mapLayerCreator = {
 	},
 
 	createSggLayer : function() {
-		this.sggLayer = new ol.layer.Tile({ // wms
+		this.layers.sggLayer = new ol.layer.Tile({ // wms
 			name : '시군구WMS',
 			visible : true,
 			zIndex : 0,
@@ -123,11 +137,11 @@ var mapLayerCreator = {
 			})
 		});
 
-		this.daumMap.addLayer(this.sggLayer);
+		this.daumMap.addLayer(this.layers.sggLayer);
 	},
 
 	createEmdLayer : function() {
-		this.emdLayer = new ol.layer.Vector({ // wfs
+		this.layers.emdLayer = new ol.layer.Vector({ // wfs
 			name : '읍면동WFS',
 			visible : true,
 			// 애니메이션중에는 레이어 업데이트 비활성화
@@ -151,43 +165,44 @@ var mapLayerCreator = {
 		// addStyle("emdLayer")
 		});
 
-		this.daumMap.addLayer(this.emdLayer);
+		this.daumMap.addLayer(this.layers.emdLayer);
 
 		let clickedEmd = new ol.interaction.Select({
-			layers : [ this.emdLayer ],
+			layers : [ this.layers.emdLayer ],
 			condition : ol.events.condition.click
 		});
 
 		this.daumMap.addInteraction(clickedEmd);
 
-		let emdPopUp = new ol.Overlay({
+		this.popUps.emdPopUp = new ol.Overlay({
 			element : document.createElement('div'),
 			positioning : 'bottom-center',
 			offset : [ 0, 0 ],
 			stopEvent : true
 		});
 
-		this.daumMap.addOverlay(emdPopUp);
+		this.daumMap.addOverlay(this.popUps.emdPopUp);
 
-		clickedEmd.on('select', function(event) {
+		clickedEmd.on('select', (event) => {
 			if (event.selected.length > 0) {
 				let selectedFeature = event.selected[0];
 
 				let emdName = selectedFeature.get('emd_kor_nm');
 				// centroid 함수
-				let emdCentroid = ol.extent.getCenter(selectedFeature.getGeometry().getExtent());
-				//let clickedCoordinates = event.mapBrowserEvent.coordinate;
+				let emdCentroid = ol.extent.getCenter(selectedFeature
+						.getGeometry().getExtent());
+				// let clickedCoordinates = event.mapBrowserEvent.coordinate;
 
-				emdPopUp.getElement().innerHTML = emdName;
-				emdPopUp.setPosition(emdCentroid);
+				this.popUps.emdPopUp.getElement().innerHTML = emdName;
+				this.popUps.emdPopUp.setPosition(emdCentroid);
 			} else {
-				emdPopUp.setPosition(undefined);
+				this.popUps.emdPopUp.setPosition(undefined);
 			}
 		});
 	},
 
 	createKoreaLayer : function() {
-		this.koreaLayer = new ol.layer.Vector({
+		this.layers.koreaLayer = new ol.layer.Vector({
 			name : '대한민국',
 			visible : true,
 			updateWhileAnimating : false,
@@ -202,12 +217,12 @@ var mapLayerCreator = {
 			style : layerController.addStyle('kais_korea_as')
 		// addStyle("koreaLayer")
 		});
-		this.daumMap.addLayer(this.koreaLayer);
+		this.daumMap.addLayer(this.layers.koreaLayer);
 
 	},
 
 	createCctvLayer : function() {
-		this.cctvLayer = new ol.layer.Vector({
+		this.layers.cctvLayer = new ol.layer.Vector({
 			name : 'CCTV',
 			visible : true,
 			updateWhileAnimating : false,
@@ -221,18 +236,20 @@ var mapLayerCreator = {
 			source : mapSourceCreator.cctvSource
 		// style : addStyle('asset_cctv')
 		});
-
+		
+		this.daumMap.addLayer(this.layers.cctvLayer);
+		
 		let clickedCctv = new ol.interaction.Select({
 			// 이벤트를 감지할 레이어 배열로 전달
-			layers : [ this.cctvLayer ],
+			layers : [ this.layers.cctvLayer ],
 			// 조건: 클릭시
 			condition : ol.events.condition.click
 		});
-				
+
 		this.daumMap.addInteraction(clickedCctv);
 
 		// popUp.className = 'tooltip'; 추후 css 적용하기 위해
-		let cctvPopUp = new ol.Overlay({
+		this.popUps.cctvPopUp = new ol.Overlay({
 			element : document.createElement('div'),
 			positioning : 'bottom-center',
 			// cctv point 바로 위
@@ -240,10 +257,10 @@ var mapLayerCreator = {
 			// 맵에는 영향을 주지 않도록
 			stopEvent : true
 		});
-		
-		this.daumMap.addOverlay(cctvPopUp);
 
-		clickedCctv.on('select', function(event) {
+		this.daumMap.addOverlay(this.popUps.cctvPopUp);
+
+		clickedCctv.on('select', (event) => {
 			// 클릭된 피처가 있는 경우
 			if (event.selected.length > 0) { // 반대는 event.deselected
 				let selectedFeature = event.selected[0];
@@ -267,20 +284,19 @@ var mapLayerCreator = {
 				let cctvName = selectedFeature.get("cctv_nm");
 				let clickedCoordinates = event.mapBrowserEvent.coordinate;
 
-				cctvPopUp.getElement().innerHTML = cctvName;
-				cctvPopUp.setPosition(clickedCoordinates);
+				this.popUps.cctvPopUp.getElement().innerHTML = cctvName;
+				this.popUps.cctvPopUp.setPosition(clickedCoordinates);
 			}
 
 			// else => event.deselected
 			// 다른 거 클릭시 숨김 null, undefined, 경도 위도의 좌표 배열[x, y]
 
 			else {
-				cctvPopUp.setPosition(null);
+				this.popUps.cctvPopUp.setPosition(null);
 			}
 
 		});
 
-		this.daumMap.addLayer(this.cctvLayer);
-
 	}
+
 }
