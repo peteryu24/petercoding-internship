@@ -6,7 +6,8 @@ var mapLayerCreator = {
 	daumMap : null,
 
 	createLayer : function() {
-		this.createSggLayer();
+		// 여기서 this는 mapLayerCreator
+		this.createSggLayer(); // mapLayerCreator 객체 내부에 있는 메소드를 실행하기 위해
 		this.createEmdLayer();
 		this.createKoreaLayer();
 		this.createCctvLayer();
@@ -56,7 +57,7 @@ var mapLayerCreator = {
 			})
 		});
 		// 5181 좌표게를 사용하는 프로젝션 객체 가져옴
-		let _daumProjection = new ol.proj.get('EPSG:5181');
+		let _daumProjection = new ol.proj.get('EPSG:5181'); // 5181??????????
 		// 다음 지도 서비스의 타일 원점
 		let _daumOrigin = [ -30000, -60000 ];
 		// 확대 레벨별 해상도
