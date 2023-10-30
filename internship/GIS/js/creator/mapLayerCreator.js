@@ -128,7 +128,7 @@ var mapLayerCreator = {
             positioning: 'bottom-center',
             // feature 바로 위
             offset: [0, 0],
-            // 맵에는 영향을 주지 않도록
+            // 맵에는 영향을 주지 않도록(클릭 이벤트 맵에 전달 X)
             stopEvent: true
         });
 
@@ -139,13 +139,14 @@ var mapLayerCreator = {
             if (event.selected.length > 0) {
             	// 배열로 담김
                 let selectedFeature = event.selected[0];
-                let label = selectedFeature.get(featureName); // forEachFeatureAtPixel
+                let context = selectedFeature.get(featureName); // forEachFeatureAtPixel
                 let popUpCentroid = ol.extent.getCenter(selectedFeature
 						.getGeometry().getExtent());
                 // let coordinates = event.mapBrowserEvent.coordinate;
-                popUp.getElement().innerHTML = label;
+                popUp.getElement().innerHTML = context;
                 popUp.setPosition(popUpCentroid);
             } else {
+            	// indefined로 설정시 팝업 사라짐
                 popUp.setPosition(undefined);
                 // else => event.deselected
     			// 다른 거 클릭시 숨김 null, undefined, 경도 위도의 좌표 배열[x, y]
