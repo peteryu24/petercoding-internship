@@ -21,8 +21,6 @@ var mapLayerCreator = {
 		this.createCctvLayer();
 	},
 
-	
-
 	createSggLayer : function() {
 		this.layers.sggLayer = new ol.layer.Tile({ // wms
 			name : '시군구WMS',
@@ -142,10 +140,11 @@ var mapLayerCreator = {
             	// 배열로 담김
                 let selectedFeature = event.selected[0];
                 let label = selectedFeature.get(featureName);
-                let coordinates = event.mapBrowserEvent.coordinate;
-
+                let popUpCentroid = ol.extent.getCenter(selectedFeature
+						.getGeometry().getExtent());
+                // let coordinates = event.mapBrowserEvent.coordinate;
                 popUp.getElement().innerHTML = label;
-                popUp.setPosition(coordinates);
+                popUp.setPosition(popUpCentroid);
             } else {
                 popUp.setPosition(undefined);
                 // else => event.deselected
