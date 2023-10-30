@@ -138,13 +138,12 @@ var mapLayerCreator = {
         clickedLayer.on('select', (event) => {
             if (event.selected.length > 0) {
             	// 배열로 담김
-                let selectedFeature = event.selected[0];
+                let selectedFeature = event.selected[0]; // 첫 번째 feature만 참조
                 let context = selectedFeature.get(featureName); // forEachFeatureAtPixel
                 /*
                  * selectedFeature = 클릭하여 선택된 feature 참조
                  * getGeometry() = 해당 feature의 geometry 반환(ex.point, line, polygon)
                  * getExtent() = geometry의 경계 영역 반환([최소 x, 최소 y, 최대 x, 최대 y])
-                 * 
                  * getCenter() = getExtent()로 받은 경계 영역을 토대로 중심점 좌표 얻기
                  */
                 let popUpCentroid = ol.extent.getCenter(selectedFeature
