@@ -149,7 +149,8 @@ var mapLayerCreator = {
                 let popUpCentroid = ol.extent.getCenter(selectedFeature
 						.getGeometry().getExtent());
                 // let coordinates = event.mapBrowserEvent.coordinate;
-                popUp.getElement().innerHTML = context;
+                // innerHTML 대신 XSS(Cross Site Scripting)의 공격 위험이 없는 textContent 사용
+                popUp.getElement().textContent = context;
                 popUp.setPosition(popUpCentroid);
             } else {
             	// undefined로 설정시 팝업 사라짐
