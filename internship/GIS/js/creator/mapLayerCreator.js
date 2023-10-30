@@ -12,7 +12,7 @@ var mapLayerCreator = {
         cctvPopUp: null,
     },
 
-	createLayer : function() {
+	createLayer: function() {
 		// 여기서 this는 mapLayerCreator
 		// this = mapLayerCreator 객체 내부에 있는 메소드를 실행하기 위해
 		this.createSggLayer();
@@ -21,7 +21,7 @@ var mapLayerCreator = {
 		this.createCctvLayer();
 	},
 
-	createSggLayer : function() {
+	createSggLayer: function() {
 		this.layers.sggLayer = new ol.layer.Tile({ // wms
 			name : '시군구WMS',
 			visible : true,
@@ -44,7 +44,7 @@ var mapLayerCreator = {
 		baseMapCreator.baseMap.daumMap.addLayer(this.layers.sggLayer);
 	},
 
-	createEmdLayer : function() {
+	createEmdLayer: function() {
 		this.layers.emdLayer = new ol.layer.Vector({ // wfs
 			name : '읍면동WFS',
 			visible : true,
@@ -73,7 +73,7 @@ var mapLayerCreator = {
 		this.popUps.emdPopUp = this.createPopup(this.layers.emdLayer, 'emd_kor_nm');
 	},
 
-	createKoreaLayer : function() {
+	createKoreaLayer: function() {
 		this.layers.koreaLayer = new ol.layer.Vector({
 			name : '대한민국',
 			visible : true,
@@ -92,7 +92,7 @@ var mapLayerCreator = {
 		baseMapCreator.baseMap.daumMap.addLayer(this.layers.koreaLayer);
 	},
 
-	createCctvLayer : function() {
+	createCctvLayer: function() {
 		this.layers.cctvLayer = new ol.layer.Vector({
 			name : 'CCTV',
 			visible : true,
@@ -139,7 +139,7 @@ var mapLayerCreator = {
             if (event.selected.length > 0) {
             	// 배열로 담김
                 let selectedFeature = event.selected[0];
-                let label = selectedFeature.get(featureName);
+                let label = selectedFeature.get(featureName); // forEachFeatureAtPixel
                 let popUpCentroid = ol.extent.getCenter(selectedFeature
 						.getGeometry().getExtent());
                 // let coordinates = event.mapBrowserEvent.coordinate;
