@@ -19,7 +19,6 @@ var mapLayerCreator = {
 		this.createEmdLayer();
 		this.createKoreaLayer();
 		this.createCctvLayer();
-
 	},
 
 	
