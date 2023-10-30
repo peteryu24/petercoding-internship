@@ -20,8 +20,8 @@
  */
 var layerController = {
 
-	onOffLayer : function(layerName) {
-		
+	onOffLayer: function(layerName) {
+
 		// 레이어 끄는 로직
 		const layer = mapLayerCreator.layers[layerName];
 
@@ -32,7 +32,7 @@ var layerController = {
 
 		const onOff = layer.getVisible();
 		layer.setVisible(!onOff);
-		
+
 		// 팝업 끄는 로직
 		const popUpsMapping = {
 			'emdLayer' : 'emdPopUp',
@@ -44,7 +44,7 @@ var layerController = {
 
 	},
 
-	getStyleFromDB : function(attributeName, callback) {
+	getStyleFromDB: function(attributeName, callback) {
 		$.ajax({
 			url : 'map/getLayerStyle.do',
 			method : 'GET',
@@ -63,7 +63,7 @@ var layerController = {
 		});
 	},
 
-	addStyle : function(attributeName) {
+	addStyle: function(attributeName) {
 		layerController.getStyleFromDB(attributeName,
 				function(error, response) { // attributeName, callback 함수 넘겨줌
 
