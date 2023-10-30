@@ -16,15 +16,12 @@ var mapLayerCreator = {
 
 	createLayer : function() {
 		// 여기서 this는 mapLayerCreator
-		this.createSggLayer(); // mapLayerCreator 객체 내부에 있는 메소드를 실행하기 위해
+		// this = mapLayerCreator 객체 내부에 있는 메소드를 실행하기 위해
+		this.createSggLayer();
 		this.createEmdLayer();
 		this.createKoreaLayer();
 		this.createCctvLayer();
 
-		/*
-		 * 그냥 this.createSggLayer() .createEmdLayer() .createKoreaLayer()
-		 * .createCctvLayer(); 이렇게 해도 됌
-		 */
 	},
 
 	createDaumMap : function() {
@@ -162,43 +159,11 @@ var mapLayerCreator = {
 			source : mapSourceCreator.emdSource,
 			// 각 feature마다 style 지정
 			style : layerController.addStyle('emd_kor_nm')
-		// addStyle("emdLayer")
 		});
 
 		this.baseMap.daumMap.addLayer(this.layers.emdLayer);
-
-		let clickedEmd = new ol.interaction.Select({
-			layers : [ this.layers.emdLayer ],
-			condition : ol.events.condition.click
-		});
-
-		this.baseMap.daumMap.addInteraction(clickedEmd);
-
-		this.popUps.emdPopUp = new ol.Overlay({
-			element : document.createElement('div'),
-			positioning : 'bottom-center',
-			offset : [ 0, 0 ],
-			stopEvent : true
-		});
-
-		this.baseMap.daumMap.addOverlay(this.popUps.emdPopUp);
-
-		clickedEmd.on('select', (event) => {
-			if (event.selected.length > 0) {
-				let selectedFeature = event.selected[0];
-
-				let emdName = selectedFeature.get('emd_kor_nm');
-				// centroid 함수
-				let emdCentroid = ol.extent.getCenter(selectedFeature
-						.getGeometry().getExtent());
-				// let clickedCoordinates = event.mapBrowserEvent.coordinate;
-
-				this.popUps.emdPopUp.getElement().innerHTML = emdName;
-				this.popUps.emdPopUp.setPosition(emdCentroid);
-			} else {
-				this.popUps.emdPopUp.setPosition(undefined);
-			}
-		});
+		// 팝업 생성하면서 popUps.emdPopUp에 담아줌
+		this.popUps.emdPopUp = this.createPopup(this.layers.emdLayer, 'emd_kor_nm');
 	},
 
 	createKoreaLayer : function() {
@@ -215,10 +180,9 @@ var mapLayerCreator = {
 			group : "지적 기반",
 			source : mapSourceCreator.koreaSource,
 			style : layerController.addStyle('kais_korea_as')
-		// addStyle("koreaLayer")
 		});
+		
 		this.baseMap.daumMap.addLayer(this.layers.koreaLayer);
-
 	},
 
 	createCctvLayer : function() {
@@ -234,69 +198,53 @@ var mapLayerCreator = {
 			maxResolution : Infinity,
 			group : "지적 기반",
 			source : mapSourceCreator.cctvSource
-		// style : addStyle('asset_cctv')
 		});
 		
 		this.baseMap.daumMap.addLayer(this.layers.cctvLayer);
 		
-		let clickedCctv = new ol.interaction.Select({
-			// 이벤트를 감지할 레이어 배열로 전달
-			layers : [ this.layers.cctvLayer ],
-			// 조건: 클릭시
-			condition : ol.events.condition.click
-		});
+		this.popUps.cctvPopUp = this.createPopup(this.layers.cctvLayer, 'cctv_nm');		
+	},
+	
+	createPopup: function(layer, featureName) {	
+        let clickedLayer = new ol.interaction.Select({
+        	// 이벤트를 감지할 레이어 배열로 전달
+            layers: [layer],
+            // 조건: 클릭시
+            condition: ol.events.condition.click
+        });
 
-		this.baseMap.daumMap.addInteraction(clickedCctv);
+        this.baseMap.daumMap.addInteraction(clickedLayer);
 
-		// popUp.className = 'tooltip'; 추후 css 적용하기 위해
-		this.popUps.cctvPopUp = new ol.Overlay({
-			element : document.createElement('div'),
-			positioning : 'bottom-center',
-			// cctv point 바로 위
-			offset : [ 0, -10 ],
-			// 맵에는 영향을 주지 않도록
-			stopEvent : true
-		});
+        let popUp = new ol.Overlay({
+        	// popUp.className = 'tooltip'; 추후 css 적용하기 위해
+            element: document.createElement('div'),
+            positioning: 'bottom-center',
+            // feature 바로 위
+            offset: [0, 0],
+            // 맵에는 영향을 주지 않도록
+            stopEvent: true
+        });
 
-		this.baseMap.daumMap.addOverlay(this.popUps.cctvPopUp);
+        this.baseMap.daumMap.addOverlay(popUp);
+        
+        // 클릭된 피처가 있는 경우
+        clickedLayer.on('select', (event) => {
+            if (event.selected.length > 0) {
+            	// 배열로 담김
+                let selectedFeature = event.selected[0];
+                let label = selectedFeature.get(featureName);
+                let coordinates = event.mapBrowserEvent.coordinate;
 
-		clickedCctv.on('select', (event) => {
-			// 클릭된 피처가 있는 경우
-			if (event.selected.length > 0) { // 반대는 event.deselected
-				let selectedFeature = event.selected[0];
-				// 배열로 담김
-				// map.forEachFeatureAtPixel 로 변경하기
-				// _annox, _annoy는 실제 좌표가 아님
-
-				// 선택된 feature의 지오메트리 객체의 좌표
-				// ol.Feature 안에서만
-				/*
-				 * let clickedCoordinates = selectedFeature.getGeometry()
-				 * .getCoordinates(); $.ajax({ url :
-				 * "map/getCctvNameByCoordinates.do", type : "GET", data : { x :
-				 * clickedCoordinates[0], y : clickedCoordinates[1] }, success :
-				 * function(response) { // 팝업 문구 cctvPopUp.innerHTML = response; //
-				 * 팝업 위치를 아까 클릭했던 위치로
-				 * popUpLayOut.setPosition(clickedCoordinates); }, error :
-				 * function(error) { console.error("Error:", error); } }); }
-				 */
-
-				let cctvName = selectedFeature.get("cctv_nm");
-				let clickedCoordinates = event.mapBrowserEvent.coordinate;
-
-				this.popUps.cctvPopUp.getElement().innerHTML = cctvName;
-				this.popUps.cctvPopUp.setPosition(clickedCoordinates);
-			}
-
-			// else => event.deselected
-			// 다른 거 클릭시 숨김 null, undefined, 경도 위도의 좌표 배열[x, y]
-
-			else {
-				this.popUps.cctvPopUp.setPosition(null);
-			}
-
-		});
-
-	}
+                popUp.getElement().innerHTML = label;
+                popUp.setPosition(coordinates);
+            } else {
+                popUp.setPosition(undefined);
+                // else => event.deselected
+    			// 다른 거 클릭시 숨김 null, undefined, 경도 위도의 좌표 배열[x, y]
+            }
+        });
+        // popUps.emdPopUp랑 popUps.cctvPopUp에 할당하기 위해
+        return popUp;
+    }
 
 }
