@@ -152,7 +152,7 @@ var mapLayerCreator = {
                 popUp.getElement().innerHTML = context;
                 popUp.setPosition(popUpCentroid);
             } else {
-            	// indefined로 설정시 팝업 사라짐
+            	// undefined로 설정시 팝업 사라짐
                 popUp.setPosition(undefined);
                 // else => event.deselected
     			// 다른 거 클릭시 숨김 null, undefined, 경도 위도의 좌표 배열[x, y]
