@@ -49,7 +49,7 @@ var layerController = {
 			url: 'map/getLayerStyle.do',
 			method: 'GET',
 			data: {
-				attributeName : attributeName
+				attributeName: attributeName
 			},
 			dataType: 'json',
 			success: function(response) {
