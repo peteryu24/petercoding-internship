@@ -1,10 +1,10 @@
 var baseMapCreator = {
 		
-	baseMap : {
-		daumMap : null
+	baseMap: {
+		daumMap: null
 	},
 
-	createDaumMap : function() {
+	createDaumMap: function() {
 		// OpenLayer 맵 객체 할당
 		this.baseMap.daumMap = new ol.Map({
 			// ol의 기본 컨트롤러 사용
