@@ -35,8 +35,8 @@ var layerController = {
 
 		// 팝업 끄는 로직
 		const popUpsMapping = {
-			'emdLayer' : 'emdPopUp',
-			'cctvLayer' : 'cctvPopUp'
+			'emdLayer': 'emdPopUp',
+			'cctvLayer': 'cctvPopUp'
 		};
 
 		const popUpName = popUpsMapping[layerName];
@@ -46,17 +46,17 @@ var layerController = {
 
 	getStyleFromDB: function(attributeName, callback) {
 		$.ajax({
-			url : 'map/getLayerStyle.do',
-			method : 'GET',
-			data : {
+			url: 'map/getLayerStyle.do',
+			method: 'GET',
+			data: {
 				attributeName : attributeName
 			},
-			dataType : 'json',
-			success : function(response) {
+			dataType: 'json',
+			success: function(response) {
 				// 에러에는 null response에는 response
 				callback(null, response);
 			},
-			error : function(error) {
+			error: function(error) {
 				// error 에 error
 				callback(error);
 			}
