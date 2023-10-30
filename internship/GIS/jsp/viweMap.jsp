@@ -12,8 +12,11 @@
 
 <script type="text/javascript" src="../js/lib/proj4/proj4.js"></script>
 
+<script src="../js/map/creator/baseMapCreator.js"></script>
+
 <script src="../js/map/creator/mapSourceCreator.js"></script>
 <script src="../js/map/creator/mapLayerCreator.js"></script>
+
 <script src="../js/map/controller/layerController.js"></script>
 
 
@@ -39,7 +42,7 @@
 
 	$(document).ready(function() {
 
-		mapLayerCreator.createDaumMap();
+		baseMapCreator.createDaumMap();
 
 		mapSourceCreator.createSource();
 		mapLayerCreator.createLayer();
