@@ -80,22 +80,22 @@ var layerController = {
 					return function(feature, resolution) {
 						let txt = feature.get(attributeName);
 						return new ol.style.Style({
-							stroke : new ol.style.Stroke({
-								color : styleData.strokeColor,
-								width : styleData.strokeWidth
+							stroke: new ol.style.Stroke({
+								color: styleData.strokeColor,
+								width: styleData.strokeWidth
 							}),
-							fill : new ol.style.Fill({
-								color : styleData.fillColor
+							fill: new ol.style.Fill({
+								color: styleData.fillColor
 							}),
-							text : new ol.style.Text({
-								font : styleData.font,
-								text : txt,
-								fill : new ol.style.Fill({
-									color : styleData.textcolor
+							text: new ol.style.Text({
+								font: styleData.font,
+								text: txt,
+								fill: new ol.style.Fill({
+									color: styleData.textcolor
 								}),
-								stroke : new ol.style.Stroke({
-									color : styleData.textStrokeColor,
-									width : styleData.textStrokeWidth,
+								stroke: new ol.style.Stroke({
+									color: styleData.textStrokeColor,
+									width: styleData.textStrokeWidth,
 								})
 							})
 						});
