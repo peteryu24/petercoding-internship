@@ -46,8 +46,9 @@
 
 		mapSourceCreator.createSource();
 		mapLayerCreator.createLayer();
-
-		$("#koreaLayer, #emdLayer, #cctvLayer").on("click", function() {
+		
+		// #toggle 내부의 모든 button 요소를 대상으로 클릭 이벤트
+		$("#toggle > button").on("click", function() {
 			const layerName = $(this).attr("id"); // 클릭한 버튼의 id 가져오기
 			layerController.onOffLayer(layerName);
 		});
