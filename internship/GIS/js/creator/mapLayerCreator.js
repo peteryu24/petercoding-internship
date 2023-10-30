@@ -23,20 +23,20 @@ var mapLayerCreator = {
 
 	createSggLayer: function() {
 		this.layers.sggLayer = new ol.layer.Tile({ // wms
-			name : '시군구WMS',
-			visible : true,
-			zIndex : 0,
-			updateWhileAnimating : false,
-			updateWhileInteracting : false,
-			minResolution : 2,
-			maxResolution : Infinity,
-			source : new ol.source.TileWMS({
-				url : "http://127.0.0.1:8000/xeus/wfs", // wms 요청 url
-				params : {
-					'LAYERS' : 'kais_sig_as',
-					'FORMAT' : 'image/png',
-					'STYLES' : '',
-					'TRANSPARENT' : 'TRUE'
+			name: '시군구WMS',
+			visible: true,
+			zIndex: 0,
+			updateWhileAnimating: false,
+			updateWhileInteracting: false,
+			minResolution: 2,
+			maxResolution: Infinity,
+			source: new ol.source.TileWMS({
+				url: "http://127.0.0.1:8000/xeus/wfs", // wms 요청 url
+				params: {
+					'LAYERS': 'kais_sig_as',
+					'FORMAT': 'image/png',
+					'STYLES': '',
+					'TRANSPARENT': 'TRUE'
 				}
 			})
 		});
@@ -46,26 +46,26 @@ var mapLayerCreator = {
 
 	createEmdLayer: function() {
 		this.layers.emdLayer = new ol.layer.Vector({ // wfs
-			name : '읍면동WFS',
-			visible : true,
+			name: '읍면동WFS',
+			visible: true,
 			// 애니메이션중에는 레이어 업데이트 비활성화
-			updateWhileAnimating : false,
+			updateWhileAnimating: false,
 			// 사용자와 상호작용 중에는 레이어 업데이트 비활성화
-			updateWhileInteracting : false,
-			type : "MULTIPOLYGON",
+			updateWhileInteracting: false,
+			type: "MULTIPOLYGON",
 			// 레이어의 z-index
-			zIndex : 1,
+			zIndex: 1,
 			// 레이어 전체 이름 설정
-			fullName : "",
+			fullName: "",
 			// 레이어가 표시되는 최소 해상도
-			minResolution : 0,
+			minResolution: 0,
 			// 최대 해상도
-			maxResolution : Infinity,
+			maxResolution: Infinity,
 			// 레이어 그룹 이름
-			group : "지적 기반",
-			source : mapSourceCreator.emdSource,
+			group: "지적 기반",
+			source: mapSourceCreator.emdSource,
 			// 각 feature마다 style 지정
-			style : layerController.addStyle('emd_kor_nm')
+			style: layerController.addStyle('emd_kor_nm')
 		});
 
 		baseMapCreator.baseMap.daumMap.addLayer(this.layers.emdLayer);
@@ -75,18 +75,18 @@ var mapLayerCreator = {
 
 	createKoreaLayer: function() {
 		this.layers.koreaLayer = new ol.layer.Vector({
-			name : '대한민국',
-			visible : true,
-			updateWhileAnimating : false,
-			updateWhileInteracting : false,
-			type : "MULTIPOLYGON",
-			zIndex : 2,
-			fullName : "",
-			minResolution : 0,
-			maxResolution : Infinity,
-			group : "지적 기반",
-			source : mapSourceCreator.koreaSource,
-			style : layerController.addStyle('kais_korea_as')
+			name: '대한민국',
+			visible: true,
+			updateWhileAnimating: false,
+			updateWhileInteracting: false,
+			type: "MULTIPOLYGON",
+			zIndex: 2,
+			fullName: "",
+			minResolution: 0,
+			maxResolution: Infinity,
+			group: "지적 기반",
+			source: mapSourceCreator.koreaSource,
+			style: layerController.addStyle('kais_korea_as')
 		});
 		
 		baseMapCreator.baseMap.daumMap.addLayer(this.layers.koreaLayer);
@@ -94,17 +94,17 @@ var mapLayerCreator = {
 
 	createCctvLayer: function() {
 		this.layers.cctvLayer = new ol.layer.Vector({
-			name : 'CCTV',
-			visible : true,
-			updateWhileAnimating : false,
-			updateWhileInteracting : false,
-			type : "POINT",
-			zIndex : 2,
-			fullName : "",
-			minResolution : 0,
-			maxResolution : Infinity,
-			group : "지적 기반",
-			source : mapSourceCreator.cctvSource
+			name: 'CCTV',
+			visible: true,
+			updateWhileAnimating: false,
+			updateWhileInteracting: false,
+			type: "POINT",
+			zIndex: 2,
+			fullName: "",
+			minResolution: 0,
+			maxResolution: Infinity,
+			group: "지적 기반",
+			source: mapSourceCreator.cctvSource
 		});
 		
 		baseMapCreator.baseMap.daumMap.addLayer(this.layers.cctvLayer);
