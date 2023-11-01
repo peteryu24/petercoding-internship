@@ -1,4 +1,8 @@
 [https://lotsofmakemoney.tistory.com/entry/%EA%B5%AC%EA%B8%80%EC%97%90%EC%84%9C-%EB%82%B4-%EB%B8%94%EB%A1%9C%EA%B7%B8-%EA%B8%80%EC%9D%B4-%EB%88%84%EB%9D%BD%EB%90%98%EC%97%88%EB%8B%A4-%EA%B5%AC%EA%B8%80%EC%84%9C%EC%B9%98%EC%BD%98%EC%86%94-%EC%82%AC%EC%9A%A9%EB%B0%A9%EB%B2%95](https://projectb.tistory.com/20)
+<br>
+https://projectb.tistory.com/13
+<br>
+
 
 자바스크립트 this 
 자바스크립트 "==" "==="
