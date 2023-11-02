@@ -6,40 +6,53 @@
         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
                 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
                 http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+	
+	<!-- web.xml에서 경로 등록 -->
+	
+    <!--  가장 대표적인 ViewResolver에는 단순 jsp처럼 리소스를 위한 InternalResourceResolver와
+   			빈 이름을 통해 뷰를 찾는 BeanNameResolver   -->
 
 	<!-- @Component annotation이 설정된 클래스들을 메모리 상에 등록 -->
 	<!-- annotation이 정의된 클래스들은 bean으로 등록을 안 해도 인식하고 메모리에 등록 -->
-    <context:component-scan base-package="egovframework">
+	<!-- 특정 패키지 내의 클래스를 스캔하고 annotation을 확인 후 Bean 인스턴스로 생성 -->
+    <context:component-scan base-package="gmx">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
         <!-- scan 대상에서 제외한다는 뜻 -->
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
     </context:component-scan>
 	
 	<!-- HandlerMapping; client의 요청과 매핑되는 controller를 찾아서 Dispatcher-Servlet으로 리턴하는 역할 -->
 	<!-- 매핑된 controller-method를 실행하는 기능 -->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
-        <property name="webBindingInitializer">
-            <bean class="egovframework.example.cmmn.web.EgovBindingInitializer"/>
+	    <property name="messageConverters">
+	            <list>
+	                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+	            </list>
         </property>
+        <!-- <p3roperty name="webBindingInitializer">
+            <bean class="gmx.cmmn.web.EgovBindingInitializer"/>
+        </property> -->
     </bean>
     <!-- client의 요청에 맞는 controller와 method를 mapping -->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-        <property name="interceptors">
+        <!-- <property name="interceptors">
             <list>
                 <ref bean="localeChangeInterceptor" />
             </list>
-        </property>
+        </property> -->
     </bean>
     
-    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
-    <!-- 쿠키를 이용한 Locale 이용시 <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/> -->
+    <!-- <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+    쿠키를 이용한 Locale 이용시 <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/>
     <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
         <property name="paramName" value="language" />
-    </bean>
+    </bean> -->
+    
+
 	
 	<!-- Exception 발생시 종류에 따라 Resolver에 선언된 페이지를 브라우저에 띄우는 역할 -->
-    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+   <!--  <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
         <property name="defaultErrorView" value="cmmn/egovError"/>
         <property name="exceptionMappings">
             <props>
@@ -49,24 +62,41 @@
                 <prop key="org.springframework.security.AccessDeniedException">cmmn/egovError</prop>
             </props>
         </property>
-    </bean>
+    </bean> -->
+    
+    <!-- 파일 업로드를 위한 Multipart Resolver -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	    <property name="maxUploadSize" value="10485760" />
+	    <property name="maxInMemorySize" value="1048576" />
+	    <property name="uploadTempDir" value="webapps/temp" />
+	    <property name="defaultEncoding" value="utf-8" />
+	</bean>
+    <!-- 자동으로 RequestMappingHandlerMapping, RequestMappingHandlerAdapter를 구성해줌 -->
+    <!-- xml파일에 context:component-scan을 명시하면 아래 annotation-driven을 하지 않아도 MVC는 작동 -->
+    <!-- @Controller에서 @RequestMapping등과 같은 주석을 통해 해당 기능을 사용할 수 있도록 해줌-->
+    <!-- <mvc:annotation-driven /> -->
+	
+	<context:property-placeholder location="/WEB-INF/properties/fileDownloadPath.properties" /> 
 
 	<!-- 단순히 view의 이름을 url로 매핑할 때 사용 -->
     <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1"
 	    p:viewClass="org.springframework.web.servlet.view.JstlView"
 	    p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
+	   	    
 
     <!-- For Pagination Tag -->
-    <bean id="imageRenderer" class="egovframework.example.cmmn.web.EgovImgPaginationRenderer"/>
+    <!-- <bean id="imageRenderer" class="gmx.cmmn.web.EgovImgPaginationRenderer"/> -->
 
-    <bean id="paginationManager" class="egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager">
+    <!-- <bean id="paginationManager" class="egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager">
         <property name="rendererType">
             <map>
                 <entry key="image" value-ref="imageRenderer"/>
             </map>
         </property>
-    </bean>
+    </bean> -->
 	<!-- /For Pagination Tag -->
 
-    <mvc:view-controller path="/cmmn/validator.do" view-name="cmmn/validator"/>
+    <!-- <mvc:view-controller path="/cmmn/validator.do" view-name="cmmn/validator"/> -->
 </beans>
+
+    
