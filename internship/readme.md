@@ -1,3 +1,7 @@
+model attribute
+
+
+
 accept 와 content-type difference
 
 
