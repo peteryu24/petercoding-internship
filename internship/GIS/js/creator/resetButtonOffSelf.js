@@ -142,14 +142,15 @@ var mapLayerCreator = {
                 let context = selectedFeature.get(featureName);
                 if(layer === this.layers.emdLayer) {
                 	// 해당 읍면동에 대한 CCTV 정보들
-                    let cctvData = this.countCctvPointsInEmdLayer(selectedFeature);
+                    let cctvData = this.countCctvPointsAndNames(selectedFeature);
                     // 해당 읍면동에 대한 CCTV 갯수
                     let cctvCount = cctvData.count;
                     let cctvNamesList = cctvData.names; 
                     // 클릭 이동을 위해서 HTML 형식으로 구성
                     context += `<div>CCTV 수: ${cctvCount}개</div><ul>`;
                     cctvNamesList.forEach((name) => {
-                        context += `<li><a href="#" onclick="mapLayerCreator.centerMapOnCctv('${name.replace(/'/g, "\\'")}'); return false;">${name}</a></li>`;
+                    	// <a href="#"로 가짜(더미) 하이퍼링크, name.replace(/'/g, "\\'")로 자바스크립트 에러 방지, return false로 가짜(더미) 하이퍼링크
+                        context += `<li><a href="#" onclick="mapLayerCreator.moveToCctvCenter('${name.replace(/'/g, "\\'")}'); return false;">${name}</a></li>`;
                     });
                     context += '</ul>';
                 }
@@ -166,13 +167,13 @@ var mapLayerCreator = {
         return popUp;
     },
     
-    countCctvPointsInEmdLayer: function(emdFeature) {
-        var count = 0; 
-        var cctvNames = []; 
-        var cctvLayer = this.layers.cctvLayer; 
-        var emdGeometry = emdFeature.getGeometry();
+    countCctvPointsAndNames: function(emdFeature) {
+        let count = 0; 
+        let cctvNames = []; 
+        let cctvLayer = this.layers.cctvLayer; 
+        let emdGeometry = emdFeature.getGeometry();
 
-
+        // TODO 리펙토링 필요? 모든 CCTV 순회
         cctvLayer.getSource().forEachFeature(function(cctvFeature) {
             // 일단 모든 CCTV의 지오메트리 가져오기
             var cctvGeometry = cctvFeature.getGeometry();
@@ -190,13 +191,12 @@ var mapLayerCreator = {
     
     createResetButton: function (coordinates) {
     	// 리셋 버튼
-        var resetButton = document.createElement('button');
+        let resetButton = document.createElement('button');
         resetButton.innerHTML = 'Reset';
-        resetButton.className = 'reset-button';
-
+        // 화살표 함수(this 바인딩)
         resetButton.onclick = () => {
-        	// 하이라이트 리셋
-            this.resetCctvHighlight();
+        	// 하이라이트 리셋( 화살표 함수 안 쓸거면 var self = mapLayerCreator; 이런식으로 설정)
+            this.resetCctvHighlight(); // 화살표 함수를 사용했기 때문에 this는 mapLayerCreator, 화살표 함수 안 쓰면 resetButton 가리킴
             // 리셋버튼 제거
             baseMapCreator.baseMap.daumMap.removeOverlay(this.resetButtonOverlay);
         };
@@ -214,7 +214,8 @@ var mapLayerCreator = {
     // 하이라이트 리셋 함수
     resetCctvHighlight: function () {
        
-        var cctvLayer = this.layers.cctvLayer;
+        let cctvLayer = this.layers.cctvLayer;
+        // TODO 모든 cctv 참조하기에... cctv 많아지면...
         cctvLayer.getSource().getFeatures().forEach(function (feature) {
         	// 기본 스타일로~
             feature.setStyle(undefined); 
@@ -222,36 +223,35 @@ var mapLayerCreator = {
         // 적용을 위해 새로고침
         cctvLayer.getSource().changed();
         
-        var defaultView = baseMapCreator.baseMap.daumMap.getView();
-        defaultView.animate({
+        let defaultView = baseMapCreator.baseMap.daumMap.getView();
+        defaultView.animate({ // animate으로
             zoom: 12,
             duration: 1000 
         });
     },
     
 
-    centerMapOnCctv: function(cctvName) {
-        var cctvFeature = this.layers.cctvLayer.getSource().getFeatures().find(function(feature) {
+    moveToCctvCenter: function(cctvName) {
+    	// cctv 돌면서 cctv_nm을 키로 검색
+    	let cctvFeature = this.layers.cctvLayer.getSource().getFeatures().find(function(feature) {
             return feature.get('cctv_nm') === cctvName;
         });
-
+        // 만약 존재하면
         if (cctvFeature) {
-            var coordinates = cctvFeature.getGeometry().getCoordinates();
+        	// 해당 cctv의 좌표 얻기
+            let coordinates = cctvFeature.getGeometry().getCoordinates();
+            // 중심을 센터로
             baseMapCreator.baseMap.daumMap.getView().animate({
                 center: coordinates,
                 zoom: 15, 
                 duration: 1000 
             });
 
-            var highlightStyle = new ol.style.Style({
+            let highlightStyle = new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 10,
                     fill: new ol.style.Fill({
-                        color: '#ffcc33'
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: '#fff',
-                        width: 2
+                        color: '#ff334b'
                     })
                 })
             });
