@@ -186,8 +186,10 @@ var mapLayerCreator = {
         return {count: count, names: cctvNames}; 
     },
     
+ // ... existing code ...
+
     centerMapOnCctv: function(cctvName) {
-        // ... function to center map on CCTV
+        var self = this;
         var cctvFeature = this.layers.cctvLayer.getSource().getFeatures().find(function(feature) {
             return feature.get('cctv_nm') === cctvName;
         });
@@ -196,9 +198,35 @@ var mapLayerCreator = {
             var coordinates = cctvFeature.getGeometry().getCoordinates();
             baseMapCreator.baseMap.daumMap.getView().animate({
                 center: coordinates,
-                zoom: 15, // Example zoom level
+                zoom: 15, // Adjust the zoom level as needed
                 duration: 1000 // Duration for animation
             });
+
+            // Define a highlight style
+            var highlightStyle = new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 10,
+                    fill: new ol.style.Fill({
+                        color: '#ffcc33'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: '#fff',
+                        width: 2
+                    })
+                })
+            });
+
+            // Apply the highlight style
+            cctvFeature.setStyle(highlightStyle);
+
+            // Reset the style to default after some time if needed
+            setTimeout(function() {
+                cctvFeature.setStyle(undefined); // This will reset to the default style
+                self.layers.cctvLayer.getSource().changed(); // Refresh the source to apply the style change
+            }, 3000); // Reset after 3 seconds or the duration of your choice
         }
     }
+
+    // ... remaining code ...
+
 }
