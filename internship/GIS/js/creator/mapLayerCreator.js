@@ -140,6 +140,13 @@ var mapLayerCreator = {
             	// 배열로 담김
                 let selectedFeature = event.selected[0]; // 첫 번째 feature만 참조
                 let context = selectedFeature.get(featureName); // forEachFeatureAtPixel
+                // 읍면동 레이어를 클릭했을 경우
+                if(layer === this.layers.emdLayer) {
+                  // CCTV 포인트의 수를 가져옵니다.
+                  let cctvCount = this.countCctvPointsInEmdLayer(selectedFeature);
+                  // context에 CCTV 포인트의 수를 추가합니다.
+                  context += ' (CCTV 수: ' + cctvCount + ')';
+                }
                 /*
                  * selectedFeature = 클릭하여 선택된 feature 참조
                  * getGeometry() = 해당 feature의 geometry 반환(ex.point, line, polygon)
@@ -147,7 +154,7 @@ var mapLayerCreator = {
                  * getCenter() = getExtent()로 받은 경계 영역을 토대로 중심점 좌표 얻기
                  */
                 let popUpCentroid = ol.extent.getCenter(selectedFeature
-						.getGeometry().getExtent());
+						.getGeometry().getExtent()); 
                 // let coordinates = event.mapBrowserEvent.coordinate;
                 // innerHTML 대신 XSS(Cross Site Scripting)의 공격 위험이 없는 textContent 사용
                 popUp.getElement().textContent = context;
@@ -161,6 +168,33 @@ var mapLayerCreator = {
         });
         // popUps.emdPopUp랑 popUps.cctvPopUp에 할당하기 위해
         return popUp;
-    }
+    },
+	countCctvPointsInEmdLayer: function(emdFeature) {
+		var count = 0; // 포인트를 세기 위한 변수입니다.
+	    var cctvLayer = this.layers.cctvLayer; // CCTV 레이어에 접근합니다.
+	    var emdGeometry = emdFeature.getGeometry();
+		  
+		  // CCTV Layer의 모든 피처(포인트)를 순회합니다.
+		  cctvLayer.getSource().forEachFeature(function(cctvFeature) {
+		    // 각 CCTV 피처의 지오메트리를 가져옵니다.
+		    var cctvGeometry = cctvFeature.getGeometry();		   	      
+		      // CCTV 포인트가 멀티폴리곤 안에 포함되어 있는지 확인합니다.
+		      if (emdGeometry.intersectsCoordinate(cctvGeometry.getCoordinates())) {
+		        count++; // 포함되어 있다면 카운트를 증가시킵니다.
+		      }
+
+		  });
+
+		  return count; // 최종 개수를 반환합니다.
+		},
+		
+		
+	getCctvNum: function(){
+		var numberOfCctvPoints = this.countCctvPointsInEmdLayer();	
+		
+		return numberofCctvPoints;
+	}
+		
+	
 
 }
