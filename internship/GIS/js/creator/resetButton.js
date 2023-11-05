@@ -185,8 +185,46 @@ var mapLayerCreator = {
         
         return {count: count, names: cctvNames}; 
     },
+    createResetButton: function (coordinates) {
+        var self = this;
+
+        // Create a reset button element
+        var resetButton = document.createElement('button');
+        resetButton.innerHTML = 'Reset';
+        resetButton.className = 'reset-button';
+
+        // Define what happens on click
+        resetButton.onclick = function () {
+            self.resetCctvHighlight();
+            baseMapCreator.baseMap.daumMap.removeOverlay(self.resetButtonOverlay);
+        };
+
+        // Create an overlay for the reset button
+        this.resetButtonOverlay = new ol.Overlay({
+            element: resetButton,
+            position: coordinates,
+            positioning: 'top-center',
+            offset: [0, 0], // Adjust as needed
+        });
+
+        // Add the overlay to the map
+        baseMapCreator.baseMap.daumMap.addOverlay(this.resetButtonOverlay);
+    },
+    resetCctvHighlight: function () {
+        // Assuming that this function is meant to reset the style of all CCTV features
+        var cctvLayer = this.layers.cctvLayer;
+        cctvLayer.getSource().getFeatures().forEach(function (feature) {
+            feature.setStyle(undefined); // This resets the feature to its default style
+        });
+        cctvLayer.getSource().changed(); // Refresh the source to apply the style changes
+        
+        var defaultView = baseMapCreator.baseMap.daumMap.getView();
+        defaultView.animate({
+            zoom: 12,
+            duration: 1000 
+        });
+    },
     
- // ... existing code ...
 
     centerMapOnCctv: function(cctvName) {
         var self = this;
@@ -218,15 +256,9 @@ var mapLayerCreator = {
 
             // Apply the highlight style
             cctvFeature.setStyle(highlightStyle);
+            this.createResetButton(coordinates);
 
-            // Reset the style to default after some time if needed
-            setTimeout(function() {
-                cctvFeature.setStyle(undefined); // This will reset to the default style
-                self.layers.cctvLayer.getSource().changed(); // Refresh the source to apply the style change
-            }, 3000); // Reset after 3 seconds or the duration of your choice
         }
     }
-
-    // ... remaining code ...
 
 }
