@@ -146,17 +146,19 @@ var mapLayerCreator = {
                     // 해당 읍면동에 대한 CCTV 갯수
                     let cctvCount = cctvData.count;
                     let cctvNamesList = cctvData.names; 
-
+                    // 클릭 이동을 위해서 HTML 형식으로 구성
                     context += `<div>CCTV 수: ${cctvCount}개</div><ul>`;
                     cctvNamesList.forEach((name) => {
                         context += `<li><a href="#" onclick="mapLayerCreator.centerMapOnCctv('${name.replace(/'/g, "\\'")}'); return false;">${name}</a></li>`;
                     });
                     context += '</ul>';
                 }
+                // 팝업 표시 위치
                 let popUpCentroid = ol.extent.getCenter(selectedFeature.getGeometry().getExtent());
                 popUp.getElement().innerHTML = context;
                 popUp.setPosition(popUpCentroid);
             } else {
+            	// 숨김
                 popUp.setPosition(undefined);
             }
         });
@@ -172,51 +174,53 @@ var mapLayerCreator = {
 
 
         cctvLayer.getSource().forEachFeature(function(cctvFeature) {
-            // 일단 모든 CCTV의 지오메트리를 가져옵니다.
+            // 일단 모든 CCTV의 지오메트리 가져오기
             var cctvGeometry = cctvFeature.getGeometry();
               
             // CCTV 포인트가 읍면동 레이어 안에 있는지 확인
             if (emdGeometry.intersectsCoordinate(cctvGeometry.getCoordinates())) {
                 count++;
-                // CCTV 이름을 배열에 추가
+                // 배열에 넣기 (javaScript에서는 push라는 메소드 사용)
                 cctvNames.push(cctvFeature.get('cctv_nm'));
             }
         });
         
         return {count: count, names: cctvNames}; 
     },
+    
     createResetButton: function (coordinates) {
-        var self = this;
-
-        // Create a reset button element
+    	// 리셋 버튼
         var resetButton = document.createElement('button');
         resetButton.innerHTML = 'Reset';
         resetButton.className = 'reset-button';
 
-        // Define what happens on click
-        resetButton.onclick = function () {
-            self.resetCctvHighlight();
-            baseMapCreator.baseMap.daumMap.removeOverlay(self.resetButtonOverlay);
+        resetButton.onclick = () => {
+        	// 하이라이트 리셋
+            this.resetCctvHighlight();
+            // 리셋버튼 제거
+            baseMapCreator.baseMap.daumMap.removeOverlay(this.resetButtonOverlay);
         };
 
-        // Create an overlay for the reset button
         this.resetButtonOverlay = new ol.Overlay({
             element: resetButton,
             position: coordinates,
             positioning: 'top-center',
-            offset: [0, 0], // Adjust as needed
+            offset: [0, 0], 
         });
 
-        // Add the overlay to the map
         baseMapCreator.baseMap.daumMap.addOverlay(this.resetButtonOverlay);
     },
+
+    // 하이라이트 리셋 함수
     resetCctvHighlight: function () {
-        // Assuming that this function is meant to reset the style of all CCTV features
+       
         var cctvLayer = this.layers.cctvLayer;
         cctvLayer.getSource().getFeatures().forEach(function (feature) {
-            feature.setStyle(undefined); // This resets the feature to its default style
+        	// 기본 스타일로~
+            feature.setStyle(undefined); 
         });
-        cctvLayer.getSource().changed(); // Refresh the source to apply the style changes
+        // 적용을 위해 새로고침
+        cctvLayer.getSource().changed();
         
         var defaultView = baseMapCreator.baseMap.daumMap.getView();
         defaultView.animate({
@@ -227,7 +231,6 @@ var mapLayerCreator = {
     
 
     centerMapOnCctv: function(cctvName) {
-        var self = this;
         var cctvFeature = this.layers.cctvLayer.getSource().getFeatures().find(function(feature) {
             return feature.get('cctv_nm') === cctvName;
         });
@@ -236,11 +239,10 @@ var mapLayerCreator = {
             var coordinates = cctvFeature.getGeometry().getCoordinates();
             baseMapCreator.baseMap.daumMap.getView().animate({
                 center: coordinates,
-                zoom: 15, // Adjust the zoom level as needed
-                duration: 1000 // Duration for animation
+                zoom: 15, 
+                duration: 1000 
             });
 
-            // Define a highlight style
             var highlightStyle = new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 10,
@@ -254,7 +256,6 @@ var mapLayerCreator = {
                 })
             });
 
-            // Apply the highlight style
             cctvFeature.setStyle(highlightStyle);
             this.createResetButton(coordinates);
 
