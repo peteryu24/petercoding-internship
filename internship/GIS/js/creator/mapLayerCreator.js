@@ -121,10 +121,12 @@ var mapLayerCreator = {
         });
 
         baseMapCreator.baseMap.daumMap.addInteraction(clickedLayer);
-
-        let popUp = new ol.Overlay({
-        	// popUp.className = 'tooltip'; 추후 css 적용하기 위해
-            element: document.createElement('div'),
+        
+        let popUpElement = document.createElement('div');
+        popUpElement.className = 'tooltip';
+        
+        let popUp = new ol.Overlay({  
+        	element: popUpElement,
             positioning: 'bottom-center',
             // feature 바로 위
             offset: [0, 0],
@@ -134,67 +136,54 @@ var mapLayerCreator = {
 
         baseMapCreator.baseMap.daumMap.addOverlay(popUp);
         
-        // 클릭된 피처가 있는 경우
         clickedLayer.on('select', (event) => {
             if (event.selected.length > 0) {
-            	// 배열로 담김
-                let selectedFeature = event.selected[0]; // 첫 번째 feature만 참조
-                let context = selectedFeature.get(featureName); // forEachFeatureAtPixel
-                // 읍면동 레이어를 클릭했을 경우
+                let selectedFeature = event.selected[0];
+                let context = selectedFeature.get(featureName);
                 if(layer === this.layers.emdLayer) {
-                  // CCTV 포인트의 수를 가져옵니다.
-                  let cctvCount = this.countCctvPointsInEmdLayer(selectedFeature);
-                  // context에 CCTV 포인트의 수를 추가합니다.
-                  context += ' (CCTV 수: ' + cctvCount + ')';
-                }
-                /*
-                 * selectedFeature = 클릭하여 선택된 feature 참조
-                 * getGeometry() = 해당 feature의 geometry 반환(ex.point, line, polygon)
-                 * getExtent() = geometry의 경계 영역 반환([최소 x, 최소 y, 최대 x, 최대 y])
-                 * getCenter() = getExtent()로 받은 경계 영역을 토대로 중심점 좌표 얻기
-                 */
-                let popUpCentroid = ol.extent.getCenter(selectedFeature
-						.getGeometry().getExtent()); 
-                // let coordinates = event.mapBrowserEvent.coordinate;
-                // innerHTML 대신 XSS(Cross Site Scripting)의 공격 위험이 없는 textContent 사용
-                popUp.getElement().textContent = context;
+                	// CCTV 포인트의 수와 이름을 가져옵니다.
+                    let cctvData = this.countCctvPointsInEmdLayer(selectedFeature);
+                    let cctvCount = cctvData.count;
+                    let cctvNamesList = cctvData.names; // 이미 배열로 가정
+
+                    // context에 CCTV 포인트의 수를 추가합니다.
+                    context += '<div>CCTV 수: ' + cctvCount + '개</div>';
+                    
+                    // CCTV 이름 목록을 추가합니다. 각 이름은 별도의 줄에 표시됩니다.
+                    for (let name of cctvNamesList) {
+                        context += '<div>' + name + '</div>';
+                    }
+                  }
+                let popUpCentroid = ol.extent.getCenter(selectedFeature.getGeometry().getExtent());
+                popUp.getElement().innerHTML = context; // innerHTML을 사용하여 HTML을 설정합니다.
                 popUp.setPosition(popUpCentroid);
             } else {
-            	// undefined로 설정시 팝업 사라짐
                 popUp.setPosition(undefined);
-                // else => event.deselected
-    			// 다른 거 클릭시 숨김 null, undefined, 경도 위도의 좌표 배열[x, y]
             }
         });
+
+
         // popUps.emdPopUp랑 popUps.cctvPopUp에 할당하기 위해
         return popUp;
     },
-	countCctvPointsInEmdLayer: function(emdFeature) {
-		var count = 0; // 포인트를 세기 위한 변수입니다.
-	    var cctvLayer = this.layers.cctvLayer; // CCTV 레이어에 접근합니다.
-	    var emdGeometry = emdFeature.getGeometry();
-		  
-		  // CCTV Layer의 모든 피처(포인트)를 순회합니다.
-		  cctvLayer.getSource().forEachFeature(function(cctvFeature) {
-		    // 각 CCTV 피처의 지오메트리를 가져옵니다.
-		    var cctvGeometry = cctvFeature.getGeometry();		   	      
-		      // CCTV 포인트가 멀티폴리곤 안에 포함되어 있는지 확인합니다.
-		      if (emdGeometry.intersectsCoordinate(cctvGeometry.getCoordinates())) {
-		        count++; // 포함되어 있다면 카운트를 증가시킵니다.
-		      }
+    countCctvPointsInEmdLayer: function(emdFeature) {
+        var count = 0; // 포인트를 세기 위한 변수입니다.
+        var cctvNames = []; // CCTV 이름을 담을 배열입니다.
+        var cctvLayer = this.layers.cctvLayer; // CCTV 레이어에 접근합니다.
+        var emdGeometry = emdFeature.getGeometry();
 
-		  });
+        // CCTV Layer의 모든 피처(포인트)를 순회합니다.
+        cctvLayer.getSource().forEachFeature(function(cctvFeature) {
+            // 각 CCTV 피처의 지오메트리를 가져옵니다.
+            var cctvGeometry = cctvFeature.getGeometry();
+              
+            // CCTV 포인트가 멀티폴리곤 안에 포함되어 있는지 확인합니다.
+            if (emdGeometry.intersectsCoordinate(cctvGeometry.getCoordinates())) {
+                count++; // 포함되어 있다면 카운트를 증가시킵니다.
+                cctvNames.push(cctvFeature.get('cctv_nm')); // CCTV 이름을 배열에 추가합니다.
+            }
+        });
 
-		  return count; // 최종 개수를 반환합니다.
-		},
-		
-		
-	getCctvNum: function(){
-		var numberOfCctvPoints = this.countCctvPointsInEmdLayer();	
-		
-		return numberofCctvPoints;
-	}
-		
-	
-
+        return {count: count, names: cctvNames}; // 개수와 이름의 리스트를 함께 반환합니다.
+    }
 }
