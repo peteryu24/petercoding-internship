@@ -1,3 +1,7 @@
+자바스크립트 백틱
+https://mozzi-devlog.tistory.com/22
+<br><br>
+
 ajax가 뭐야?
 
 
