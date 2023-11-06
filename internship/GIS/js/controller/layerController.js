@@ -38,16 +38,18 @@ var layerController = {
 			'emdLayer': 'emdPopUp',
 			'cctvLayer': 'cctvPopUp'
 		};
-
-		const popUpName = popUpsMapping[layerName];
-		mapLayerCreator.popUps[popUpName].setPosition(null);
+		
+		if(!(layerName === 'koreaLayer')){
+			const popUpName = popUpsMapping[layerName];
+			mapLayerCreator.popUps[popUpName].setPosition(null);
+		}
 
 	},
 
 	getStyleFromDB: function(attributeName, callback) {
 		$.ajax({
 			url: 'map/getLayerStyle.do',
-			method: 'GET',
+			method: 'POST',
 			data: {
 				attributeName: attributeName
 			},
