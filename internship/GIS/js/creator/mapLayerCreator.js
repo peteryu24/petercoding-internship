@@ -142,52 +142,131 @@ var mapLayerCreator = {
                 let context = selectedFeature.get(featureName);
                 if(layer === this.layers.emdLayer) {
                 	// 해당 읍면동에 대한 CCTV 정보들
-                    let cctvData = this.countCctvPointsInEmdLayer(selectedFeature);
+                    let cctvData = this.countCctvPointsAndNames(selectedFeature);
                     // 해당 읍면동에 대한 CCTV 갯수
                     let cctvCount = cctvData.count;
                     let cctvNamesList = cctvData.names; 
-
-                    // context에 CCTV 포인트의 수 추가
-                    context += '<div>CCTV 수: ' + cctvCount + '개</div>';
-                    
-                    // CCTV 이름 목록 추가 
-                    for (let name of cctvNamesList) {
-                        context += '<div>' + name + '</div>';
+                    // 클릭 이동을 위해서 HTML 형식으로 구성
+                    context += `<div>CCTV 수: ${cctvCount}개</div><ul>`;
+                    cctvNamesList.forEach((name) => {
+                    	// <a href="#"로 가짜(더미) 하이퍼링크, name.replace(/'/g, "\\'")로
+						// 자바스크립트 에러 방지, return false로 가짜(더미) 하이퍼링크
+                        context += `<li><a href="#" onclick="mapLayerCreator.moveToCctvCenter('${name.replace(/'/g, "\\'")}'); return false;">${name}</a></li>`;
+                    });
+                    context += '</ul>';
+                }else { // (layer === this.layers.cctvLayer)
+                	if(this.popUps.emdPopUp) {
+                        this.popUps.emdPopUp.setPosition(undefined);
                     }
-                  }
+                }
+                // 팝업 표시 위치
                 let popUpCentroid = ol.extent.getCenter(selectedFeature.getGeometry().getExtent());
-                // innerHTML
                 popUp.getElement().innerHTML = context;
                 popUp.setPosition(popUpCentroid);
             } else {
+            	// 숨김
                 popUp.setPosition(undefined);
             }
         });
 
-
-        // popUps.emdPopUp랑 popUps.cctvPopUp에 할당하기 위해
         return popUp;
     },
     
-    countCctvPointsInEmdLayer: function(emdFeature) {
-        var count = 0; 
-        var cctvNames = []; 
-        var cctvLayer = this.layers.cctvLayer; 
-        var emdGeometry = emdFeature.getGeometry();
+    countCctvPointsAndNames: function(emdFeature) {
+        let count = 0; 
+        let cctvNames = []; 
+        let cctvLayer = this.layers.cctvLayer; 
+        let emdGeometry = emdFeature.getGeometry();
 
-
+        // TODO 리펙토링 필요? 모든 CCTV 순회
         cctvLayer.getSource().forEachFeature(function(cctvFeature) {
-            // 일단 모든 CCTV의 지오메트리를 가져옵니다.
-            var cctvGeometry = cctvFeature.getGeometry();
+            // 일단 모든 CCTV의 지오메트리 가져오기
+            let cctvGeometry = cctvFeature.getGeometry();
               
             // CCTV 포인트가 읍면동 레이어 안에 있는지 확인
             if (emdGeometry.intersectsCoordinate(cctvGeometry.getCoordinates())) {
                 count++;
-                // CCTV 이름을 배열에 추가
+                // 배열에 넣기 (javaScript에서는 push라는 메소드 사용)
                 cctvNames.push(cctvFeature.get('cctv_nm'));
             }
         });
         
         return {count: count, names: cctvNames}; 
+    },
+    
+    createResetButton: function(coordinates) {
+    	// 리셋 버튼
+        let resetButton = document.createElement('button');
+        resetButton.innerHTML = 'Reset';
+        // 화살표 함수(this 바인딩)
+        resetButton.onclick = () => {
+        	// 하이라이트 리셋( 화살표 함수 안 쓸거면 var self = mapLayerCreator; 이런식으로 설정)
+            this.resetCctvHighlight(); // 화살표 함수를 사용했기 때문에 this는
+										// mapLayerCreator, 화살표 함수 안 쓰면
+										// resetButton 가리킴
+            // 리셋버튼 제거
+            baseMapCreator.baseMap.daumMap.removeOverlay(this.resetButtonOverlay);
+        };
+
+        this.resetButtonOverlay = new ol.Overlay({
+            element: resetButton,
+            position: coordinates,
+            positioning: 'top-center',
+            offset: [0, 15], 
+        });
+
+        baseMapCreator.baseMap.daumMap.addOverlay(this.resetButtonOverlay);
+    },
+
+    // 하이라이트 리셋 함수
+    resetCctvHighlight: function () {
+       
+        let cctvLayer = this.layers.cctvLayer;
+        // TODO 모든 cctv 참조하기에... cctv 많아지면...
+        cctvLayer.getSource().getFeatures().forEach(function (feature) {
+        	// 기본 스타일로~
+            feature.setStyle(undefined); 
+        });
+        // 적용을 위해 새로고침
+        cctvLayer.getSource().changed();
+        
+        let defaultView = baseMapCreator.baseMap.daumMap.getView();
+        defaultView.animate({ // animate으로
+            zoom: 12,
+            duration: 1000 
+        });
+    },
+    
+
+    moveToCctvCenter: function(cctvName) {
+    	// cctv 돌면서 cctv_nm을 키로 검색
+    	let cctvFeature = this.layers.cctvLayer.getSource().getFeatures().find(function(feature) {
+            return feature.get('cctv_nm') === cctvName;
+        });
+        // 만약 존재하면
+        if (cctvFeature) {
+        	// 해당 cctv의 좌표 얻기
+            let coordinates = cctvFeature.getGeometry().getCoordinates();
+            // 중심을 센터로
+            baseMapCreator.baseMap.daumMap.getView().animate({
+                center: coordinates,
+                zoom: 15, 
+                duration: 1000 
+            });
+
+            let highlightStyle = new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 10,
+                    fill: new ol.style.Fill({
+                        color: '#ff334b'
+                    })
+                })
+            });
+
+            cctvFeature.setStyle(highlightStyle);
+            this.createResetButton(coordinates);
+
+        }
     }
+
 }
