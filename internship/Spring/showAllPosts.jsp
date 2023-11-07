@@ -116,8 +116,9 @@
         </select>
         <button id="sortButton">정렬</button>
     </div>
+    
     <div>
-    	<input type ="text" name = "Keyword">
+    	<input type ="text" id="searchInput">
     	<button id="searchButton">검색</button>
     </div>
     
@@ -145,7 +146,7 @@
 	            $('#sortSelect').val(currentSort);
 	        }
 	        if(currentSearch) {
-	            $('input[name="Keyword"]').val(currentSearch);
+	            $('input[id="searchInput"]').val(currentSearch);
 	        }
 	    });
 	    
@@ -204,6 +205,9 @@
                     url: "post/totalPageNum.do",
                     type: "GET",
                     dataType: "json",
+                    data: {
+                        searchedKeyword: sessionStorage.getItem('searchedKeyword') // 검색어 추가
+                    },
                     success: function(response) {
                         var fetchedTotalPage = response.totalPage;
                         pageController.setTotalPage(fetchedTotalPage);
@@ -291,7 +295,8 @@
 				url : "post/postPerPage.do",
 				type : "GET",
 				data : {
-					sortType : sessionStorage.getItem('orderBy')
+					sortType : sessionStorage.getItem('orderBy'),
+					searchedKeyword: sessionStorage.getItem('searchedKeyword')
 				},
 				dataType : "json",
 				success : Posts,
@@ -302,43 +307,15 @@
 				}
 			});
 		});
-		
+    	
 		$('#searchButton').on('click', function() {
-			var keyword = $('input[name="Keyword"]').val();
-			pageController.setSearchedKeyword(keyword);
-			$.ajax({
-				url : "post/searchPost.do",
-				type : "GET",
-				data : {
-					keyword : sessionStorage.getItem('searchedKeyword') 
-				},
-				dataType : "json",
-				success : Posts,
-				error : function(xhr, status, error) {
-					alert("error");
-					console.log("에러: " + error);
-					console.log(xhr.responseText);
-				}
-			});
-			
-			$.ajax({
-		        url: "post/getSearchedPostCount.do",
-		        type: "GET",
-		        data: { keyword: keyword },
-		        dataType: "json",
-		        success: function(response) {
-		            var totalPage = response.totalPage;
-		            pageController.setTotalPage(totalPage);
-		            showPageNum(totalPage); 
-		        },
-		        error: function(xhr, status, error) {
-		            alert("error");
-		            console.log("에러: " + error);
-		            console.log(xhr.responseText);
-		        }
-		    });
+		    var keyword = $('#searchInput').val();
+		    pageController.setSearchedKeyword(keyword); // 검색어 sessionStorage에 저장
+		    pageController.setCurrentPage('1'); // 검색 후 첫 페이지로 초기화
+		    showAllPosts(); // 게시글 표시 함수 호출
+		    showPageNum(); // 페이징 번호를 다시 가져오는 함수 호출
 		});
-		
+			
 		function confirmUnregister() {
 		    var confirmFlag = window.confirm("탈퇴하시겠습니까?");
 		    if (confirmFlag) {
@@ -348,14 +325,13 @@
 		}
 		
 		function logoutAndClearSession() {
-		        sessionStorage.clear(); 
-		        location.href = 'user/logout.do'; 
-		}
-
-		function resetAndClearSession() {
-			sessionStorage.clear(); 
-			location.href = 'post/goShowAllPosts.do'; 
-		}
+	        sessionStorage.clear(); 
+	        location.href = 'user/logout.do'; 
+	    }
+	    function resetAndClearSession() {
+	        sessionStorage.clear(); 
+	        location.href = 'post/goShowAllPosts.do'; 
+	    }
 	
     </script>
 </body>
