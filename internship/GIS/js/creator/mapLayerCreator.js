@@ -112,65 +112,57 @@ var mapLayerCreator = {
 		this.popUps.cctvPopUp = this.createPopup(this.layers.cctvLayer, 'cctv_nm');		
 	},
 	
-	createPopup: function(layer, featureName) {	
-        let clickedLayer = new ol.interaction.Select({
-        	// 이벤트를 감지할 레이어 배열로 전달
-            layers: [layer],
-            // 조건: 클릭시
-            condition: ol.events.condition.click
-        });
+	createPopup: function(layer, featureName) {
+	    let popUpElement = document.createElement('div');
+	    popUpElement.className = 'tooltip';
 
-        baseMapCreator.baseMap.daumMap.addInteraction(clickedLayer);
-        
-        let popUpElement = document.createElement('div');
-        popUpElement.className = 'tooltip';
-        
-        let popUp = new ol.Overlay({  
-        	element: popUpElement,
-            positioning: 'bottom-center',
-            // feature 바로 위
-            offset: [0, 0],
-            // 맵에는 영향을 주지 않도록(클릭 이벤트 맵에 전달 X)
-            stopEvent: true
-        });
+	    let popUp = new ol.Overlay({  
+	        element: popUpElement,
+	        positioning: 'bottom-center',
+	        offset: [0, 0], // 팝업을 피처 바로 위에 위치시키려면 offset을 적절히 조정해야 할 수 있습니다.
+	        stopEvent: true
+	    });
 
-        baseMapCreator.baseMap.daumMap.addOverlay(popUp);
-        
-        clickedLayer.on('select', (event) => {
-            if (event.selected.length > 0) {
-                let selectedFeature = event.selected[0];
-                let context = selectedFeature.get(featureName);
-                if(layer === this.layers.emdLayer) {
-                	// 해당 읍면동에 대한 CCTV 정보들
-                    let cctvData = this.countCctvPointsAndNames(selectedFeature);
-                    // 해당 읍면동에 대한 CCTV 갯수
-                    let cctvCount = cctvData.count;
-                    let cctvNamesList = cctvData.names; 
-                    // 클릭 이동을 위해서 HTML 형식으로 구성
-                    context += `<div>CCTV 수: ${cctvCount}개</div><ul>`;
-                    cctvNamesList.forEach((name) => {
-                    	// <a href="#"로 가짜(더미) 하이퍼링크, name.replace(/'/g, "\\'")로
-						// 자바스크립트 에러 방지, return false로 가짜(더미) 하이퍼링크
-                        context += `<li><a href="#" onclick="mapLayerCreator.moveToCctvCenter('${name.replace(/'/g, "\\'")}'); return false;">${name}</a></li>`;
-                    });
-                    context += '</ul>';
-                }else { // (layer === this.layers.cctvLayer)
-                	if(this.popUps.emdPopUp) {
-                        this.popUps.emdPopUp.setPosition(undefined);
-                    }
-                }
-                // 팝업 표시 위치
-                let popUpCentroid = ol.extent.getCenter(selectedFeature.getGeometry().getExtent());
-                popUp.getElement().innerHTML = context;
-                popUp.setPosition(popUpCentroid);
-            } else {
-            	// 숨김
-                popUp.setPosition(undefined);
-            }
-        });
+	    baseMapCreator.baseMap.daumMap.addOverlay(popUp);
 
-        return popUp;
-    },
+	    baseMapCreator.baseMap.daumMap.on('click', (evt) => {
+	        let pixel = evt.pixel;
+	        let featureFound = false;
+
+	        baseMapCreator.baseMap.daumMap.forEachFeatureAtPixel(pixel, (feature, layerClicked) => {
+	            if (layerClicked === layer) {
+	                featureFound = true;
+	                let context = feature.get(featureName);
+	                if (layer === this.layers.emdLayer) {
+	                    // 읍면동 레이어 클릭 시의 로직 처리
+	                    let cctvData = this.countCctvPointsAndNames(feature);
+	                    let cctvCount = cctvData.count;
+	                    let cctvNamesList = cctvData.names;
+	                    context += `<div>CCTV 수: ${cctvCount}개</div><ul>`;
+	                    cctvNamesList.forEach((name) => {
+	                        context += `<li><a href="#" onclick="mapLayerCreator.moveToCctvCenter('${name.replace(/'/g, "\\'")}'); return false;">${name}</a></li>`;
+	                    });
+	                    context += '</ul>';
+	                } else if (layer === this.layers.cctvLayer) {
+	                    // CCTV 레이어 클릭 시의 로직 처리
+	                    if (this.popUps.emdPopUp) {
+	                        this.popUps.emdPopUp.setPosition(undefined);
+	                    }
+	                }
+	                let popUpCentroid = ol.extent.getCenter(feature.getGeometry().getExtent());
+	                popUp.getElement().innerHTML = context;
+	                popUp.setPosition(popUpCentroid);
+	            }
+	        });
+
+	        if (!featureFound) {
+	            popUp.setPosition(undefined);
+	        }
+	    });
+
+	    return popUp;
+	}
+,
     
     countCctvPointsAndNames: function(emdFeature) {
         let count = 0; 
