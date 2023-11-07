@@ -243,7 +243,8 @@
                     dataType: "json",
                     data: {
                         currentPage: sessionStorage.getItem('currentPage'),
-                        sortType: sessionStorage.getItem('orderBy')
+                        sortType: sessionStorage.getItem('orderBy'),
+                        searchedKeyword: sessionStorage.getItem('searchedKeyword')
                     },
                     success: function(data) {
                         Posts(data);
@@ -336,4 +337,3 @@
     </script>
 </body>
 </html>
-
