@@ -348,13 +348,14 @@
 		}
 		
 		function logoutAndClearSession() {
-	        sessionStorage.clear(); 
-	        location.href = 'user/logout.do'; 
-	    }
-	    function resetAndClearSession() {
-	        sessionStorage.clear(); 
-	        location.href = 'post/goShowAllPosts.do'; 
-	    }
+		        sessionStorage.clear(); 
+		        location.href = 'user/logout.do'; 
+		}
+
+		function resetAndClearSession() {
+			sessionStorage.clear(); 
+			location.href = 'post/goShowAllPosts.do'; 
+		}
 	
     </script>
 </body>
