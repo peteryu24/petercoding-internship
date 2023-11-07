@@ -161,8 +161,7 @@ var mapLayerCreator = {
 	    });
 
 	    return popUp;
-	}
-,
+	},
     
     countCctvPointsAndNames: function(emdFeature) {
         let count = 0; 
