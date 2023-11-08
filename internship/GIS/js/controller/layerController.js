@@ -20,7 +20,7 @@
  */
 var layerController = {
 
-	onOffLayer: function(layerName) {
+	onOffLayer : function(layerName) {
 
 		// 레이어 끄는 로직
 		const layer = mapLayerCreator.layers[layerName];
@@ -35,73 +35,56 @@ var layerController = {
 
 		// 팝업 끄는 로직
 		const popUpsMapping = {
-			'emdLayer': 'emdPopUp',
-			'cctvLayer': 'cctvPopUp'
+			'emdLayer' : 'emdPopUp',
+			'cctvLayer' : 'cctvPopUp'
 		};
-		
-		if(!(layerName === 'koreaLayer')){
+
+		if (!(layerName === 'koreaLayer')) {
 			const popUpName = popUpsMapping[layerName];
 			mapLayerCreator.popUps[popUpName].setPosition(null);
 		}
 
-	}, 
-
-	getStyleFromDB: function(attributeName, callback) {
-		$.ajax({
-			url: 'map/getLayerStyle.do',
-			method: 'POST',
-			data: {
-				attributeName: attributeName
-			},
-			dataType: 'json',
-			success: function(response) {
-				// 에러에는 null response에는 response
-				callback(null, response);
-			},
-			error: function(error) {
-				// error 에 error
-				callback(error);
-			}
-		});
 	},
 
-	addStyle: function(attributeName) {
-		layerController.getStyleFromDB(attributeName,
-				function(error, response) { // attributeName, callback 함수 넘겨줌
+	setStyleWithResponse : function(layer, response) {
+		let newStyle = new ol.style.Style({
+			stroke : new ol.style.Stroke({
+				color : response.strokeColor,
+				width : response.strokeWidth
+			}),
+			fill : new ol.style.Fill({
+				color : response.fillColor
+			}),
+			text : new ol.style.Text({
+				font : response.font,
+				fill : new ol.style.Fill({
+					color : response.textColor
+				}),
+				stroke : new ol.style.Stroke({
+					color : response.textStrokeColor,
+					width : response.textStrokeWidth
+				})
+			})
+		});
+		
+		layer.setStyle(newStyle);
+	},
 
-					if (error) {
-						console.error("Error:", error);
-						return;
-					}
-
-					let styleData = response;
-
-					console.log("styleData", styleData);
-					console.log("strokeColor", styleData.strokeColor);
-
-					return function(feature, resolution) {
-						let txt = feature.get(attributeName);
-						return new ol.style.Style({
-							stroke: new ol.style.Stroke({
-								color: styleData.strokeColor,
-								width: styleData.strokeWidth
-							}),
-							fill: new ol.style.Fill({
-								color: styleData.fillColor
-							}),
-							text: new ol.style.Text({
-								font: styleData.font,
-								text: txt,
-								fill: new ol.style.Fill({
-									color: styleData.textcolor
-								}),
-								stroke: new ol.style.Stroke({
-									color: styleData.textStrokeColor,
-									width: styleData.textStrokeWidth,
-								})
-							})
-						});
-					};
-				});
+	addStyle : function(attributeName, layer) {
+		$.ajax({
+			url : 'map/getLayerStyle.do',
+			method : 'POST',
+			data : {
+				attributeName : attributeName
+			},
+			dataType : 'json',
+			success : function(response) {
+				console.log("success", response);
+				layerController.setStyleWithResponse(layer, response); 
+			},
+			error : function(error) {
+				console.error("스타일 정보를 가져오는 데 실패했습니다.", error);
+			}
+		});
 	}
 }
