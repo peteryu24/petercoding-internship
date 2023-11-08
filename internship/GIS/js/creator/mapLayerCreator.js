@@ -65,10 +65,10 @@ var mapLayerCreator = {
 			group: "지적 기반",
 			source: mapSourceCreator.emdSource,
 			// 각 feature마다 style 지정
-			style: layerController.addStyle('emd_kor_nm')
 		});
-
 		baseMapCreator.baseMap.daumMap.addLayer(this.layers.emdLayer);
+		
+		layerController.addStyle('emd_kor_nm',this.layers.emdLayer);
 		// 리턴받은 popUp을 popUps.emdPopUp에 담아줌
 		this.popUps.emdPopUp = this.createPopup(this.layers.emdLayer, 'emd_kor_nm');
 	},
@@ -86,10 +86,11 @@ var mapLayerCreator = {
 			maxResolution: Infinity,
 			group: "지적 기반",
 			source: mapSourceCreator.koreaSource,
-			style: layerController.addStyle('kais_korea_as')
 		});
 		
 		baseMapCreator.baseMap.daumMap.addLayer(this.layers.koreaLayer);
+		
+		layerController.addStyle('kais_korea_as', this.layers.koreaLayer);
 	},
 
 	createCctvLayer: function() {
@@ -117,45 +118,53 @@ var mapLayerCreator = {
 	    popUpElement.className = 'tooltip';
 
 	    let popUp = new ol.Overlay({  
+	    	// 위에서 생성한 HTML요소
 	        element: popUpElement,
 	        positioning: 'bottom-center',
-	        offset: [0, 0], // 팝업을 피처 바로 위에 위치시키려면 offset을 적절히 조정해야 할 수 있습니다.
+	        offset: [0, 0], 
+	        // 팝업 이벤트가 지도로 전파되지 않도록
 	        stopEvent: true
 	    });
 
 	    baseMapCreator.baseMap.daumMap.addOverlay(popUp);
 
 	    baseMapCreator.baseMap.daumMap.on('click', (evt) => {
-	        let pixel = evt.pixel;
-	        let featureFound = false;
-
-	        baseMapCreator.baseMap.daumMap.forEachFeatureAtPixel(pixel, (feature, layerClicked) => {
+	        // 클릭된 지점의 픽셀
+	    	let clickedPixel = evt.pixel;
+	    	// 클릭된 지점에 feature가 있는지
+	        let featureFlag = false;
+	        // 클릭된 픽셀에서 feature를 찾고, 내포하는 layer의 정보도 가져옴
+	        baseMapCreator.baseMap.daumMap.forEachFeatureAtPixel(clickedPixel, (feature, layerClicked) => {
 	            if (layerClicked === layer) {
-	                featureFound = true;
+	            	featureFlag = true;
 	                let context = feature.get(featureName);
 	                if (layer === this.layers.emdLayer) {
-	                    // 읍면동 레이어 클릭 시의 로직 처리
+	                	// 해당 읍면동에 대한 cctv 정보들
 	                    let cctvData = this.countCctvPointsAndNames(feature);
+	                    // 해당 읍면동에 대한 cctv 갯수
 	                    let cctvCount = cctvData.count;
 	                    let cctvNamesList = cctvData.names;
+	                    // 클릭 이동을 위해서 HTML 형식으로 구성
 	                    context += `<div>CCTV 수: ${cctvCount}개</div><ul>`;
 	                    cctvNamesList.forEach((name) => {
+	                    	// <a href="#"로 가짜(더미) 하이퍼링크, name.replace(/'/g, "\\'")로
+							// 자바스크립트 에러 방지, return false로 가짜(더미) 하이퍼링크
 	                        context += `<li><a href="#" onclick="mapLayerCreator.moveToCctvCenter('${name.replace(/'/g, "\\'")}'); return false;">${name}</a></li>`;
 	                    });
 	                    context += '</ul>';
 	                } else if (layer === this.layers.cctvLayer) {
-	                    // CCTV 레이어 클릭 시의 로직 처리
 	                    if (this.popUps.emdPopUp) {
 	                        this.popUps.emdPopUp.setPosition(undefined);
 	                    }
 	                }
+	                // 팝업 표시 위치
 	                let popUpCentroid = ol.extent.getCenter(feature.getGeometry().getExtent());
 	                popUp.getElement().innerHTML = context;
 	                popUp.setPosition(popUpCentroid);
 	            }
 	        });
 
-	        if (!featureFound) {
+	        if (!featureFlag) { // 숨김
 	            popUp.setPosition(undefined);
 	        }
 	    });
