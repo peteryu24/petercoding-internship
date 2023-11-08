@@ -44,7 +44,7 @@ var layerController = {
 			mapLayerCreator.popUps[popUpName].setPosition(null);
 		}
 
-	},
+	}, 
 
 	getStyleFromDB: function(attributeName, callback) {
 		$.ajax({
