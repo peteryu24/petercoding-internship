@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <base href="http://localhost:8080/egov30/">
+    <base href="http://localhost:8080/egov20/">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <title>Posts</title>
     <style>
@@ -37,14 +37,14 @@
             border-bottom: 1px solid #ddd;
         }
 
-        .buttonGroup {
+        .firstRowButtonGroup {
             display: flex;
             justify-content: space-between;
             width: 70%;
             margin-top: 20px;
         }
 
-        .buttonGroup button {
+        .firstRowButtonGroup button {
             width: 23%;
             padding: 10px;
             margin-right: 10px; /* 버튼 사이 간격 조절 */
@@ -63,6 +63,39 @@
         .unRegister:hover {
             background-color: #c9302c;
         }
+        
+        .secondRowButtonGroup {
+		    width: 70%;
+		    display: flex;
+		    justify-content: space-between; 
+		    margin-top: 20px;
+		}
+		
+		.secondRowButtonGroup button {
+		    width: 23%;
+		    padding: 10px;
+		    margin-right: 10px; 
+		    border: none;
+		    border-radius: 5px;
+		    cursor: pointer;
+		    transition: background-color 0.3s;
+		    background-color: #007BFF;
+		    color: #fff;
+		}
+	
+		
+		.viewMap:hover, .viewLog:hover {
+		    background-color: #0056b3;
+		}
+		#unvisibleButton1, #unvisibleButton2 {
+		    background-color: transparent; /* 배경색 투명 */
+		    color: transparent; /* 글자색 투명 */
+		    border: none; /* 테두리 없음 */
+		    cursor: default; /* 일반 커서로 변경 */
+		    pointer-events: none; /* 마우스 이벤트 무시 */
+		}
+				
+        
         .detailPost , #sortButton, #searchButton{
         width: auto; /* 너비 자동 조정 */
         padding: 5px 10px; /* 내부 여백 조정 */
@@ -75,13 +108,12 @@
         color: #fff;
 	    }
 	
-
 	    .detailPost:hover, sortButton:hover , searchButton:hover{
 	        background-color: #ccc; /* 얕은 회색 */
 	    }
 	    
 	    .pageNumber:hover {
-	        color: blue;
+	        color: red;
 	        cursor: pointer;
 	    }
 	    
@@ -124,17 +156,30 @@
     
     <button id="resetButton" type="button" onclick="resetAndClearSession()">Reset</button>
 
-    <div class="buttonGroup">
+    <div class="firstRowButtonGroup">
         <button class="writePost" type="button" onclick="location.href='post/showWritePost.do'">Write Post</button>
         <button class="logOut" type="button" onclick="logoutAndClearSession()">Log Out</button>
         <button class="unRegister" type="button" onclick="confirmUnregister()">Unregister</button>
         <button class="changePassword" type="button" onclick="location.href='user/showChangePassword.do'">Change Password</button>
-        <button class="changePassword" type="button" onclick="location.href='map/showViewMap.do'">View Map</button>
     </div>
+    
+    <div class="secondRowButtonGroup">
+    	<button id="unvisibleButton1">unvisible</button>  
+	    <button class="viewMap" type="button" onclick="location.href='map/showViewMap.do'">View Map</button>
+	    <button class="viewLog" type="button" onclick="clearSessionAndViewLog()">View Log</button>
+	    <button id="unvisibleButton2">unvisible</button>    
+	</div>
     
     
     <script type="text/javascript">
 	    $(document).ready(function() {
+	    	
+	    	let writeFlag = "${writeFlag}";
+
+	        if (writeFlag === "yes") {
+	            resetAndClearSession();
+	        }
+	    	
 	        showAllPosts();  
 	        showPageNum();
 	        
@@ -151,7 +196,7 @@
 	    });
 	    
 	    // setter 느낌의 sessionStorage 
-	    var pageController = (function() {
+	    let pageController = (function() {
 	        return {
 	            setCurrentPage: function(page) {
 	                currentPage = page;
@@ -184,7 +229,7 @@
                 dataType: "json",
                 data: {
                     sortType: sessionStorage.getItem('orderBy'),
-                    currentPage: sessionStorage.getItem('currentPage'),  
+                    //currentPage: sessionStorage.getItem('currentPage'),  // 새로 고침시 첫번째 페이지로~
                     searchedKeyword: sessionStorage.getItem('searchedKeyword')
                 },
                 success: Posts, 
@@ -209,7 +254,7 @@
                         searchedKeyword: sessionStorage.getItem('searchedKeyword') // 검색어 추가
                     },
                     success: function(response) {
-                        var fetchedTotalPage = response.totalPage;
+                        let fetchedTotalPage = response.totalPage;
                         pageController.setTotalPage(fetchedTotalPage);
                         generatePageNumbers(fetchedTotalPage);
                     },
@@ -223,17 +268,17 @@
         }
 		
         function generatePageNumbers(totalPage) {
-            var pageNumbersClick = '';
-            for (var i = 1; i <= totalPage; i++) {
+            let pageNumbersClick = '';
+            for (let i = 1; i <= totalPage; i++) {
                 pageNumbersClick += '<span class="pageNumber">' + i + '</span>';
             }
             $("#pageNumbers").html(pageNumbersClick);
 
             $(".pageNumber").on('click', function() {
-                var pageNumber = $(this).text();
+                let pageNumber = $(this).text();
                 pageController.setCurrentPage(pageNumber);
                 
-                var selectedSort = $('#sortSelect').val();
+                let selectedSort = $('#sortSelect').val();
                 pageController.setOrderBy(selectedSort);
                 console.log(selectedSort," selectedSort");           
 
@@ -261,18 +306,18 @@
 		// 동적으로 받은 게시글들 보여주기
         function Posts(data) { 
         	console.log(data)
-            var tbody = $("#postsTbody");
+            let tbody = $("#postsTbody");
             tbody.empty();
             data.forEach(function(post) {
-                var createTime = new Date(post.createTime).toLocaleString(); 
-                var $tr = $('<tr>');
-                var $td = $('<td>');
+                let createTime = new Date(post.createTime).toLocaleString(); 
+                let $tr = $('<tr>');
+                let $td = $('<td>');
                 
                 $tr.append($td.clone().html('<button class="detailPost" data-postid="' 
                     + post.postId + '">' + post.title + '</button>'));
                 $tr.append($td.clone().text(post.content));
                 
-                var fileStatus = post.hasFile ? 'O' : 'X';
+                let fileStatus = post.hasFile ? 'O' : 'X';
                 $tr.append($td.clone().text(fileStatus));
                 
                 $tr.append($td.clone().text(post.view));
@@ -284,13 +329,13 @@
         }
     	// 게시글의 title 누르면 게시글 상세보기 페이지로
         $(document).on('click', '.detailPost', function() {
-            var postId = $(this).data('postid'); 
+            let postId = $(this).data('postid'); 
             window.location.href = 'post/detailPost.do?postId=' + postId + '&viewSet=yes'; 
         });
 		
     	// 사용자가 선택한 정렬 방식 넘겨줌
 		$('#sortButton').on('click', function() {
-			var selectedSort = $('#sortSelect').val();
+			let selectedSort = $('#sortSelect').val();
 			pageController.setOrderBy(selectedSort);
 			$.ajax({
 				url : "post/postPerPage.do",
@@ -310,7 +355,7 @@
 		});
     	
 		$('#searchButton').on('click', function() {
-		    var keyword = $('#searchInput').val();
+		    let keyword = $('#searchInput').val();
 		    pageController.setSearchedKeyword(keyword); // 검색어 sessionStorage에 저장
 		    pageController.setCurrentPage('1'); // 검색 후 첫 페이지로 초기화
 		    showAllPosts(); // 게시글 표시 함수 호출
@@ -318,7 +363,7 @@
 		});
 			
 		function confirmUnregister() {
-		    var confirmFlag = window.confirm("탈퇴하시겠습니까?");
+		    let confirmFlag = window.confirm("탈퇴하시겠습니까?");
 		    if (confirmFlag) {
 		    	sessionStorage.clear();
 		        location.href = 'user/unregister.do';
@@ -332,6 +377,10 @@
 	    function resetAndClearSession() {
 	        sessionStorage.clear(); 
 	        location.href = 'post/goShowAllPosts.do'; 
+	    }
+	    function clearSessionAndViewLog() {
+	    	sessionStorage.clear();
+	    	location.href = 'log/goShowLogs.do';
 	    }
 	
     </script>
