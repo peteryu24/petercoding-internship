@@ -28,7 +28,6 @@ https://2429.tistory.com/entry/%EA%B5%AC%EA%B8%80-%EC%84%9C%EC%B9%98-%EC%BD%98%E
 
 
 자바스크립트 this 
-자바스크립트 "==" "==="
 
 스프링 response entity
 
