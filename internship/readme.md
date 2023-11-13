@@ -5,8 +5,6 @@
 https://mozzi-devlog.tistory.com/22
 <br><br>
 
-ajax가 뭐야?
-
 
 ajax beforesend complete<br>
 https://milenote.tistory.com/46<br><br>
