@@ -7,7 +7,7 @@ import gmx.set.animal.Animal;
 import gmx.set.animal.list.Dog;
 
 public class AnimalTypeExceptionThrower {
-	HashMap<String, Animal> anicafe_map = new HashMap<String, Animal>();
+	HashMap<String, Animal> anicafe_map = new HashMap<String, Animal>(); 
 
 	public void in(Animal e) throws AnimalTypeException {
 		if (!(e instanceof Dog)) {
