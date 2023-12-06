@@ -1,3 +1,6 @@
+https://yeko90.tistory.com/entry/%ED%8B%B0%EC%8A%A4%ED%86%A0%EB%A6%AC-%EB%84%A4%EC%9D%B4%EB%B2%84-%EC%84%9C%EC%B9%98%EC%96%B4%EB%93%9C%EB%B0%94%EC%9D%B4%EC%A0%80-%EB%93%B1%EB%A1%9D-%EB%B0%A9%EB%B2%95
+ 
+ 
  돌이킬 수 없는 결정을 내릴 때는 과감함보다는 신중함이 더 좋은 덕목<br>
 
 https://www.boostcourse.org/web326/lecture/60591?isDesc=false<br>
