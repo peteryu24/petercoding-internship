@@ -5,10 +5,7 @@ https://yeko90.tistory.com/entry/%ED%8B%B0%EC%8A%A4%ED%86%A0%EB%A6%AC-%EB%84%A4%
  
  
  돌이킬 수 없는 결정을 내릴 때는 과감함보다는 신중함이 더 좋은 덕목<br>
-
-https://www.boostcourse.org/web326/lecture/60591?isDesc=false<br>
  
-
 scanner buffer
  https://m.blog.naver.com/ka28/221850826909<br>
  
@@ -18,25 +15,14 @@ https://mozzi-devlog.tistory.com/22
 <br><br>
 
 
-ajax beforesend complete<br>
-https://milenote.tistory.com/46<br><br>
-
 model attribute
-
 
 
 accept 와 content-type difference
 
 구글 인덱싱
 
-
-[https://lotsofmakemoney.tistory.com/entry/%EA%B5%AC%EA%B8%80%EC%97%90%EC%84%9C-%EB%82%B4-%EB%B8%94%EB%A1%9C%EA%B7%B8-%EA%B8%80%EC%9D%B4-%EB%88%84%EB%9D%BD%EB%90%98%EC%97%88%EB%8B%A4-%EA%B5%AC%EA%B8%80%EC%84%9C%EC%B9%98%EC%BD%98%EC%86%94-%EC%82%AC%EC%9A%A9%EB%B0%A9%EB%B2%95](https://projectb.tistory.com/20)
 <br><br>
-https://projectb.tistory.com/13
-<br><br>
-https://2429.tistory.com/entry/%EA%B5%AC%EA%B8%80-%EC%84%9C%EC%B9%98-%EC%BD%98%EC%86%94-%EB%93%B1%EB%A1%9D-%EB%B0%A9%EB%B2%95
-
-
 자바스크립트 this 
 
 스프링 response entity
@@ -70,13 +56,6 @@ thread는 service()로 접근하여 doPost doGet메소드를 실행
 response객체에 담아서 was로 리턴
 httpresonse형태로 web server로 리턴
 
-
-
-
-문자열 비교에 == 대신 .equals() 메소드를 사용해야 합니다. Java에서는 문자열을 비교할 때 == 대신 .equals()를 사용하는 것이 권장됩니다. ==는 두 객체의 참조값이 동일한지 확인하는 반면, .equals()는 두 문자열의 내용 자체가 같은지 확인합니다. <br>
-
-
-
 enum<br>
 
 https://bcp0109.tistory.com/334<br>
@@ -93,9 +72,6 @@ https://jjingho.tistory.com/81
 https://youtu.be/hao05jNL2m8?si=RQ8RirZWSyiCgfTg
 https://gompangs.tistory.com/50
 https://m.blog.naver.com/PostView.naver?blogId=wusemr2&logNo=222421074895&categoryNo=0&proxyReferer=
-
-DBConnect 에서 다른 클래스들이 전부 돌아가도록 구현
-Create
 Insert
 Select
 Update
