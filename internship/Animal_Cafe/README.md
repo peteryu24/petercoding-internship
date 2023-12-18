@@ -4,7 +4,7 @@
 
 ```
 📦Animal_Cafe                          
-   └─ src
+   └─ src      
       ├─ cafe.animal
       │     ├─ AnimalCafe.java - 애견 카페 (입장 / 퇴장 메소드 구현)
       │     │
@@ -19,7 +19,7 @@
                    └─ Dog.java - 강아지 (1가지 기능 추가)
 ```
 
-### 기능구현 🐸
+### 기능구현 🐸   
 - ArrayList / HashMap 이용한 애견카페 출입
   - 입장시 강아지 / 고양이 판별
     - 고양이 입장시 입장 불가 문구 출력
