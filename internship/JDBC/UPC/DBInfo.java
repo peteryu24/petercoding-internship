@@ -54,7 +54,7 @@ import java.sql.SQLException;
 
 public class DBInfo {
 
-	private final String URL = "jdbc:postgresql://127.0.0.1:5432/UsersPostsComments";
+	private final String URL = "jdbc:yourDBMS://yourURL&PORT/SchemaName";
 	private final String USER = "postgres";
 	private final String PASS = "0000";
 
