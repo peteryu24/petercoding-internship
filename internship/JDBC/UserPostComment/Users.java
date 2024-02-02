@@ -88,9 +88,9 @@ class UserVO {
 
 public class Users {
 	// DB 연결 정보
-	static final String URL = "jdbc:postgresql://127.0.0.1:5432/UsersPostsComments";
-	static final String USER = "postgres";
-	static final String PASS = "0000";
+	static final String URL = "jdbc:yourDBMS://yourURL&PORT/SchemaName";
+	static final String USER = "xxxxxxx";
+	static final String PASS = "XXXXXXXX";
 
 	// 연결 수행
 	public static Connection getConnection() {
