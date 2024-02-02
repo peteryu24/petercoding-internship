@@ -45,7 +45,7 @@ mime 타입
 
 자바 직렬화
 
-동기 통신 비동기 통신 xhr ajax 파싱 @requstBody
+동기 통신 비동기 통신 xhr ajax 파싱 @requestBody
 
 마샬링
 
