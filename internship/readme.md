@@ -2,7 +2,6 @@ https://jojoldu.tistory.com/250
 <br>
 @ExceptionHandler
 <br>
-https://recruit.jejuair.net/jobinfo/jobinfo_view.asp?ID=1840
 
 https://blog.naver.com/gngh0101/221295353117<br>
 
