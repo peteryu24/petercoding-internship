@@ -21,7 +21,7 @@
 <h4>처리 과정</h4>
 <h5>요청 단계</h5>
 1. 클라이언트 요청: 웹 브라우저에서 서버에 HTTP 요청을 보냄(URL, HTTP메소드(GET,POST등), 헤더 정보, 본문 데이터(POST 데이터))<br>
-2. 서버 도착: 웹 서버(Apache)에 도착하고, 웹 서버는 요청을 해당 애플리케이션 서버(Tomcat)에 전달<br>
+2. 서버 도착: 웹 서버(Apache)에 도착하고, 웹 서버는 요청을 해당 애플리케이션 서버(Tomcat)에 전달<br> 
 3. Dispatcher-Servlet 접근(web.xml에 설정): Dispatcher-Servlet이 요청을 받아 처리<br>
 4. 핸들러 매핑(servlet-context.xml에 설정): Dispatcher-Servlet은 핸들러 매핑을 사용하여 해당 요청을 처리할 Controller 탐색<br>
 5. 컨트롤러 실행: 찾아진 컨트롤러의 메소드 실행(비즈니스 로직을 처리하거나 필요한 경우 DB에 접근하여 필요한 데이터를 조작/조회)<br>
