@@ -7,7 +7,7 @@
    └─ src      
       ├─ cafe.animal 
       │     ├─ AnimalCafe.java - 애견 카페 (입장 / 퇴장 메소드 구현)
-      │     │
+      │     │ 
       │     └─ Action.java - 동물 생성자 호출 / 입장과 퇴장 메소드 호출
       │
       └─ set.animal
