@@ -6,7 +6,7 @@ FROM
 	exam.stadium s -- 강릉종합경기장 추출을 위해
 	,exam.team t
 	,exam.player p
-WHERE 	
+WHERE 	 
 	s.stadium_name = '강릉종합경기장'
 	AND s.stadium_id = t.stadium_id -- 강릉종합경기장에서 경기하는 팀 목록
 	AND t.team_id = p.team_id; -- 해당 팀의 선수들 목록
