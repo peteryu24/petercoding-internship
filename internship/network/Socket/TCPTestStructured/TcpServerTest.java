@@ -11,7 +11,7 @@ import java.net.Socket;
 public class TcpServerTest {
 
 	public static void serverRun() {
-		ServerSocket serverSocket = createSs(5432); // 5432 포트
+		ServerSocket serverSocket = createSs(5432); // 5432 포트 
 
 		while (true) { // 무한 루프 소켓 종료 후 또 접속 가능
 			Socket socket = connectClient(serverSocket);
