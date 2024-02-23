@@ -17,7 +17,7 @@ public class AnimalCafe {
 				System.out.print(key + " ");
 			}
 
-			System.out.println("\n");
+			System.out.println("\n"); 
 		} else { // 고양이가 입장시
 			System.out.println("죄송합니다 강아지만 입장 가능합니다.\n");
 		}
